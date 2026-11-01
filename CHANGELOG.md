@@ -3,6 +3,8 @@
 Formato basato su [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/); versioni secondo [SemVer](https://semver.org/lang/it/).
 
 ## [Non rilasciato]
+### Corretto
+- `secret_triage.py`: in un valore lungo e casuale (≥ 20 caratteri, entropia ≥ 4,2) le parole corte come «dev», «tuo» o «xyz» non lo declassano più a segnaposto o password debole: comparivano per caso circa una volta su cento su 40 caratteri, declassando un segreto vero (e facendo fallire a caso il banco dei segreti in CI).
 
 ## [1.2.2] - 2026-11-01
 ### Aggiunto

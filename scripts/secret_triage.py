@@ -186,8 +186,12 @@ def score(kind, val, ctx, path, nfiles):
     fc = file_class(path)
     strong = False
     low = val.lower()
-    placeholder = next((w for w in PLACEHOLDER if w in low), None) if not ctx.get("provider") else None
-    weak = next((w for w in WEAK if w in low), None) if not (ctx.get("provider") or placeholder) else None
+    # in un valore lungo e casuale una parola corta («dev», «tuo», «xyz») compare per caso: circa una volta su cento
+    # su 40 caratteri. Lì contano solo le parole lunghe; il banco dei segreti falliva a caso per questo.
+    casual = len(val) >= 20 and entropy(val) >= 4.2
+    hit = lambda words: next((w for w in words if w in low and not (casual and len(w) <= 4)), None)
+    placeholder = hit(PLACEHOLDER) if not ctx.get("provider") else None
+    weak = hit(WEAK) if not (ctx.get("provider") or placeholder) else None
     if ctx.get("provider"):
         s += 4; why.append(f"formato riconosciuto ({kind})")
     elif ctx.get("hash"):

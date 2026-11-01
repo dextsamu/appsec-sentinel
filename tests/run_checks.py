@@ -689,6 +689,22 @@ if have("verify_findings.py"):
           "senza numero di riga" in rv2.stdout.split("APP-003")[0] and "audit:dinamico" not in rv2.stdout and rv2.stdout.count("senza numero di riga") == 1, rv2.stdout[-500:])
     check("revisore: la sezione «## Risposte» di revisione.md sopravvive a una nuova esecuzione", "APP-001: motivato a mano" in txt and "vecchio" not in txt, txt[-300:])
 
+if have("prepass.py") and have("init_audit.py"):
+    sr = tmp / "spa-repo"
+    (sr / "frontend" / "src" / "app").mkdir(parents=True)
+    (sr / "frontend" / "src" / "app" / "app.routing.ts").write_text("const routes = [\n  { path: 'home' },\n  { path: 'administration', canActivate: [AdminGuard] },\n  { path: 'web3-sandbox' }\n]\n", encoding="utf-8")
+    (sr / "data" / "static").mkdir(parents=True)
+    (sr / "data" / "static" / "users.yml").write_text("-\n  email: a@example.test\n  password: 'x'\n", encoding="utf-8")
+    (sr / "src").mkdir()
+    (sr / "src" / "img.ts").write_text("const r = await fetch(req.body.imageUrl)\n", encoding="utf-8")
+    sa = tmp / "spa-audit"
+    run("init_audit.py", sa); run("prepass.py", sr, "--audit", sa, "--no-network")
+    pcsv = (sa / "punti-pericolosi.csv").read_text(encoding="utf-8")
+    ptxt = (sa / "registro-tool" / "punti-pericolosi.txt").read_text(encoding="utf-8")
+    check("prepass: route riservate del client, dati di seed con credenziali e URL dall'utente diventano righe da chiudere",
+          all(c in pcsv for c in ("route del client,", "dati di seed e credenziali,", "URL dall'utente (SSRF),"))
+          and "app.routing.ts:3" in ptxt and "app.routing.ts:2" not in ptxt and "users.yml:3" in ptxt, pcsv + ptxt[-400:])
+
 if have("check_delivery.py") and have("init_audit.py"):
     md = tmp / "mod-standard"
     run("init_audit.py", md)

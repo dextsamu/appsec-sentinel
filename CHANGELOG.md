@@ -3,6 +3,8 @@
 Formato basato su [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/); versioni secondo [SemVer](https://semver.org/lang/it/).
 
 ## [Non rilasciato]
+### Aggiunto
+- Due categorie in `punti-pericolosi.csv`: **route del client** (pagine riservate o protette solo da un guard nel browser, nei file di routing del frontend) e **dati di seed e credenziali** (file YAML/JSON di dati iniziali con password, segreti, domande o risposte di sicurezza). Motivo: nel giro std6 su Juice Shop (13/32) le mancate erano quasi tutte nelle route del frontend e nel file delle domande di sicurezza, che nessuna categoria apriva.
 
 ## [1.2.1] - 2026-11-01
 ### Misurato

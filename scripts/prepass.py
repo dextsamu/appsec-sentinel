@@ -127,28 +127,35 @@ def main():
             ("parser XML", r"libxml|parseXml|noent\s*:\s*true|XMLParser|DocumentBuilderFactory|etree\.(parse|fromstring)|simplexml_load"),
             ("AI e prompt", r"openai|anthropic|langchain|ollama|\bllm\b|chat.?bot|messages\.create|chat\.completions|system.?prompt"),
             ("recupero password", r"security.?(question|answer)|domand\w* di sicurezza|reset.?token|forgot.?password"),
+            ("route del client", r"""\bpath:\s*['"][^'"]*\b(admin\w*|account\w*|manage\w*|debug|internal|hidden|secret|sandbox|beta|dev|config\w*|settings)\b|canActivate|beforeEnter|<(Private|Protected|Admin)Route|requireAuth"""),
+            ("dati di seed e credenziali", r"""^\s*-?\s*["']?(password|passwd|pwd|answer|question|secret|token|api_?key|totp\w*)["']?\s*:"""),
             ("URL dall'utente (SSRF)", r"(\bfetch|\brequest(\.get)?|axios\.(get|post)|\bgot|urlopen|requests\.(get|post)|file_get_contents|curl_exec|http\.get)\s*\(\s*[\w.\[\]'\"]*(url|link|href|uri)\b")]
     hits = []
     for p_ in sorted(repo.rglob("*")):
         rel = p_.relative_to(repo)
         if not p_.is_file() or {"node_modules", ".git", "dist", "build", ".next", "vendor", "coverage", "test", "tests", "__pycache__"} & set(rel.parts) \
-                or p_.suffix.lower() not in {".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".vue", ".svelte", ".html", ".py", ".php", ".rb", ".go", ".java", ".cs", ".yml", ".yaml"} \
+                or p_.suffix.lower() not in {".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".vue", ".svelte", ".html", ".py", ".php", ".rb", ".go", ".java", ".cs", ".yml", ".yaml", ".json"} \
                 or re.search(r"\.(spec|test|min)\.", p_.name):
             continue
         try:
             lines = p_.read_text(encoding="utf-8", errors="replace").splitlines()
         except OSError:
             continue
+        is_route = bool(re.search(r"rout", p_.name, re.I)) and bool({"frontend", "client", "web", "app", "src", "ui"} & set(rel.parts))
+        is_data = bool({"data", "seed", "seeds", "fixtures", "static", "db"} & {x.lower() for x in rel.parts[:-1]}) and p_.suffix.lower() in {".yml", ".yaml", ".json"}
         for n, line in enumerate(lines, 1):
             if len(line) > 400:
                 continue
             for cat, rx in SINK:
-                if re.search(rx, line, re.I if cat in ("AI e prompt", "recupero password", "URL dall'utente (SSRF)") else 0):
+                if (cat == "route del client" and not is_route) or (cat == "dati di seed e credenziali" and not is_data) \
+                        or (p_.suffix.lower() == ".json" and cat != "dati di seed e credenziali"):
+                    continue
+                if re.search(rx, line, re.I if cat in ("AI e prompt", "recupero password", "URL dall'utente (SSRF)", "route del client", "dati di seed e credenziali") else 0):
                     hits.append((cat, rel.as_posix(), n))
     by, per_file = {}, {}
     for cat, f, n in hits:   # al massimo 2 righe per file e categoria: conta quali file aprire, non quante righe
         per_file[(cat, f)] = per_file.get((cat, f), 0) + 1
-        if per_file[(cat, f)] <= 2:
+        if per_file[(cat, f)] <= (12 if cat == "route del client" else 2):   # le route riservate sono tante nello stesso file
             by.setdefault(cat, []).append(f"{f}:{n}")
     out_lines = []
     for cat, _ in SINK:
@@ -160,7 +167,7 @@ def main():
     # chatbot e recupero password e li avevano lasciati nel motivo della checklist («annotato», «non promosso»).
     import punti
     punti.write(audit, [(c, len(by.get(c, []))) for c, _ in SINK if by.get(c)])
-    prefill["R11"] = ("parziale", "punti pericolosi elencati per categoria, da chiudere uno per uno in punti-pericolosi.csv (html senza escape anche nel client, esecuzione di codice, deserializzazione, XML, AI, recupero password, URL dall'utente): "
+    prefill["R11"] = ("parziale", "punti pericolosi elencati per categoria, da chiudere uno per uno in punti-pericolosi.csv (html senza escape anche nel client, esecuzione di codice, deserializzazione, XML, AI, recupero password, URL dall'utente, route del client, dati di seed): "
                       + ", ".join(f"{c} {len(by.get(c, []))}" for c, _ in SINK) + "; da leggere a mano, con upload, SSRF, query e redirect",
                       "registro-tool/punti-pericolosi.txt")
 

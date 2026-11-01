@@ -3,6 +3,8 @@
 Formato basato su [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/); versioni secondo [SemVer](https://semver.org/lang/it/).
 
 ## [Non rilasciato]
+### Aggiunto
+- **Problemi annotati e non diventati finding**: `chiudi` segnala le aree della checklist il cui motivo dice «non promosso», «da approfondire», «non ridimostrato» o simili; si chiude facendone un finding (anche «ipotesi da validare») o motivando in `revisione.md` sotto «## Risposte». Nello `standard` segnala anche quando la modalità non aggiunge nessun finding al rapido; la procedura ha un passo di **approfondimento** (4b). Motivo: un giro `standard` con la 1.2.0 su Juice Shop (Opus 4.8, PC dell'autore) ha chiuso pulito, con 5 smentite su 5, ma con gli stessi 9 finding del rapido e 7/32 vulnerabilità: recupero password, SSRF, XSS nel client e chatbot erano annotati nella checklist e mai riportati.
 
 ## [1.2.0] - 2026-11-01
 ### Aggiunto (generalizzazione, altri linguaggi, tempi, report)

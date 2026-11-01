@@ -709,6 +709,25 @@ if have("check_delivery.py") and have("init_audit.py"):
     check("modalità standard: senza findings/rapido.json `chiudi` fallisce", "FAIL base del rapido" in r1.stdout, r1.stdout[-600:])
     check("modalità standard: con i deliverable e un test dinamico registrato i due controlli passano",
           "ok   deliverable della modalità standard" in r2.stdout and "ok   test dinamici registrati" in r2.stdout, r2.stdout[-600:])
+    check("modalità standard: nessun finding oltre al rapido è segnalato", "!!   finding aggiunti dalla modalità standard" in r2.stdout, r2.stdout[-600:])
+    (md / "revisione.md").write_text("# Revisione\n\n## Risposte\nNessun nuovo finding: repository minimo, tutte le aree chiuse nel rapido.\n", encoding="utf-8")
+    r3 = run("check_delivery.py", md)
+    check("modalità standard: «nessun nuovo finding» motivato in ## Risposte toglie la segnalazione", "finding aggiunti dalla modalità" not in r3.stdout, r3.stdout[-600:])
+    import csv as _c
+    clp = md / "checklist-rapido.csv"
+    rows = list(_c.DictReader(clp.open(encoding="utf-8")))
+    for r in rows:
+        r.update(esito="esaminato", riferimenti="src/x.ts:1", motivo="ok")
+    rows[3]["motivo"] = "recupero con domanda di sicurezza indovinabile, non promosso a finding"
+    rows[10]["motivo"] = "SSRF possibile su url immagine, da approfondire"
+    with clp.open("w", newline="", encoding="utf-8") as fh:
+        w = _c.DictWriter(fh, fieldnames=list(rows[0].keys())); w.writeheader(); w.writerows(rows)
+    r4 = run("check_delivery.py", md)
+    check("checklist: «non promosso» e «da approfondire» nel motivo sono segnalati con l'area",
+          "!!   problemi annotati nella checklist" in r4.stdout and "R04, R11" in r4.stdout, r4.stdout[-600:])
+    (md / "revisione.md").write_text("# Revisione\n\n## Risposte\nNessun nuovo finding.\nR04: le domande sono solo per account demo, non un difetto.\n", encoding="utf-8")
+    r5 = run("check_delivery.py", md)
+    check("checklist: un'area motivata in ## Risposte non è più segnalata", "R11" in r5.stdout and "R04" not in r5.stdout.split("problemi annotati")[1].split("\n")[0], r5.stdout[-600:])
     cs = run("coverage_summary.py", md)
     check("coverage_summary: «si (L2)» conta come applicabile", "applicabili: **1**" in cs.stdout, cs.stdout[-400:])
 

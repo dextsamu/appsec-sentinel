@@ -6,6 +6,7 @@ Esiti ammessi: «esaminato» (con riferimenti), «parziale» (con riferimenti e 
 «non esaminato» (con motivo), «non applicabile» (con motivo). Un'area vuota è un'area dimenticata.
 """
 import csv
+import re
 from pathlib import Path
 
 ESITI = ("esaminato", "parziale", "non esaminato", "non applicabile")
@@ -36,6 +37,27 @@ def problems(rows):
         elif e in ("non esaminato", "non applicabile") and not mot:
             incoerenti.append(f"{r['id']} ({e} senza motivo)")
     return vuote, incoerenti
+
+
+# Un problema visto e lasciato nel motivo non arriva al proprietario. Su Juice Shop un giro `standard` ha scritto
+# «non promosso a finding» o «da approfondire» su recupero password, SSRF, XSS e chatbot: 7/32 trovate, e le mancate
+# erano quasi tutte lì.
+LASCIATI = re.compile(r"non promoss|non promuov|non (?:ri)?dimostrat|da approfondire|rischio latente|da valutare in (?:standard|completo)", re.I)
+
+
+def lasciati(rows, risposte=""):
+    """Id delle aree il cui motivo dice di aver visto un problema senza farne un finding. Un'area citata in
+    revisione.md sotto «## Risposte» (con il motivo per cui non è un difetto) non viene più segnalata."""
+    return [r["id"] for r in rows if LASCIATI.search(r.get("motivo") or "") and not re.search(rf"\b{re.escape(r['id'])}\b", risposte)]
+
+
+def risposte(audit):
+    p = Path(audit) / "revisione.md"
+    try:
+        t = p.read_text(encoding="utf-8")
+    except OSError:
+        return ""
+    return t[t.index("\n## Risposte"):] if "\n## Risposte" in t else ""
 
 
 def write(audit, rows):

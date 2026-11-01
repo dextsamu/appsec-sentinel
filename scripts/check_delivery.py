@@ -252,6 +252,11 @@ def main() -> int:
             from collections import Counter
             c = Counter((r.get("esito") or "").strip().lower() for r in cl)
             add("checklist delle aree (checklist-rapido.csv)", "OK", ", ".join(f"{k} {v}" for k, v in c.most_common()))
+        las = checklist.lasciati(cl, checklist.risposte(audit))
+        add("problemi annotati nella checklist e non diventati finding", "DA VERIFICARE" if las else "OK",
+            (f"{', '.join(las)}: il motivo dice «non promosso», «da approfondire» o simili. Ogni problema visto con file e riga "
+             "diventa un finding, anche come «ipotesi da validare»; se non è un difetto, scrivi perché in revisione.md sotto "
+             "«## Risposte» citando l'area") if las else "")
     elif fj.exists() and (audit / "coverage-matrix.csv").exists():
         import csv
         rows = list(csv.DictReader((audit / "coverage-matrix.csv").open(encoding="utf-8")))
@@ -305,6 +310,11 @@ def deliverables(audit: Path):
             add("base del rapido (findings/rapido.json)", "DA VERIFICARE" if gone else "OK",
                 (f"{len(gone)} finding del rapido spariti senza smentita che li respinga: {', '.join(sorted(gone)[:8])}") if gone
                 else f"{len(base)} finding del rapido, {len(now)} ora")
+            import checklist
+            if not gone and now <= base and "nessun nuovo finding" not in checklist.risposte(audit).lower():
+                add(f"finding aggiunti dalla modalità {mode}", "DA VERIFICARE",
+                    f"gli stessi {len(base)} del rapido: threat model, approfondimento delle aree «parziale» e prove dinamiche "
+                    "non hanno aggiunto nulla. Se è corretto, scrivi in revisione.md sotto «## Risposte» «nessun nuovo finding» e il perché")
         except (OSError, ValueError, KeyError, TypeError):
             add("base del rapido (findings/rapido.json)", "DA VERIFICARE", "file illeggibile")
     if "dinamic" in mod and "non" not in mod.split("dinamic")[0][-12:]:

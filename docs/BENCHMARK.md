@@ -127,6 +127,19 @@ Giri eseguiti da sottoagenti con contesto nuovo, uno per cartella, con la sola s
 - **Secondo giro `standard`, con la procedura fissa**: threat model presente, 6 su 10 riprodotti, 18 richieste, `chiudi` senza falliti; ma ancora 10 finding (16/32 vulnerabilità nei file citati, contro 22/32 del `rapido`) e riferimenti senza numero di riga. Correzioni: copia obbligatoria dei finding a fine rapido (`findings/rapido.json`) controllata da `chiudi`, righe obbligatorie e riferimenti `audit:` nel revisore. Un terzo giro di verifica è stato interrotto al primo passo da un controllo di sicurezza dell'ambiente: queste correzioni sono provate dai test, non ancora da un giro reale.
 - **`completo` sul banco Django** (solo statico): 15 finding, tutti i deliverable, 62 righe di controlli ASVS/profilo, circa 10 minuti. Ha segnalato i punti poco chiari, ora corretti: procedura e definizione di «finito», applicabilità «si (…)», riferimenti solo nella storia Git, risposte in `revisione.md` sovrascritte.
 
+## Modalità standard su un PC, stesso modello e stesso prompt (01/11/2026)
+Giri `standard` su Juice Shop con istanza locale (127.0.0.1, dati sintetici), lanciati dall'autore con Claude Code sul proprio PC, **Opus 4.8**, stesso prompt in ogni giro; cambia solo la versione della skill.
+
+| Skill | Vulnerabilità con file e riga | Vicino (15 righe) | Finding | Riprodotti | Gravi smentiti | `chiudi` |
+|---|---|---|---|---|---|---|
+| versione precedente alla 1.2.0 | 7/32 | 9/32 | 12 | 9 | — | — |
+| 1.2.0 | 7/32 | 8/32 | 9 | 6 | 5, tutti resistono | 13 ok |
+| 1.2.0 + controllo sui problemi annotati | 8/32 | 10/32 | 13 | 8 | 7, tutti resistono | 1 fallito |
+| 1.2.1 (`punti-pericolosi.csv`) | **13/32** | **15/32** | 22 | 11 | 9, tutti resistono | 15 ok |
+| 1.2.2 (route del client, dati di seed) | 12/32 | 13/32 | 18 | 8 | 6, tutti resistono | 15 ok |
+
+Cosa mostra: con lo stesso modello il salto viene da `punti-pericolosi.csv`, una riga da chiudere per categoria di punti pericolosi, che ha portato nei finding XSS nel client, SSRF, XXE, chatbot e domande di sicurezza, prima annotati nella checklist e mai riportati. Un controllo sulle parole del motivo («non promosso») non bastava: il giro successivo ha scritto «annotato» e «superfici note». Fra 1.2.1 e 1.2.2 la differenza (13 contro 12) sta nella variabilità di un giro solo: le due categorie nuove sono state aperte e chiuse come «non difetto» con motivi deboli («dati di demo», «solo navigazione»), da cui i criteri aggiunti in `references/commands.md`. Per misurare un effetto di questa grandezza servono almeno due giri per versione. Con Opus 5.5 in cloud il `rapido` aveva dato 18–20/32: il modello conta quanto la procedura.
+
 ## Come ripeterlo
 ```bash
 git clone --depth 1 https://github.com/juice-shop/juice-shop /tmp/juice-shop

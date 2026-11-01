@@ -13,6 +13,16 @@ Stesso compito e stesso prompt per i due agenti, su Windows, con la versione 1.3
 
 Cosa è emerso: entrambi hanno rispettato il mandato (repository non modificato, nessuna rete, nessun «conforme», nessun valore di segreto) e nessuno ha smentito da solo i propri gap. Antigravity ha raggruppato più cause in un gap (9 gap per 14 difetti: reCAPTCHA, Maps, YouTube e Fonts in uno solo), contro la regola «un gap = una causa»; ha mancato la galleria con le foto degli alunni. Codex ha scritto 19 gap ben separati e due fuori elenco ragionevoli (backup e procedura data breach non verificabili); ha mancato Google Fonts come gap a sé (il file è citato in un gap sull'informativa). Codex ha scritto propri script di supporto nella cartella di audit. Antigravity non partiva con Cloudflare WARP attivo: l'API di Google rifiutava la posizione («User location is not supported»). Un giro per agente: misura che la skill funziona su questi agenti, non quanto siano stabili.
 
+Stesso giorno, `appsec-sentinel rapido` (solo analisi statica) sul banco Django (`tests/bench-django`, gestionale soci con 11 difetti noti, uno solo nella storia Git, e 5 esche), stesso prompt per gli agenti:
+
+| Agente | Difetti | Alti | Falsi allarmi | Finding | Smentita | `chiudi` |
+|---|---|---|---|---|---|---|
+| Antigravity (Gemini) | 10/11 | 6/6 | 0/5 | 12 | 7 finding alti, tutti resistono, con tentativi citati per file e riga; l'agente ha preparato il pacchetto e dichiara un «sottoagente indipendente con contesto isolato»: non verificabile da qui che fosse davvero separato | 13 ok, 0 da verificare, 0 falliti (13 min) |
+| Codex | — | — | — | — | — | giro interrotto: credito esaurito, da ripetere |
+| Claude (riferimento, due giri in cloud) | 11/11 e 11/11 | 6/6 | 0/5 | — | — | 0 falliti |
+
+Antigravity ha trovato anche il segreto presente solo nella storia Git senza riportarne il valore; ha mancato le dipendenze con vulnerabilità note (D09).
+
 ## Prima prova (30/10/2026)
 Prova del 30/10/2026, su Windows, un solo giro per agente: audit in modalità `rapido`, solo analisi statica, su un'app finta creata dall'agente stesso, con entrambe le skill (`appsec-sentinel` e `gdpr-sentinel`). Le versioni degli agenti non sono state registrate.
 

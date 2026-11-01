@@ -3,7 +3,10 @@
 Formato basato su [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/); versioni secondo [SemVer](https://semver.org/lang/it/).
 
 ## [Non rilasciato]
+
+## [1.3.1] - 2026-11-01
 ### Misurato
+- **Antigravity**: `appsec-sentinel rapido` sul banco Django, 10/11 difetti (6/6 alti), 0 falsi allarmi, `chiudi` senza falliti in 13 minuti; il giro di Codex è da ripetere (credito esaurito).
 - **Antigravity e Codex**: `gdpr-sentinel statica` sul secondo banco privacy, stesso prompt: 14/15 difetti e 0 falsi allarmi per entrambi, smentita indipendente fatta in entrambi i casi (Antigravity con il pacchetto in una sessione nuova, Codex con un sottoagente). Tabella in `docs/ALTRI-AGENTI.md`. Corretta l'esca T02 del banco (si attivava su «preventiva»).
 
 ### Corretto

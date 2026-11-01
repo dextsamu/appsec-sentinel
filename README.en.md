@@ -29,9 +29,9 @@ Python scripts with no third-party dependencies except `reportlab` (PDF reports)
 ## Install
 
 - **Claude.ai / Claude Desktop:** upload the `.skill` file (a zip of this repo) through the skills settings.
-- **Claude Code:** copy the folder to `~/.claude/skills/appsec-sentinel`.
+- **Claude Code, as a plugin** (updates with new releases): `/plugin marketplace add dextsamu/appsec-sentinel`, then `/plugin install appsec-sentinel@appsec-sentinel`. The twin skill installs from the same marketplace: `/plugin install gdpr-sentinel@appsec-sentinel`. Or copy the folder to `~/.claude/skills/appsec-sentinel`.
 - **Codex CLI / Antigravity:** same `SKILL.md` convention; install paths and what was tested are in [`docs/ALTRI-AGENTI.md`](docs/ALTRI-AGENTI.md).
-- **`npx skills add <owner>/appsec-sentinel`:** the repository root contains `SKILL.md`; discovery was checked on a local path.
+- **`npx skills add dextsamu/appsec-sentinel`:** the repository root contains `SKILL.md`; discovery was checked on a local path.
 
 Then say, for example: *"Use appsec-sentinel. Quick mode, static analysis only, on this folder. The repo is mine; no dynamic testing is authorized."*
 

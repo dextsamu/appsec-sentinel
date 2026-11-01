@@ -1,0 +1,23 @@
+{
+  "name": "appsec-sentinel",
+  "description": "Skill sentinel per agenti AI: sicurezza (appsec-sentinel) e privacy (gdpr-sentinel)",
+  "owner": {
+    "name": "Samuele Cucurnia",
+    "url": "https://github.com/dextsamu"
+  },
+  "plugins": [
+    {
+      "name": "appsec-sentinel",
+      "source": "./",
+      "description": "Assessment di sicurezza applicativa e cloud per agenti AI: regole di ingaggio, finding dimostrati, copertura con denominatori reali. Italiano e inglese."
+    },
+    {
+      "name": "gdpr-sentinel",
+      "source": {
+        "source": "github",
+        "repo": "dextsamu/gdpr-sentinel"
+      },
+      "description": "Valutazione tecnica GDPR/ePrivacy: informativa contro codice, gap con file e riga, mai «conforme»."
+    }
+  ]
+}

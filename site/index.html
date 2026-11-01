@@ -8,6 +8,16 @@
 <meta property="og:title" content="appsec-sentinel e gdpr-sentinel">
 <meta property="og:description" content="Sicurezza e privacy per agenti AI: un audit vale quanto la sua onestà.">
 <meta property="og:type" content="website">
+<link rel="canonical" href="https://dextsamu.github.io/appsec-sentinel/">
+<meta property="og:url" content="https://dextsamu.github.io/appsec-sentinel/">
+<meta property="og:image" content="https://dextsamu.github.io/appsec-sentinel/img/og.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta property="og:locale" content="it_IT">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="appsec-sentinel e gdpr-sentinel">
+<meta name="twitter:description" content="Sicurezza e privacy per agenti AI: un audit vale quanto la sua onestà.">
+<meta name="twitter:image" content="https://dextsamu.github.io/appsec-sentinel/img/og.png">
 <meta name="theme-color" content="#0f172a">
 <link rel="alternate" hreflang="en" href="index.en.html">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-60 -70 120 150'%3E%3Cpath d='M0,-60 L52,-38 L52,8 C52,38 26,56 0,68 C-26,56 -52,38 -52,8 L-52,-38 Z' fill='%230f172a' stroke='%235eead4' stroke-width='9'/%3E%3Cpath d='M-22,6 L-6,22 L26,-16' fill='none' stroke='%235eead4' stroke-width='11' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
@@ -494,10 +504,10 @@ footer ul{list-style:none;margin:0;padding:0}footer li{margin:4px 0}
       </ol>
     </div>
     <div role="tabpanel" id="p-code" aria-labelledby="t-code" hidden>
-      <div class="codebox"><pre><code>git clone https://github.com/dextsamu/appsec-sentinel ~/.claude/skills/appsec-sentinel
-git clone https://github.com/dextsamu/gdpr-sentinel   ~/.claude/skills/gdpr-sentinel
-pip install reportlab        # per il report PDF</code></pre></div>
-      <p>Per un solo progetto, clona in <code>&lt;progetto&gt;/.claude/skills/</code>.</p>
+      <div class="codebox"><pre><code>/plugin marketplace add dextsamu/appsec-sentinel
+/plugin install appsec-sentinel@appsec-sentinel
+/plugin install gdpr-sentinel@appsec-sentinel     # la skill gemella, facoltativa</code></pre></div>
+      <p>Come plugin si aggiorna da solo alle nuove versioni. In alternativa, come cartella: <code>git clone https://github.com/dextsamu/appsec-sentinel ~/.claude/skills/appsec-sentinel</code> (per un solo progetto in <code>&lt;progetto&gt;/.claude/skills/</code>). Per il report PDF: <code>pip install reportlab</code>.</p>
     </div>
     <div role="tabpanel" id="p-altri" aria-labelledby="t-altri" hidden>
       <p><strong>Antigravity:</strong> cartella <code>.agents/skills/&lt;nome-skill&gt;/</code> del progetto, oppure <code>~/.gemini/config/skills/</code> per tutti i progetti. <strong>Codex:</strong> una fonte di terzi indica <code>~/.codex/skills/&lt;nome-skill&gt;/</code>, da verificare con <code>codex --help</code>.</p>

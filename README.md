@@ -248,7 +248,12 @@ Un esempio anonimizzato, da un caso reale: [`examples/collaudo-rapido/report-ese
 
 **Claude.ai**: scarica il file `appsec-sentinel.skill` dalle [Release](https://github.com/dextsamu/appsec-sentinel/releases) e caricalo da *Impostazioni → Capacità → Skill*.
 
-**Claude Code**:
+**Claude Code**, come plugin (si aggiorna da solo alle nuove versioni):
+```text
+/plugin marketplace add dextsamu/appsec-sentinel
+/plugin install appsec-sentinel@appsec-sentinel
+```
+Dallo stesso marketplace si installa anche la skill gemella: `/plugin install gdpr-sentinel@appsec-sentinel`. In alternativa, come cartella di skill:
 ```bash
 git clone https://github.com/dextsamu/appsec-sentinel ~/.claude/skills/appsec-sentinel
 ```

@@ -37,7 +37,7 @@ SKIP_DIRS = {".git", "node_modules", "__pycache__", ".venv", "venv", ".next", "d
 TEXT_EXT = {".txt", ".md", ".csv", ".json", ".yml", ".yaml", ".html", ".log", ".py", ".js", ".ts", ".env", ".cfg", ".ini", ".toml", ".conf", ""}
 VALUE_RE = re.compile(r"(?i)\b(?:password|passwd|pwd|secret|api[_-]?key|token|auth[_-]?token|secret[_-]?key)\w*\b\s*[:=]\s*['\"]([^'\"\s]{10,})['\"]")
 PLACEHOLDER = re.compile(r"(?i)^(?:x{3,}|\*+|redatto|redacted|changeme|example|esempio|tuo|your|<.*>|\$\{.*\}|process\.env|env:)")
-VIETATE = re.compile(r"(?i)\b(non\s+conforme|conforme|conformi|sicuro|sicura|sicuri|certificat[oa])\b")
+VIETATE = re.compile(r"(?i)\b(non\s+conforme|conforme(?!\s+(?:a|al|alla|all'|alle|ai)\s*(?:informativ|quanto|dichiarat|codice|document))|conformi|sicuro|sicura|sicuri|certificat[oa])\b")
 AVVERTENZE = re.compile(r"(?i)(giudizi?\s+di\s+conformit|non\s+(?:è|e'|esprime|certifica|dichiara|può|puo|sono)|mai\s+«?(?:conforme|sicur)|«\s*(?:conforme|non conforme|sicuro|sicura)\s*»|conformit[aà]\s+(?:non|a\s+)|nessun\w*\s+(?:giudizio|dichiarazione)|esclusi|vietat)")
 
 results = []

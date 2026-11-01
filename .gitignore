@@ -1,0 +1,27 @@
+# Cartelle di audit: contengono evidenze e finding non corretti, non vanno MAI in Git
+audit/
+audit-*/
+*-audit/
+evidenze*/
+findings.json
+report/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Sistema/editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Pacchetti generati (si allegano alle release, non al repository)
+*.skill
+*.zip
+_backup*/
+
+# Eccezione: gli esempi anonimizzati in examples/ sono pubblicabili
+!examples/**/findings.json
+!examples/**/findings/

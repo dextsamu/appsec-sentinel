@@ -1,0 +1,29 @@
+{
+ "titolo": "Audit di sicurezza e documentale",
+ "tipo": "Report di audit · esempio anonimizzato",
+ "sottotitolo": "Applicazione web (caso reale anonimizzato)",
+ "oggetto": "Repository del cliente (esempio)",
+ "versione": "commit esempio0001",
+ "modalita": "rapido · solo analisi statica e documentale",
+ "data": "2026-10-30",
+ "autore": "Claude con appsec-sentinel",
+ "classificazione": "ESEMPIO · RISERVATO",
+ "sintesi": [
+  "Cinque finding confermati da codice o configurazione; nessun test dinamico, quindi nessuno «riprodotto».",
+  "Priorità alte: un endpoint di seed senza autenticazione che crea utenti con password nota, e un framework con advisory noti, fra cui bypass del middleware.",
+  "L'audit documentale mostra dichiarazioni di sicurezza non sostenute dal codice: l'MFA è descritta nel middleware ma applicata solo dal browser.",
+  "Tre documenti sovrapposti sullo stato di conformità, un rapporto di test senza autore né metodo, 37 file di lavoro nella radice del repository."
+ ],
+ "note_copertura": [
+  "Route API: 309 nel progetto, circa 14 lette; oltre 280 non lette."
+ ],
+ "non_verificato": [
+  "Cronologia Git, build di produzione, firewall e hosting.",
+  "Raggiungibilità dei singoli advisory.",
+  "Matrice dei controlli ASVS/NIST/ACN: non compilata in modalità rapido."
+ ],
+ "domande_aperte": [
+  "Le route di debug e di seed sono nella build di produzione?",
+  "Quale documento di conformità è quello vigente?"
+ ]
+}

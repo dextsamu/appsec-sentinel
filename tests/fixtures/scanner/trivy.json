@@ -1,0 +1,51 @@
+{
+ "Results": [
+  {
+   "Target": "package-lock.json",
+   "Class": "lang-pkgs",
+   "Vulnerabilities": [
+    {
+     "VulnerabilityID": "CVE-2000-0001",
+     "PkgName": "leftpad-demo",
+     "InstalledVersion": "1.0.0",
+     "Severity": "CRITICAL",
+     "FixedVersion": "1.0.1"
+    },
+    {
+     "VulnerabilityID": "CVE-2000-0002",
+     "PkgName": "leftpad-demo",
+     "InstalledVersion": "1.0.0",
+     "Severity": "HIGH"
+    }
+   ]
+  },
+  {
+   "Target": "Dockerfile",
+   "Class": "config",
+   "Misconfigurations": [
+    {
+     "ID": "DS002",
+     "Title": "Image user should not be root",
+     "Severity": "HIGH",
+     "Message": "Specify at least 1 USER command",
+     "CauseMetadata": {
+      "StartLine": 1
+     }
+    }
+   ]
+  },
+  {
+   "Target": "config.js",
+   "Class": "secret",
+   "Secrets": [
+    {
+     "RuleID": "generic-api-key",
+     "Title": "Generic API key",
+     "Severity": "HIGH",
+     "StartLine": 7,
+     "Match": "api_key = \"VALORE-DI-PROVA-TRIVY\""
+    }
+   ]
+  }
+ ]
+}

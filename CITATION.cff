@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "Se usi questa skill in un lavoro o in una pubblicazione, citala così."
+title: "appsec-sentinel"
+abstract: "Skill per agenti AI (nata per Claude, provata anche su Codex e Antigravity) per assessment di sicurezza applicativa e cloud: regole di ingaggio, test dimostrabili, finding strutturati e copertura con denominatori reali."
+type: software
+authors:
+  - family-names: Cucurnia
+    given-names: Samuele
+  - family-names: Previtali
+    given-names: Pietro
+license: Apache-2.0
+version: 1.2.0
+date-released: 2026-10-30
+repository-code: "https://github.com/dextsamu/appsec-sentinel"
+keywords:
+  - claude-skill
+  - appsec
+  - security-audit
+  - asvs
+  - nis2
+  - owasp

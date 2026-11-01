@@ -1,0 +1,4 @@
+endpoint,metodo,fonte_scoperta,identita,ruolo,tenant,oggetto,azione,controllo_atteso,test_eseguito,esito,finding_id
+ESEMPIO: /api/orders/{id},GET,codice+runtime,utente-B,utente,altro-tenant,ordine,lettura,403/404,no,,
+ESEMPIO: /api/orders/{id},GET,codice+runtime,utente-A,utente,stesso-tenant,ordine proprio,lettura,200,no,,
+ESEMPIO: /api/admin/export,POST,solo-codice,utente-A,utente,stesso-tenant,export,esportazione,403,no,,

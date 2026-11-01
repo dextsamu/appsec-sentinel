@@ -1,0 +1,3 @@
+{"site":[{"@name":"http://127.0.0.1:3000","alerts":[
+ {"pluginid":"10202","alert":"Absence of Anti-CSRF Tokens","riskcode":"3","riskdesc":"High (Medium)","cweid":"352","instances":[{"uri":"http://127.0.0.1:3000/login","method":"POST","evidence":"<form EVIDENZA-DI-PROVA-ZAP>","attack":"ATTACCO-DI-PROVA"}]},
+ {"pluginid":"10038","alert":"Content Security Policy Header Not Set","riskcode":"2","riskdesc":"Medium","cweid":"693","instances":[{"uri":"http://127.0.0.1:3000/","method":"GET"}]}]}]}

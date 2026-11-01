@@ -1,0 +1,24 @@
+appsec-sentinel
+Copyright 2026 Samuele Cucurnia e Pietro Previtali
+
+Questo prodotto è distribuito con licenza Apache-2.0 (vedi LICENSE).
+
+Origine: le skill derivano da un prompt di assessment di sicurezza applicativa e
+privacy fornito come base di partenza da Pietro Previtali, e sono state adattate
+e strutturate in skill da Samuele Cucurnia, con il supporto di Claude (Anthropic).
+
+Nessuna affiliazione: questo progetto non è affiliato, sponsorizzato né approvato
+da OWASP, NIST, MITRE, FIRST, CISA, ACN, AgID, Garante per la protezione dei dati
+personali, EDPB, Commissione europea, CINI, Anthropic o da altri
+enti, standard e prodotti citati. Nomi e marchi appartengono ai rispettivi titolari
+e sono usati solo per identificare le fonti (uso nominativo).
+
+Fonti di terzi: i riferimenti a standard, linee guida e normative sono collegamenti
+e sintesi in parole proprie; i testi originali restano di proprietà dei rispettivi
+titolari e sono soggetti alle loro condizioni d'uso. Vedi THIRD_PARTY.md.
+
+Esclusione di garanzie e responsabilità: il materiale è fornito «così com'è»,
+senza garanzie (vedi sezioni 7 e 8 della licenza). Non costituisce consulenza legale,
+parere del DPO né certificazione di conformità o di sicurezza, e non garantisce di
+individuare tutte le vulnerabilità. L'utente è l'unico responsabile dell'uso:
+i test su sistemi altrui richiedono autorizzazione scritta del titolare.

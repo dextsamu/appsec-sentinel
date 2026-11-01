@@ -1,0 +1,14 @@
+services:
+  db:
+    image: postgres:16
+    privileged: true
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=VALORE-IAC-DI-PROVA
+  app:
+    image: app:1.2.3
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      - JWT_SECRET=${JWT_SECRET}

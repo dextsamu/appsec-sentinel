@@ -1,0 +1,8 @@
+area_o_percorso,tipo,modalita_verifica,esaminato,motivo_esclusione,note
+src/middleware.ts,file,lettura integrale,si,,"autenticazione, CSP, ruoli"
+src/app/api (309 route),directory,ricerca euristica + lettura mirata,parziale,modalità rapido,circa 14 gestori letti; oltre 280 non letti
+.env* e secrets/,file,controllo valori mascherati,si,,solo la forma dei valori
+Dockerfile e file Compose,file,lettura mirata,si,,"porte, utente, immagine base"
+package.json e lockfile,file,npm audit su lockfile,si,,raggiungibilità non valutata
+Documentazione (65 file in docs/ e 37 nella radice),directory,lettura mirata,parziale,modalità rapido,letti per intero solo i documenti citati
+"Pagine, componenti, worker, test",directory,non letto,no,modalità rapido,

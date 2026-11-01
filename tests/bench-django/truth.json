@@ -1,0 +1,157 @@
+{
+  "_nota": "Banco Django: classi comuni nei gestionali Python. Non va dato all'agente. Dopo i primi due giri reali: /cerca/ senza filtro per sezione è un difetto vero piantato senza volerlo (D11); l'esca E02 resta solo sulla SQL injection.",
+  "difetti": [
+    {
+      "id": "D01",
+      "area": "R06",
+      "alto": true,
+      "titolo": "SECRET_KEY scritta in settings.py",
+      "file": [
+        "gestionale/settings.py"
+      ],
+      "parole": "secret_key|chiave|segret"
+    },
+    {
+      "id": "D02",
+      "area": "R12",
+      "alto": false,
+      "titolo": "DEBUG attivo per impostazione predefinita (DEBUG=1 se la variabile manca) e ALLOWED_HOSTS='*'",
+      "file": [
+        "gestionale/settings.py"
+      ],
+      "parole": "debug|allowed_hosts"
+    },
+    {
+      "id": "D03",
+      "area": "R03",
+      "alto": true,
+      "titolo": "socio_update: mass assignment di tutti i campi (anche ruolo e sezione) su qualunque socio, senza CSRF",
+      "file": [
+        "soci/views.py"
+      ],
+      "parole": "mass|setattr|ruol|campi|privileg|csrf"
+    },
+    {
+      "id": "D04",
+      "area": "R03",
+      "alto": true,
+      "titolo": "ricevuta: BOLA, ricevute con codice fiscale di qualunque socio di qualunque sezione",
+      "file": [
+        "soci/views.py"
+      ],
+      "parole": "ricevut|bola|idor|codice fiscale|altr"
+    },
+    {
+      "id": "D05",
+      "area": "R11",
+      "alto": true,
+      "titolo": "Deserializzazione non sicura: yaml.load con Loader non sicuro e pickle.loads da un header",
+      "file": [
+        "soci/views.py"
+      ],
+      "parole": "pickle|yaml|deserializ"
+    },
+    {
+      "id": "D06",
+      "area": "R11",
+      "alto": true,
+      "titolo": "SSRF: anteprima-link scarica qualunque URL dato dall'utente",
+      "file": [
+        "soci/views.py"
+      ],
+      "parole": "ssrf|url|anteprima|requests\\.get"
+    },
+    {
+      "id": "D07",
+      "area": "R11",
+      "alto": false,
+      "titolo": "Redirect aperto dopo il login (parametro next)",
+      "file": [
+        "soci/views.py"
+      ],
+      "parole": "redirect|next"
+    },
+    {
+      "id": "D08",
+      "area": "R09",
+      "alto": true,
+      "titolo": "pull_request_target con checkout del codice della PR e segreto nell'ambiente",
+      "file": [
+        ".github/workflows/ci.yml"
+      ],
+      "parole": "pull_request_target|checkout|head\\.sha|pr"
+    },
+    {
+      "id": "D09",
+      "area": "R07",
+      "alto": false,
+      "titolo": "Dipendenze con vulnerabilità note (Django 4.2.7, PyYAML 5.3.1, requests 2.31.0)",
+      "file": [
+        "requirements.txt"
+      ],
+      "parole": "django|pyyaml|requests|advisory|cve|vulnerab"
+    },
+    {
+      "id": "D10",
+      "area": "R06",
+      "alto": false,
+      "titolo": "Segreto CRON_SECRET rimosso dal codice ma presente nella storia Git",
+      "file": [
+        "scripts/rotate-cron.sh"
+      ],
+      "parole": "cron|storia|history"
+    },
+    {
+      "id": "D11",
+      "area": "R03",
+      "alto": false,
+      "titolo": "cerca: restituisce il telefono di tutti i soci di tutte le sezioni (manca il filtro per sezione; la query è parametrizzata)",
+      "file": [
+        "soci/views.py"
+      ],
+      "parole": "telefon|tutt[ie] le sezion|sezion|cerca"
+    }
+  ],
+  "esche": [
+    {
+      "id": "E01",
+      "titolo": "socio_detail filtrato per sezione: corretto",
+      "file": [
+        "soci/views.py"
+      ],
+      "parole": "socio_detail[^.]{0,80}(bola|idor|altr[ae] sezion)"
+    },
+    {
+      "id": "E02",
+      "titolo": "cerca usa una query parametrizzata: non è SQL injection",
+      "file": [
+        "soci/views.py"
+      ],
+      "parole": "(sql.?injection|iniezione sql)[^.]{0,80}(cerca|like|telefono)|(cerca|like)[^.]{0,80}(sql.?injection|iniezione sql)"
+    },
+    {
+      "id": "E03",
+      "titolo": "Porta dell'app legata a 127.0.0.1: non esposta",
+      "file": [
+        "docker-compose.yml"
+      ],
+      "parole": "8000"
+    },
+    {
+      "id": "E04",
+      "titolo": ".env.example con soli segnaposto",
+      "file": [
+        ".env.example"
+      ],
+      "parole": "segret|secret|password|credenzial"
+    },
+    {
+      "id": "E05",
+      "titolo": "Template con autoescape di Django: nessuna XSS",
+      "file": [
+        "soci/templates/soci/benvenuto.html"
+      ],
+      "parole": "xss"
+    }
+  ]
+}

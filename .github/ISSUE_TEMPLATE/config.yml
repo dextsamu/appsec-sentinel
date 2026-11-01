@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Segnalazione di sicurezza (riservata)
+    url: https://github.com/dextsamu/appsec-sentinel/security/advisories/new
+    about: Per problemi di sicurezza o istruzioni che potrebbero indurre a test non autorizzati usa la segnalazione privata, non una issue pubblica.

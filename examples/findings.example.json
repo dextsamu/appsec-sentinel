@@ -1,0 +1,62 @@
+[
+  {
+    "id": "APP-001",
+    "titolo": "Un utente può leggere le pratiche di un altro ente",
+    "categoria": "Autorizzazione / accesso diretto agli oggetti",
+    "asset": "api.esempio.invalid /api/pratiche/{id}",
+    "ambiente": "staging",
+    "versione": "commit esempio0001",
+    "stato": "riprodotto dinamicamente",
+    "severita": "alta",
+    "attore": "Utente autenticato dell'ente A, senza privilegi particolari, tramite l'API pubblica",
+    "confine_fiducia": "Separazione tra enti (tenant)",
+    "prova": {
+      "tipo": "richiesta-risposta",
+      "descrizione": "GET /api/pratiche/1042 con la sessione dell'ente A restituisce 200 e i dati dell'ente B (redatti). Controllo negativo: GET /api/pratiche/9999 restituisce 404.",
+      "riferimenti_file": [
+        "src/pratiche/controller.py:48"
+      ],
+      "test_eseguito": true,
+      "data_esecuzione": "2026-10-29T10:00:00+01:00"
+    },
+    "atteso": "403 o 404 per una pratica di un altro ente",
+    "osservato": "200 con il contenuto della pratica di un altro ente",
+    "riproduzione": [
+      "Accedere con l'utente sintetico dell'ente A",
+      "Richiedere la pratica 1042, creata per l'ente B con dati finti",
+      "Confrontare la risposta con il controllo negativo"
+    ],
+    "impatto": {
+      "reale": "Lettura di pratiche altrui, dimostrata con due account sintetici",
+      "potenziale": "Enumerazione di tutti gli identificativi numerici",
+      "condizioni_limitanti": "Serve un account autenticato"
+    },
+    "motivazione_severita": "Accesso non autorizzato a dati di altri enti, sfruttabile da qualsiasi utente autenticato senza interazioni particolari.",
+    "cwe": [
+      "CWE-639"
+    ],
+    "riferimenti_standard": [
+      "ASVS v5.0.0 (controllo di accesso)",
+      "WSTG-ATHZ-04"
+    ],
+    "intervento": {
+      "correzione": "Verificare l'appartenenza all'ente nel livello dati, non solo nel controller",
+      "mitigazione_temporanea": "Disattivare l'endpoint per gli utenti non amministratori",
+      "responsabile_proposto": "Sviluppatore dell'applicazione"
+    },
+    "retest": "Ripetere le stesse chiamate con entrambi gli account e con un terzo ruolo; provare anche l'export e le notifiche.",
+    "limiti": "Non verificati l'export CSV e le notifiche. Dati e indirizzi di questo esempio sono inventati.",
+    "confidenza": "alta",
+    "smentita": {
+      "esito": "resiste",
+      "verificatore": "secondo agente, sessione separata, senza il ragionamento dell'autore",
+      "tentativi": [
+        "Il 200 dipende dalla cache o da una risposta condivisa tra enti? No: la richiesta con l'ente A senza cache restituisce lo stesso contenuto dell'ente B",
+        "Esiste un controllo a monte (gateway, middleware) che il test ha aggirato? No: la route passa solo dal controller indicato e il codice a src/pratiche/controller.py:48 non confronta l'ente della pratica con quello della sessione",
+        "I dati dell'ente B sono davvero di un altro ente o sono dati condivisi per progetto? Sono pratiche create per l'ente B con dati finti: appartengono ad altro tenant"
+      ],
+      "data": "2026-10-29T11:30:00+01:00",
+      "note": "Esempio inventato: in un caso reale elenca anche ciò che il verificatore non ha potuto provare."
+    }
+  }
+]

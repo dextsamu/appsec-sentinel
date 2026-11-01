@@ -1,0 +1,252 @@
+[
+  {
+    "id": "APP-001",
+    "titolo": "File di configurazione staging con valori reali dichiarati, tracciato in Git",
+    "categoria": "Gestione dei segreti",
+    "asset": "repository del cliente (esempio), file .env.staging.example",
+    "ambiente": "sorgente",
+    "versione": "commit esempio0001",
+    "stato": "confermato da codice o configurazione",
+    "severita": "media",
+    "attore": "Chiunque abbia accesso in lettura al repository (collaboratori, GitHub App, eventuale futura pubblicazione)",
+    "confine_fiducia": "Repository sorgente / ambiente di staging",
+    "prova": {
+      "tipo": "configurazione",
+      "descrizione": "Il file, nonostante il suffisso .example, apre con il commento che contiene i valori reali per staging e che non va committato. Cinque chiavi sensibili (password PostgreSQL, password Redis, NEXTAUTH_SECRET, CRON_SECRET, chiave privata VAPID) hanno valori con lunghezza ed entropia tipiche di segreti veri, non segnaposto. Valori non riportati. Le regole .gitignore lo riammettono esplicitamente al tracciamento.",
+      "riferimenti_file": [
+        ".env.staging.example",
+        ".gitignore"
+      ],
+      "test_eseguito": false,
+      "data_esecuzione": "2026-01-15"
+    },
+    "atteso": "Nel repository solo segnaposto; i valori reali fuori da Git (variabili d'ambiente o secret manager)",
+    "osservato": "Valori dall'aspetto reale in un file tracciato; l'autenticità non è stata provata (nessuna prova fuori perimetro)",
+    "impatto": {
+      "reale": "Esposizione dei segreti a chi legge il repository",
+      "potenziale": "Se coincidono con quelli in uso: falsificazione di sessioni, accesso a database/cache di staging, invio di notifiche push; riuso su altri ambienti",
+      "condizioni_limitanti": "Repository privato; ambiente staging; autenticità e raggiungibilità non verificate"
+    },
+    "motivazione_severita": "Segreti plausibilmente reali in Git, ma repository privato e ambiente non produttivo. Sale ad alta se riusati in produzione o se il repository diventa pubblico.",
+    "cwe": [
+      "CWE-798",
+      "CWE-540"
+    ],
+    "riferimenti_standard": [
+      "ASVS v5.0.0 (gestione dei segreti)",
+      "NIST SP 800-53 SC-12, IA-5"
+    ],
+    "intervento": {
+      "correzione": "Ruotare i cinque segreti, sostituire i valori con segnaposto, togliere dal tracciamento, valutare la pulizia della cronologia Git",
+      "mitigazione_temporanea": "Ruotare subito i segreti; escludere il file da .gitignore",
+      "responsabile_proposto": "Proprietario del progetto"
+    },
+    "retest": "Verificare che il file contenga solo segnaposto, che la cronologia non contenga i vecchi valori e che i segreti in uso siano diversi.",
+    "limiti": "Clone shallow: cronologia non esaminata. Non provato se i valori siano in uso. Valori mai riportati nel report. Esempio ricavato da un collaudo reale e anonimizzato: nomi, organizzazioni e identificatori sono stati sostituiti.",
+    "confidenza": "media"
+  },
+  {
+    "asset": "repository del cliente (esempio)",
+    "ambiente": "sorgente",
+    "versione": "commit esempio0001",
+    "stato": "confermato da codice o configurazione",
+    "confidenza": "media",
+    "id": "APP-002",
+    "titolo": "Endpoint di arricchimento demo esente da autenticazione crea utenti con password fissa",
+    "categoria": "Controllo degli accessi / credenziali predefinite",
+    "severita": "alta",
+    "attore": "Chiunque raggiunga l'applicazione da Internet, senza account",
+    "confine_fiducia": "Perimetro pubblico / autenticato",
+    "prova": {
+      "tipo": "codice",
+      "descrizione": "Il middleware elenca /api/internal/demo-seed tra i percorsi pubblici. Il gestore POST non ha controlli di sessione, ruolo, token o ambiente; calcola l'hash di una password fissa scritta nel codice e fa upsert di utenti RESPONSABILE e VOLONTARIO nelle organizzazioni con slug da produzione (org-a, org-b, org-c), se esistono. Le email sono prevedibili (<ruolo>.<prefisso>@demo.example, stesso schema per i volontari) e l'upsert ha update vuoto: non sovrascrive account esistenti.",
+      "riferimenti_file": [
+        "src/middleware.ts",
+        "src/app/api/internal/demo-seed/route.ts",
+        "src/app/api/internal/demo-seed/route.ts",
+        "src/app/api/internal/demo-seed/route.ts"
+      ],
+      "test_eseguito": false,
+      "data_esecuzione": "2026-01-15"
+    },
+    "atteso": "Endpoint di seed non esposto in produzione, o protetto da ruolo/token e disattivato per ambiente",
+    "osservato": "Raggiungibile senza autenticazione; crea utenti con credenziale nota (non riportata)",
+    "impatto": {
+      "reale": "Nessun test eseguito: l'effetto dipende dall'esistenza delle organizzazioni indicate",
+      "potenziale": "Creazione di account RESPONSABILE e VOLONTARIO con password nota e email prevedibili in organizzazioni reali, con accesso ai loro dati; sede e mezzi demo aggiunti al database",
+      "condizioni_limitanti": "Le tre organizzazioni devono esistere nel database; non sovrascrive account già presenti (update vuoto)"
+    },
+    "motivazione_severita": "Percorso senza autenticazione verso la creazione di account con password nota; abbassabile se l'endpoint non è presente in produzione o le organizzazioni non esistono.",
+    "cwe": [
+      "CWE-306",
+      "CWE-798"
+    ],
+    "riferimenti_standard": [
+      "ASVS v5.0.0 (controllo di accesso, credenziali predefinite)",
+      "WSTG-ATHN-02",
+      "NIST SP 800-53 AC-3, IA-5"
+    ],
+    "intervento": {
+      "correzione": "Rimuovere l'endpoint dalla build di produzione e dall'elenco pubblico; se serve, eseguire il seed solo da script CLI",
+      "mitigazione_temporanea": "Bloccare /api/internal/ dal reverse proxy; verificare se esistono account demo in produzione e cambiarne le password",
+      "responsabile_proposto": "Proprietario / sviluppatore"
+    },
+    "retest": "Verificare su staging con dati finti che la richiesta senza sessione riceva 401/404 e che nessun utente venga creato.",
+    "limiti": "Non eseguito. Non verificato se la build di produzione contenga la route né se le organizzazioni esistano. Esempio ricavato da un collaudo reale e anonimizzato: nomi, organizzazioni e identificatori sono stati sostituiti."
+  },
+  {
+    "asset": "repository del cliente (esempio)",
+    "ambiente": "sorgente",
+    "versione": "commit esempio0001",
+    "stato": "confermato da codice o configurazione",
+    "confidenza": "media",
+    "id": "APP-003",
+    "titolo": "Route di debug e seed raggiungibili da qualsiasi utente autenticato, con effetti di stato via GET",
+    "categoria": "Controllo degli accessi / funzioni amministrative",
+    "severita": "media",
+    "attore": "Utente autenticato di qualsiasi organizzazione e ruolo",
+    "confine_fiducia": "Separazione tra ruoli e tra organizzazioni",
+    "prova": {
+      "tipo": "codice",
+      "descrizione": "Il middleware richiede solo una sessione per questi percorsi. I gestori GET non controllano il ruolo: debug/fix-modules modifica moduli di un'organizzazione individuata da un indirizzo email fisso scritto nel codice; internal/seed-demo e seed-sector fanno upsert di organizzazioni, sedi e utenti (seed-demo crea utenti ADMIN con un hash di password nota). Altre route di debug (verify-timbrature, init-calendars) richiedono ADMIN: l'assenza del controllo qui è una svista, non una scelta.",
+      "riferimenti_file": [
+        "src/app/api/debug/fix-modules/route.ts",
+        "src/app/api/internal/seed-demo/route.ts",
+        "src/app/api/internal/seed-demo/route.ts",
+        "src/app/api/internal/seed-sector/route.ts",
+        "src/middleware.ts",
+        "src/app/api/debug/verify-timbrature/route.ts"
+      ],
+      "test_eseguito": false,
+      "data_esecuzione": "2026-01-15"
+    },
+    "atteso": "Funzioni amministrative o di debug riservate a ruolo adeguato, non invocabili con GET e assenti in produzione",
+    "osservato": "Nessun controllo di ruolo; mutazioni tramite GET (attivabili anche da link o immagine su pagina terza per un utente collegato)",
+    "impatto": {
+      "reale": "Nessun test eseguito",
+      "potenziale": "Modifica della configurazione di un'organizzazione; creazione di organizzazioni demo e di account ADMIN con password nota; effetti attivabili via CSRF su GET se i cookie di sessione sono inviati cross-site (SameSite da verificare)",
+      "condizioni_limitanti": "Serve una sessione valida; effetti su organizzazioni demo/indirizzo fisso"
+    },
+    "motivazione_severita": "Operazioni amministrative senza controllo di ruolo, ma con perimetro di effetto limitato e sessione obbligatoria.",
+    "cwe": [
+      "CWE-862",
+      "CWE-352"
+    ],
+    "riferimenti_standard": [
+      "ASVS v5.0.0 (controllo di accesso a livello di funzione)",
+      "WSTG-ATHZ-02",
+      "NIST SP 800-53 AC-3, AC-6"
+    ],
+    "intervento": {
+      "correzione": "Eliminare le route dalla build di produzione o imporre ruolo ADMIN/SystemAdmin e metodo POST con protezione CSRF",
+      "mitigazione_temporanea": "Bloccare /api/debug e /api/internal dal reverse proxy",
+      "responsabile_proposto": "Sviluppatore"
+    },
+    "retest": "Con un utente VOLONTARIO sintetico su staging: GET sulle tre route deve dare 403/404 e non modificare dati.",
+    "limiti": "Non eseguito. Il resto delle route di debug e il comportamento dei cookie SameSite non sono stati esaminati. Esempio ricavato da un collaudo reale e anonimizzato: nomi, organizzazioni e identificatori sono stati sostituiti.",
+    "privacy": {
+      "norma_articolo": "Art. 5.1.c e 32 GDPR (minimizzazione, sicurezza)",
+      "applicabilita": "Indirizzo email fisso nel codice sorgente",
+      "rischio_interessati": "Basso",
+      "da_sottoporre_a": "titolare"
+    }
+  },
+  {
+    "asset": "repository del cliente (esempio)",
+    "ambiente": "sorgente",
+    "versione": "commit esempio0001",
+    "stato": "confermato da codice o configurazione",
+    "confidenza": "media",
+    "id": "APP-004",
+    "titolo": "Accettazione preventivo senza controllo di proprietà: risposta con password temporanea e dati del contatto",
+    "categoria": "Controllo degli accessi a livello di oggetto / esposizione di dati",
+    "severita": "media",
+    "attore": "Utente autenticato di qualsiasi organizzazione che conosca l'identificativo di un preventivo",
+    "confine_fiducia": "Separazione tra organizzazioni; area commerciale",
+    "prova": {
+      "tipo": "codice",
+      "descrizione": "Le route /api/quotes/[id] e /api/quotes/[id]/accept non verificano sessione, ruolo o appartenenza; il middleware non le elenca fra i percorsi pubblici, quindi basta una sessione qualsiasi (il flusso, descritto come pubblico, è anche incoerente col middleware). GET restituisce preventivo con lead (nome, email, telefono, messaggio) e organizzazione. POST crea un'organizzazione e un utente ADMIN e restituisce nella risposta l'intero risultato, che include la password temporanea in chiaro.",
+      "riferimenti_file": [
+        "src/app/api/quotes/[id]/route.ts",
+        "src/app/api/quotes/[id]/accept/route.ts",
+        "src/app/api/quotes/[id]/accept/route.ts",
+        "src/app/api/quotes/[id]/accept/route.ts"
+      ],
+      "test_eseguito": false,
+      "data_esecuzione": "2026-01-15"
+    },
+    "atteso": "Solo il destinatario del preventivo (token dedicato) può leggerlo/accettarlo; password mai restituita nella risposta, solo via email",
+    "osservato": "Nessun controllo di proprietà; password temporanea nel corpo della risposta",
+    "impatto": {
+      "reale": "Nessun test eseguito",
+      "potenziale": "Lettura di dati personali di contatti commerciali; presa di controllo dell'account amministratore creato dall'accettazione, da parte di chi non è il destinatario",
+      "condizioni_limitanti": "Servono sessione e identificativo (cuid, non enumerabile ma non segreto); preventivo non scaduto né già accettato"
+    },
+    "motivazione_severita": "Possibile appropriazione dell'account ADMIN generato, ma richiede identificativo e sessione; sale ad alta se gli identificativi sono ricavabili da altre route.",
+    "cwe": [
+      "CWE-639",
+      "CWE-200",
+      "CWE-522"
+    ],
+    "riferimenti_standard": [
+      "ASVS v5.0.0 (controllo di accesso, gestione credenziali)",
+      "WSTG-ATHZ-04",
+      "NIST SP 800-53 AC-3, IA-5"
+    ],
+    "intervento": {
+      "correzione": "Link con token monouso e scadenza; togliere la password dalla risposta; ridurre i campi restituiti",
+      "mitigazione_temporanea": "Disabilitare le route finché non protette",
+      "responsabile_proposto": "Sviluppatore"
+    },
+    "retest": "Con due organizzazioni sintetiche: la seconda non deve leggere né accettare il preventivo della prima; la risposta non deve contenere password.",
+    "limiti": "Non eseguito. Non verificato come gli identificativi dei preventivi vengano diffusi (email, UI, altre API). Esempio ricavato da un collaudo reale e anonimizzato: nomi, organizzazioni e identificatori sono stati sostituiti."
+  },
+  {
+    "asset": "repository del cliente (esempio)",
+    "ambiente": "sorgente",
+    "versione": "commit esempio0001",
+    "stato": "confermato da codice o configurazione",
+    "confidenza": "media",
+    "id": "APP-005",
+    "titolo": "Next.js 16.1.7 e Auth.js beta con advisory noti, inclusi bypass del middleware su cui poggia l'autenticazione",
+    "categoria": "Componenti vulnerabili / supply chain",
+    "severita": "alta",
+    "attore": "Utente non autenticato da Internet (per i bypass del middleware e i DoS); dipende dall'advisory",
+    "confine_fiducia": "Perimetro pubblico / autenticato",
+    "prova": {
+      "tipo": "log-tool",
+      "descrizione": "npm audit sul solo lockfile (invia nomi e versioni dei pacchetti, nessun codice): next 16.1.7 ricade nell'intervallo vulnerabile 9.3.4-canary.0 – 16.4.0 con advisory fra cui tre di bypass del middleware/proxy (GHSA-26hh-7cqf-hhc6, GHSA-492v-c6pp-mqqv, GHSA-267c-6grr-h53f), SSRF, DoS e XSS con nonce CSP. Auth.js (@auth/core, tramite next-auth 5.0.0-beta.30): omografia nella normalizzazione email (critical, GHSA-7rqj-j65f-68wh) e getToken con eccezione non gestita. Il totale in produzione è 39 (4 critical, 20 high). L'autenticazione dell'applicazione è centralizzata nel middleware, per cui i bypass sono pertinenti.",
+      "riferimenti_file": [
+        "package.json",
+        "package-lock.json",
+        "src/middleware.ts"
+      ],
+      "test_eseguito": true,
+      "data_esecuzione": "2026-01-15"
+    },
+    "atteso": "Versioni senza advisory noti, o advisory valutati come non raggiungibili e documentati",
+    "osservato": "Versioni in intervallo vulnerabile; raggiungibilità non valutata caso per caso",
+    "impatto": {
+      "reale": "Non dimostrato",
+      "potenziale": "Aggiramento del middleware (quindi dei controlli di sessione e ruolo sulle route), DoS, SSRF; i tre advisory critical su RCE riguardano Image Optimization con AVIF/SVG, `use cache` e host Windows: nel codice non c'è `use cache` e remotePatterns è vuoto, ma l'ottimizzazione immagini e il sistema di hosting non sono stati valutati",
+      "condizioni_limitanti": "Raggiungibilità per ciascun advisory non verificata; alcuni richiedono configurazioni specifiche (i18n Pages Router, Turbopack, Windows)"
+    },
+    "motivazione_severita": "Il bypass del middleware vale quanto l'autenticazione centralizzata; severità alta in attesa della verifica di raggiungibilità, che può abbassarla.",
+    "cwe": [
+      "CWE-1395",
+      "CWE-863"
+    ],
+    "riferimenti_standard": [
+      "ASVS v5.0.0 (dipendenze)",
+      "NIST SP 800-53 SI-2, RA-5",
+      "ACN PR.PS-02 (software mantenuto)"
+    ],
+    "intervento": {
+      "correzione": "Aggiornare Next.js alla prima versione fuori dall'intervallo (verificare sulle pagine degli advisory), Auth.js alla versione corretta, nodemailer; rieseguire npm audit; documentare ciò che resta",
+      "mitigazione_temporanea": "Aggiungere controlli di sessione e ruolo anche nei gestori delle route, non solo nel middleware",
+      "responsabile_proposto": "Sviluppatore"
+    },
+    "retest": "npm audit --omit=dev dopo l'aggiornamento; test di regressione delle route protette con e senza sessione.",
+    "limiti": "Raggiungibilità non valutata; npm audit usa un database online al momento dell'esecuzione. Altri advisory high (nodemailer, dompurify, sharp, lodash...) non analizzati uno a uno. Esempio ricavato da un collaudo reale e anonimizzato: nomi, organizzazioni e identificatori sono stati sostituiti."
+  }
+]

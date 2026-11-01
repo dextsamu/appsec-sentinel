@@ -1,0 +1,18 @@
+// FIXTURE: middleware di auth dichiarato a monte, come in molte app Express. Valori inventati.
+const express = require('express')
+const app = express()
+const security = require('./security')
+const adminRouter = require('./routes/admin')
+
+app.use('/api/basket', security.isAuthorized())
+app.use('/api/basket/:id', security.isAuthorized())
+app.get('/api/users', security.isAuthorized())
+app.get('/api/users', listUsers)
+app.get('/api/orders/:id', security.isAuthorized(), getOrder)
+app.get('/api/basket/:id', getBasket)
+app.post('/api/login', login)
+app.get('/metrics', serveMetrics)
+app.use('/ftp', serveIndex('ftp'))
+app.use('/admin', adminRouter)
+app.use(cors())
+app.get('/api/me', isLoggedIn, me)

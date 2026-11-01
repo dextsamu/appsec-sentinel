@@ -1,0 +1,28 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pacchetto della skill
+        run: |
+          mkdir -p dist/appsec-sentinel
+          cp -r SKILL.md LICENSE NOTICE references assets scripts dist/appsec-sentinel/
+          find dist -name "__pycache__" -prune -exec rm -rf {} +
+          (cd dist && zip -qr appsec-sentinel.skill appsec-sentinel)
+          unzip -l dist/appsec-sentinel.skill
+      - name: Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" dist/appsec-sentinel.skill \
+            --title "${GITHUB_REF_NAME}" \
+            --notes-file <(awk -v v="${GITHUB_REF_NAME#v}" '/^## \[/{p = index($0, "[" v "]") > 0} p' CHANGELOG.md)

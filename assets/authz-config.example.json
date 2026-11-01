@@ -1,0 +1,11 @@
+{
+  "base_url": "http://127.0.0.1:3000",
+  "timeout": 5,
+  "max_requests": 200,
+  "delay_ms": 100,
+  "identities": {
+    "anonimo": {},
+    "utente_a": {"headers": {"Authorization": "env:TOKEN_UTENTE_A"}},
+    "utente_b": {"cookies": {"session": "env:COOKIE_UTENTE_B"}}
+  }
+}

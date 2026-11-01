@@ -1,0 +1,4 @@
+area_o_percorso,tipo,modalita_verifica,esaminato,motivo_esclusione,note
+ESEMPIO: src/,directory,revisione semantica,si,,
+ESEMPIO: package-lock.json,file generato,controllo automatico,si,,solo SCA; non letto riga per riga
+ESEMPIO: node_modules/,dipendenze,esclusione motivata,no,dipendenze di terzi enumerate via SBOM,

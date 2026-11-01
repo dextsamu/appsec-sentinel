@@ -1,0 +1,13 @@
+openapi: 3.0.3
+info: {title: demo, version: "1"}
+servers: [{url: "https://api.example.test/api"}]
+security: [{bearerAuth: []}]
+paths:
+  /orders/{id}:
+    get: {operationId: getOrder}
+  /health:
+    get: {operationId: health, security: []}
+  /reports:
+    post: {operationId: createReport}
+  /legacy/export:
+    get: {operationId: legacyExport}

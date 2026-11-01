@@ -1,0 +1,6 @@
+{"route_totali": 6,
+ "senza_auth_evidente": ["/api/admin/users", "/api/debug/env", "/api/health", "/api/login"],
+ "fornitori_attesi": ["Twilio", "Google Fonts"],
+ "modelli_con_dati_personali": ["User", "AccessLog"],
+ "job_pianificati_minimi": 1,
+ "segreto_nel_codice": "server.js"}

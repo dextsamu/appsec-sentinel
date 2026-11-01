@@ -1,0 +1,22 @@
+name: Fonte, link o standard da aggiornare
+description: Un link rotto, una versione cambiata o un requisito citato in modo inesatto.
+labels: ["fonti"]
+body:
+  - type: input
+    id: dove
+    attributes:
+      label: File e riga
+      description: Per esempio references/baselines-sources.md.
+    validations:
+      required: true
+  - type: textarea
+    id: problema
+    attributes:
+      label: Che cosa non è più corretto
+    validations:
+      required: true
+  - type: input
+    id: fonte
+    attributes:
+      label: Fonte ufficiale aggiornata
+      description: Indirizzo del documento ufficiale e data di consultazione.

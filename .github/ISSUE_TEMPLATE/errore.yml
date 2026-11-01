@@ -1,0 +1,27 @@
+name: Errore nelle istruzioni o negli script
+description: Un'istruzione sbagliata, ambigua o pericolosa, oppure un bug negli script.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Non inserire segreti, dati personali reali, nomi di clienti o risultati di audit reali.
+        Se il problema potrebbe indurre a test non autorizzati o a esporre dati, usa la segnalazione privata.
+  - type: textarea
+    id: cosa
+    attributes:
+      label: Cosa succede
+      description: Descrivi l'errore e dove si trova (file e sezione, oppure script e comando).
+    validations:
+      required: true
+  - type: textarea
+    id: atteso
+    attributes:
+      label: Cosa ti aspettavi
+    validations:
+      required: true
+  - type: input
+    id: versione
+    attributes:
+      label: Versione
+      description: Tag o commit, per esempio v1.1.0.

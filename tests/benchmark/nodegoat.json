@@ -1,0 +1,7 @@
+{
+  "app": "OWASP NodeGoat",
+  "nota_sulla_verita": "Elenco ricavato in modo meccanico da app/routes/index.js (presenza o assenza di isLoggedIn sulla route): NON è un dataset ufficiale e misura solo il riconoscimento dell'autenticazione, non le vulnerabilità. Usato come seconda app dopo Juice Shop, ma i risultati hanno guidato una correzione: non è un test indipendente.",
+  "senza_auth": [["/", "GET"], ["/login", "GET"], ["/login", "POST"], ["/signup", "GET"], ["/signup", "POST"], ["/logout", "GET"]],
+  "con_auth": [["/dashboard", "GET"], ["/profile", "GET"], ["/profile", "POST"], ["/contributions", "GET"], ["/contributions", "POST"],
+               ["/benefits", "GET"], ["/memos", "GET"], ["/memos", "POST"], ["/allocations/:userId", "GET"], ["/learn", "GET"], ["/research", "GET"]]
+}

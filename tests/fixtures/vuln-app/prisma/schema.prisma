@@ -1,0 +1,17 @@
+model User {
+  id           String   @id
+  email        String
+  telefono     String?
+  codiceFiscale String?
+  createdAt    DateTime @default(now())
+}
+model AccessLog {
+  id        String   @id
+  ipAddress String
+  createdAt DateTime @default(now())
+}
+model Order {
+  id        String   @id
+  userId    String
+  createdAt DateTime @default(now())
+}

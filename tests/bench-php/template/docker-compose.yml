@@ -1,0 +1,12 @@
+services:
+  app:
+    build: .
+    environment:
+      APP_KEY: "base64:__APP_KEY__"
+      DB_PASSWORD: ${DB_PASSWORD}
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "3306:3306"

@@ -1,0 +1,2 @@
+{"name":"vuln-app-fixture","version":"0.0.1","private":true,
+ "dependencies":{"express":"4.17.1","lodash":"4.17.15","twilio":"4.0.0","next":"14.0.0","node-cron":"3.0.0"}}

@@ -1,0 +1,212 @@
+{
+  "_nota": "Verità del banco di prova. NON va copiata nella cartella analizzata dall'agente (score_bench.py prepare non la copia). Ogni difetto è riconosciuto se un finding cita uno dei file E il testo (titolo, osservato, categoria, prova) contiene una delle parole. Le esche contano come falso allarme solo se riportate con severità media o superiore. Le esche si confrontano solo con titolo e osservato (ciò che il finding afferma), non con la descrizione della prova. D06 (seed) è diventato B16: il README lo fa eseguire nel deploy, quindi è un difetto vero (trovato da entrambi i primi giri reali).",
+  "difetti": [
+    {
+      "id": "B01",
+      "area": "R02",
+      "alto": true,
+      "titolo": "Route di demo pubblica che crea utenti con password fissa",
+      "file": [
+        "src/app/api/internal/demo-seed/route.ts"
+      ],
+      "parole": "demo"
+    },
+    {
+      "id": "B02",
+      "area": "R03",
+      "alto": true,
+      "titolo": "PATCH /api/users/[id]: mass assignment di ruolo e isAdmin, nessun controllo sul ruolo del target",
+      "file": [
+        "src/app/api/users/[id]/route.ts"
+      ],
+      "parole": "mass|privileg|ruol|role|isadmin|campi|flag|assign"
+    },
+    {
+      "id": "B03",
+      "area": "R04",
+      "alto": true,
+      "titolo": "Il secondo fattore non è mai verificato al login (solo mfaEnabled)",
+      "file": [
+        "src/app/api/auth/login/route.ts"
+      ],
+      "parole": "mfa|secondo fattore|2fa|totp|second factor"
+    },
+    {
+      "id": "B04",
+      "area": "R01",
+      "alto": true,
+      "titolo": "Header x-org-id / x-is-admin non ripuliti dal middleware: tenant e admin falsificabili",
+      "file": [
+        "src/middleware.ts",
+        "src/lib/tenant.ts"
+      ],
+      "parole": "x-org-id|x-is-admin|header"
+    },
+    {
+      "id": "B05",
+      "area": "R04",
+      "alto": false,
+      "titolo": "Utenti disattivati conservano le sessioni (requireAuth non controlla isActive, JWT 30 giorni)",
+      "file": [
+        "src/lib/auth.ts",
+        "src/app/api/auth/login/route.ts"
+      ],
+      "parole": "isactive|disattiv|deactivat|revoc"
+    },
+    {
+      "id": "B06",
+      "area": "R05",
+      "alto": false,
+      "titolo": "IP dal primo valore di X-Forwarded-For: rate limit del login aggirabile",
+      "file": [
+        "src/lib/client-ip.ts",
+        "nginx.conf"
+      ],
+      "parole": "forwarded|xff"
+    },
+    {
+      "id": "B07",
+      "area": "R06",
+      "alto": true,
+      "titolo": "SESSION_SECRET scritto in docker-compose.yml",
+      "file": [
+        "docker-compose.yml"
+      ],
+      "parole": "session_secret|segreto di firma|signing"
+    },
+    {
+      "id": "B08",
+      "area": "R08",
+      "alto": true,
+      "titolo": "Socket Docker dell'host montato nel container dell'app",
+      "file": [
+        "docker-compose.yml"
+      ],
+      "parole": "docker\\.sock|socket docker|docker socket"
+    },
+    {
+      "id": "B09",
+      "area": "R08",
+      "alto": false,
+      "titolo": "Porta 5432 di PostgreSQL pubblicata su tutte le interfacce",
+      "file": [
+        "docker-compose.yml"
+      ],
+      "parole": "5432|porta|port"
+    },
+    {
+      "id": "B10",
+      "area": "R11",
+      "alto": false,
+      "titolo": "Redirect aperto dopo il login (callbackUrl)",
+      "file": [
+        "src/app/login/page.tsx"
+      ],
+      "parole": "redirect|callbackurl"
+    },
+    {
+      "id": "B11",
+      "area": "R01",
+      "alto": false,
+      "titolo": "/api/quotes/[id] pubblica: espone email e telefono dei clienti e i dati dell'organizzazione",
+      "file": [
+        "src/app/api/quotes/[id]/route.ts"
+      ],
+      "parole": "quote|preventiv"
+    },
+    {
+      "id": "B12",
+      "area": "R03",
+      "alto": false,
+      "titolo": "reset-password richiede UPDATE_USER, che la matrice concede anche a VOLONTARIO; nessun controllo sul target",
+      "file": [
+        "src/app/api/users/[id]/reset-password/route.ts",
+        "src/lib/permissions.ts"
+      ],
+      "parole": "update_user|volontario|reset"
+    },
+    {
+      "id": "B13",
+      "area": "R09",
+      "alto": false,
+      "titolo": "Azione di terzi non fissata a un commit (someorg/deploy-action@main) con segreti",
+      "file": [
+        ".github/workflows/ci.yml"
+      ],
+      "parole": "deploy-action|@main|fissat|pinn|sha"
+    },
+    {
+      "id": "B14",
+      "area": "R02",
+      "alto": false,
+      "titolo": "Route di debug che modifica dati con una GET, per qualunque utente autenticato",
+      "file": [
+        "src/app/api/debug/fix-org/route.ts"
+      ],
+      "parole": "debug|fix-org"
+    },
+    {
+      "id": "B15",
+      "area": "R06",
+      "alto": false,
+      "titolo": "Segreto CRON_SECRET rimosso dal codice ma presente nella storia Git",
+      "file": [
+        "scripts/rotate-cron.sh"
+      ],
+      "parole": "cron|storia|history"
+    },
+    {
+      "id": "B16",
+      "area": "R14",
+      "alto": false,
+      "titolo": "Il README fa eseguire il seed (ADMIN con password nota) nella procedura di deploy",
+      "file": [
+        "prisma/seed.ts",
+        "README.md"
+      ],
+      "parole": "seed"
+    }
+  ],
+  "esche": [
+    {
+      "id": "D01",
+      "titolo": ".env.example con soli segnaposto",
+      "file": [
+        ".env.example"
+      ],
+      "parole": "segret|secret|password|credenzial"
+    },
+    {
+      "id": "D02",
+      "titolo": ".env.staging versionato ma con soli segnaposto (COPY_FROM_…, GENERATE_…)",
+      "file": [
+        ".env.staging"
+      ],
+      "parole": "segret|secret|password|credenzial|staging"
+    },
+    {
+      "id": "D03",
+      "titolo": "/api/health pubblica per scelta",
+      "file": [
+        "src/app/api/health/route.ts"
+      ],
+      "parole": "health"
+    },
+    {
+      "id": "D04",
+      "titolo": "DELETE /api/admin/users/[id] corretto (ADMIN, stessa organizzazione, niente auto-cancellazione)",
+      "file": [
+        "src/app/api/admin/users/[id]/route.ts"
+      ],
+      "parole": "delet|cancell|elimin|auto-cancell"
+    },
+    {
+      "id": "D05",
+      "titolo": "trivy-action fissata a un commit",
+      "file": [
+        ".github/workflows/ci.yml"
+      ],
+      "parole": "trivy"
+    }
+  ]
+}

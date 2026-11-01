@@ -1,0 +1,4 @@
+endpoint,metodo,identita,atteso,finding_id
+/api/admin/users,GET,anonimo,401|403,
+/api/admin/users,GET,utente_a,403,
+/api/orders/ID-DI-UTENTE-B,GET,utente_a,403|404,

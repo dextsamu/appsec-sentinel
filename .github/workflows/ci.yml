@@ -1,0 +1,77 @@
+name: Controlli
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  controlli:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Intestazione della skill
+        run: |
+          python3 - <<'EOF'
+          import re, sys
+          t = open("SKILL.md", encoding="utf-8").read()
+          m = re.match(r"---\n(.*?)\n---\n", t, re.S)
+          assert m, "frontmatter mancante"
+          fm = m.group(1)
+          assert re.search(r"^name: appsec-sentinel$", fm, re.M), "name non corretto"
+          assert re.search(r"^license: Apache-2.0$", fm, re.M), "license mancante"
+          d = re.search(r"^description: (.+)$", fm, re.M)
+          assert d and len(d.group(1)) > 100, "description mancante o troppo corta"
+          assert len(d.group(1)) <= 1024, "description oltre 1024 caratteri"
+          n = t.count("\n")
+          assert n < 500, f"SKILL.md troppo lungo ({n} righe)"
+          print("intestazione ok,", n, "righe")
+          EOF
+      - name: Intestazioni di licenza negli script
+        run: |
+          for f in scripts/*.py; do
+            head -3 "$f" | grep -q "SPDX-License-Identifier: Apache-2.0" || { echo "manca SPDX in $f"; exit 1; }
+          done
+      - name: Compilazione degli script
+        run: python3 -m py_compile scripts/*.py
+      - name: Collaudo degli script su app di prova
+        run: |
+          pip install reportlab pyyaml
+          python3 tests/run_checks.py
+      - name: Link relativi nei documenti
+        run: |
+          python3 - <<'EOF'
+          import re, sys
+          from pathlib import Path
+          bad = []
+          for p in Path(".").rglob("*.md"):
+              if ".git" in p.parts:
+                  continue
+              for m in re.finditer(r"\]\(([^)#\s]+)(#[^)]*)?\)", p.read_text(encoding="utf-8")):
+                  link = m.group(1)
+                  if re.match(r"^[a-z]+:", link):
+                      continue
+                  if not (p.parent / link).exists():
+                      bad.append(f"{p}: {link}")
+          print("\n".join(bad) or "link relativi ok")
+          sys.exit(1 if bad else 0)
+          EOF
+      - name: Cartella di audit e riepilogo di copertura
+        run: |
+          python3 scripts/init_audit.py "$RUNNER_TEMP/audit"
+          python3 scripts/coverage_summary.py "$RUNNER_TEMP/audit"
+      - name: Report PDF dall'esempio
+        run: |
+          pip install reportlab
+          python3 scripts/build_report_pdf.py examples/collaudo-rapido --out "$RUNNER_TEMP/report.pdf"
+          test -s "$RUNNER_TEMP/report.pdf"
+      - name: Validazione dei finding di esempio
+        run: |
+          pip install jsonschema
+          python3 scripts/validate_findings.py examples/findings.example.json

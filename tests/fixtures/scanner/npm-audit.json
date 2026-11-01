@@ -1,0 +1,2 @@
+{"vulnerabilities":{"lodash":{"name":"lodash","severity":"critical","via":[{"url":"https://github.com/advisories/GHSA-35jh-r3h4-6jhm","title":"Command Injection","severity":"high"}],"range":"<4.17.21","fixAvailable":{"name":"lodash","version":"4.17.21"}},
+"express":{"name":"express","severity":"high","via":[{"url":"https://github.com/advisories/GHSA-rv95-896h-c2vc","title":"Open redirect","severity":"moderate"}],"range":"<4.19.2","fixAvailable":true}}}

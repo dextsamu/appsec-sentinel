@@ -1,0 +1,1 @@
+{"results":[{"check_id":"javascript.express.security.audit.xss.direct-response-write","path":"src/app.js","start":{"line":42},"extra":{"message":"Possible XSS via res.send of user input","severity":"ERROR","metadata":{"cwe":["CWE-79: Improper Neutralization of Input"]}}}]}

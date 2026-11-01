@@ -1,0 +1,339 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/appsec-sentinel/finding.schema.json",
+  "title": "Finding di assessment di sicurezza",
+  "description": "Un elemento del file findings.json (array di finding). Le conclusioni devono essere coerenti con lo stato: nessuna prova eseguita = nessuno stato 'riprodotto dinamicamente'.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "titolo",
+    "categoria",
+    "asset",
+    "ambiente",
+    "versione",
+    "stato",
+    "severita",
+    "attore",
+    "prova",
+    "atteso",
+    "osservato",
+    "impatto",
+    "motivazione_severita",
+    "intervento",
+    "retest",
+    "limiti",
+    "confidenza"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Z]{2,6}-[0-9]{3,4}$",
+      "description": "ID stabile, es. APP-001"
+    },
+    "titolo": {
+      "type": "string",
+      "minLength": 8
+    },
+    "categoria": {
+      "type": "string"
+    },
+    "asset": {
+      "type": "string"
+    },
+    "ambiente": {
+      "type": "string"
+    },
+    "versione": {
+      "type": "string",
+      "description": "Commit, tag o versione distribuita esaminata"
+    },
+    "stato": {
+      "enum": [
+        "riprodotto dinamicamente",
+        "confermato da codice o configurazione",
+        "ipotesi da validare",
+        "non verificabile"
+      ]
+    },
+    "severita": {
+      "enum": [
+        "critica",
+        "alta",
+        "media",
+        "bassa",
+        "informativa"
+      ]
+    },
+    "attore": {
+      "type": "string",
+      "description": "Chi, con quali prerequisiti e da quale ingresso"
+    },
+    "confine_fiducia": {
+      "type": "string"
+    },
+    "prova": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tipo",
+        "descrizione"
+      ],
+      "properties": {
+        "tipo": {
+          "enum": [
+            "codice",
+            "configurazione",
+            "richiesta-risposta",
+            "log-tool",
+            "documento",
+            "nessuna"
+          ]
+        },
+        "descrizione": {
+          "type": "string",
+          "description": "Prova minima redatta: nessun segreto né dato personale reale"
+        },
+        "riferimenti_file": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "path:riga"
+          }
+        },
+        "test_eseguito": {
+          "type": "boolean",
+          "description": "true solo se il test è stato davvero eseguito, con esito"
+        },
+        "data_esecuzione": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "atteso": {
+      "type": "string"
+    },
+    "osservato": {
+      "type": "string"
+    },
+    "riproduzione": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "impatto": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reale",
+        "potenziale"
+      ],
+      "properties": {
+        "reale": {
+          "type": "string"
+        },
+        "potenziale": {
+          "type": "string"
+        },
+        "condizioni_limitanti": {
+          "type": "string"
+        }
+      }
+    },
+    "motivazione_severita": {
+      "type": "string",
+      "minLength": 10
+    },
+    "cwe": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^CWE-[0-9]+$"
+      }
+    },
+    "cvss": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "versione",
+        "vettore"
+      ],
+      "properties": {
+        "versione": {
+          "type": "string",
+          "description": "es. 4.0 oppure 3.1"
+        },
+        "vettore": {
+          "type": "string"
+        },
+        "punteggio": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10
+        }
+      }
+    },
+    "riferimenti_standard": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "intervento": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "correzione"
+      ],
+      "properties": {
+        "correzione": {
+          "type": "string"
+        },
+        "mitigazione_temporanea": {
+          "type": "string"
+        },
+        "dipendenze": {
+          "type": "string"
+        },
+        "responsabile_proposto": {
+          "type": "string"
+        },
+        "priorita": {
+          "enum": [
+            "immediata",
+            "alta",
+            "media",
+            "bassa"
+          ]
+        }
+      }
+    },
+    "retest": {
+      "type": "string",
+      "description": "Come verificare il fix, inclusi percorsi alternativi, altri ruoli/tenant, regressioni"
+    },
+    "limiti": {
+      "type": "string"
+    },
+    "confidenza": {
+      "enum": [
+        "alta",
+        "media",
+        "bassa"
+      ]
+    },
+    "privacy": {
+      "type": "object",
+      "description": "Solo per finding con profilo privacy/compliance",
+      "additionalProperties": false,
+      "properties": {
+        "norma_articolo": {
+          "type": "string"
+        },
+        "applicabilita": {
+          "type": "string"
+        },
+        "rischio_interessati": {
+          "type": "string"
+        },
+        "da_sottoporre_a": {
+          "enum": [
+            "titolare",
+            "DPO",
+            "legale",
+            "fornitore"
+          ]
+        }
+      }
+    },
+    "smentita": {
+      "type": "object",
+      "description": "Esito del tentativo di smentire il finding da parte di un verificatore diverso da chi l'ha scritto (vedi references/refutation-pass.md). Obbligatoria per finding alti e critici prima del report.",
+      "additionalProperties": false,
+      "required": [
+        "esito",
+        "verificatore",
+        "tentativi"
+      ],
+      "properties": {
+        "esito": {
+          "enum": [
+            "resiste",
+            "declassato",
+            "respinto",
+            "non eseguita"
+          ],
+          "description": "resiste = il tentativo di smentita non ha prodotto ragioni valide; declassato = severità o stato ridotti; respinto = falso positivo; non eseguita = nessun verificatore indipendente disponibile (va dichiarato)"
+        },
+        "verificatore": {
+          "type": "string",
+          "description": "Chi ha provato a smentire: secondo agente, sessione nuova che riparte dal solo brief, persona. Non chi ha scritto il finding"
+        },
+        "tentativi": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Ipotesi di smentita provate (es. codice non raggiungibile, controllo a monte, solo test) e come sono state verificate"
+        },
+        "data": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "stato": {
+            "const": "riprodotto dinamicamente"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "prova": {
+            "required": [
+              "test_eseguito",
+              "data_esecuzione"
+            ],
+            "properties": {
+              "test_eseguito": {
+                "const": true
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "stato": {
+            "enum": [
+              "ipotesi da validare",
+              "non verificabile"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "confidenza": {
+            "enum": [
+              "media",
+              "bassa"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

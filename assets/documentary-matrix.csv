@@ -1,0 +1,2 @@
+id,documento,tipo,data_o_versione,cosa_afferma,evidenza_nel_codice,stato,rilievo,azione_proposta
+ESEMPIO: D01,README.md,guida,2026-01,«Tutti gli endpoint richiedono autenticazione»,Il middleware elenca percorsi pubblici non citati,incoerente,Dichiarazione non sostenuta dal codice,Allineare il documento al middleware

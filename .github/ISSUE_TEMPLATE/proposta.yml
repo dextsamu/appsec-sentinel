@@ -1,0 +1,22 @@
+name: Proposta di miglioramento
+description: Un controllo, un template o un esempio da aggiungere.
+labels: ["proposta"]
+body:
+  - type: textarea
+    id: proposta
+    attributes:
+      label: Che cosa proponi
+    validations:
+      required: true
+  - type: textarea
+    id: perche
+    attributes:
+      label: Perché serve
+      description: In quale situazione reale manca oggi.
+    validations:
+      required: true
+  - type: textarea
+    id: fonti
+    attributes:
+      label: Fonti
+      description: Se la proposta riguarda un requisito o una soglia, indica la fonte ufficiale. Senza fonte la soglia resta «proposta» o «da definire».

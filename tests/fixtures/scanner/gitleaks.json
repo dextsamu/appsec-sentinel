@@ -1,0 +1,1 @@
+[{"RuleID":"generic-api-key","File":"server.js","StartLine":4,"Secret":"VALORE-DI-PROVA-CHE-NON-DEVE-APPARIRE","Match":"JWT_SECRET = 'VALORE-DI-PROVA-CHE-NON-DEVE-APPARIRE'"}]

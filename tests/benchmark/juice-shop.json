@@ -1,0 +1,12 @@
+{
+  "app": "OWASP Juice Shop",
+  "nota_sulla_verita": "Elenco curato da noi leggendo server.ts e le sfide pubbliche di Juice Shop: NON è un dataset ufficiale e non è esaustivo. Misura solo gli endpoint elencati qui.",
+  "senza_auth": [
+    ["/ftp", "ANY"], ["/metrics", "GET"], ["/rest/products/search", "GET"], ["/rest/user/login", "POST"],
+    ["/rest/admin/application-version", "GET"], ["/rest/admin/application-configuration", "GET"], ["/redirect", "GET"],
+    ["/rest/track-order/:id", "GET"], ["/rest/user/change-password", "GET"], ["/file-upload", "POST"]
+  ],
+  "con_auth": [
+    ["/rest/basket/:id", "GET"], ["/api/BasketItems", "POST"], ["/api/Complaints", "GET"], ["/api/PrivacyRequests", "GET"], ["/api/Users", "GET"]
+  ]
+}

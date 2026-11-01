@@ -1,0 +1,5 @@
+endpoint,metodo,fonte_scoperta,identita,ruolo,tenant,oggetto,azione,controllo_atteso,test_eseguito,esito,finding_id
+/api/internal/demo-seed,POST,codice,anonimo,nessuno,n/a,utenti demo,creazione,401/404,no,,APP-002
+/api/debug/fix-modules,GET,codice,utente,qualsiasi,n/a,organizzazione,modifica,403/404,no,,APP-003
+/api/quotes/{id},GET,codice,utente,qualsiasi,altro-tenant,preventivo,lettura,403/404,no,,APP-004
+/api/quotes/{id}/accept,POST,codice,utente,qualsiasi,altro-tenant,preventivo,accettazione,403/404,no,,APP-004

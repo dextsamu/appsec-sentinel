@@ -1,0 +1,15 @@
+{
+ "titolo": "Audit di sicurezza e documentale",
+ "tipo": "Report di audit",
+ "sottotitolo": "Nome dell'applicazione",
+ "oggetto": "Repository o ambiente esaminato",
+ "versione": "commit o versione esaminata",
+ "modalita": "rapido | standard | completo · analisi statica | dinamica autorizzata",
+ "data": "AAAA-MM-GG",
+ "autore": "Chi ha eseguito e per chi",
+ "classificazione": "RISERVATO",
+ "sintesi": ["Una frase per ogni messaggio che il proprietario deve ricordare. Ogni affermazione ha il suo finding o la sua riga di matrice."],
+ "note_copertura": ["Quante route/file letti su quanti: i denominatori reali."],
+ "non_verificato": ["Ciò che non è stato verificato e perché."],
+ "domande_aperte": ["Le domande per proprietario, infrastruttura, DPO, fornitori."]
+}

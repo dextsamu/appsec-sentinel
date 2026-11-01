@@ -1,0 +1,183 @@
+{
+  "_nota": "Banco Laravel: stesse classi di difetti del banco Node, scritte in PHP. Non va dato all'agente.",
+  "difetti": [
+    {
+      "id": "L01",
+      "area": "R02",
+      "alto": true,
+      "titolo": "Route di demo pubblica che crea utenti con password fissa",
+      "file": [
+        "app/Http/Controllers/DemoController.php",
+        "routes/web.php"
+      ],
+      "parole": "demo"
+    },
+    {
+      "id": "L02",
+      "area": "R03",
+      "alto": true,
+      "titolo": "update(): mass assignment ($request->all() con $guarded vuoto) di ruolo e campi di privilegio; nessun controllo sul ruolo del target",
+      "file": [
+        "app/Http/Controllers/UserController.php",
+        "app/Models/User.php"
+      ],
+      "parole": "mass|privileg|ruol|role|guarded|request->all|assign"
+    },
+    {
+      "id": "L03",
+      "area": "R11",
+      "alto": true,
+      "titolo": "SQL injection: id concatenato nella query di /quotes/{id}",
+      "file": [
+        "app/Http/Controllers/QuoteController.php"
+      ],
+      "parole": "sql|injection|iniezion|concaten|db::select"
+    },
+    {
+      "id": "L04",
+      "area": "R01",
+      "alto": false,
+      "titolo": "/quotes/{id} pubblica: espone il preventivo e l'IBAN dell'organizzazione",
+      "file": [
+        "app/Http/Controllers/QuoteController.php",
+        "routes/web.php"
+      ],
+      "parole": "pubblic|iban|senza auth|non autenticat|espon"
+    },
+    {
+      "id": "L05",
+      "area": "R03",
+      "alto": false,
+      "titolo": "Gate update-user concesso anche a VOLONTARIO: reset password di qualunque utente",
+      "file": [
+        "app/Providers/AuthServiceProvider.php",
+        "app/Http/Controllers/UserController.php"
+      ],
+      "parole": "update-user|volontario|reset|gate"
+    },
+    {
+      "id": "L06",
+      "area": "R11",
+      "alto": false,
+      "titolo": "Redirect aperto dopo il login (parametro next)",
+      "file": [
+        "app/Http/Controllers/AuthController.php",
+        "resources/views/auth/login.blade.php"
+      ],
+      "parole": "redirect|next"
+    },
+    {
+      "id": "L07",
+      "area": "R11",
+      "alto": true,
+      "titolo": "XSS riflesso: {!! request('msg') !!} nella pagina di login",
+      "file": [
+        "resources/views/auth/login.blade.php"
+      ],
+      "parole": "xss|msg|escap|\\{!!|cross"
+    },
+    {
+      "id": "L08",
+      "area": "R12",
+      "alto": false,
+      "titolo": "APP_DEBUG forzato a true in config/app.php (stack trace e configurazione esposti in produzione)",
+      "file": [
+        "config/app.php"
+      ],
+      "parole": "debug"
+    },
+    {
+      "id": "L09",
+      "area": "R06",
+      "alto": true,
+      "titolo": "APP_KEY scritta in docker-compose.yml",
+      "file": [
+        "docker-compose.yml"
+      ],
+      "parole": "app_key|chiave|key|segret"
+    },
+    {
+      "id": "L10",
+      "area": "R08",
+      "alto": false,
+      "titolo": "Porta 3306 di MySQL pubblicata su tutte le interfacce",
+      "file": [
+        "docker-compose.yml"
+      ],
+      "parole": "3306|porta|port"
+    },
+    {
+      "id": "L11",
+      "area": "R02",
+      "alto": false,
+      "titolo": "Route di debug che modifica dati con una GET",
+      "file": [
+        "app/Http/Controllers/DemoController.php",
+        "routes/web.php"
+      ],
+      "parole": "debug|fix-org|fixorg"
+    },
+    {
+      "id": "L12",
+      "area": "R09",
+      "alto": false,
+      "titolo": "Azione di terzi non fissata a un commit",
+      "file": [
+        ".github/workflows/deploy.yml"
+      ],
+      "parole": "setup-php|fissat|pinn|sha|@v2"
+    },
+    {
+      "id": "L13",
+      "area": "R06",
+      "alto": false,
+      "titolo": "Segreto CRON_SECRET rimosso dal codice ma presente nella storia Git",
+      "file": [
+        "scripts/rotate-cron.sh"
+      ],
+      "parole": "cron|storia|history"
+    }
+  ],
+  "esche": [
+    {
+      "id": "M01",
+      "titolo": ".env.example con soli segnaposto",
+      "file": [
+        ".env.example"
+      ],
+      "parole": "segret|secret|password|credenzial"
+    },
+    {
+      "id": "M02",
+      "titolo": "show() dell'utente filtrato per organizzazione: corretto",
+      "file": [
+        "app/Http/Controllers/UserController.php"
+      ],
+      "parole": "(show|get /users)[^.]{0,80}(bola|idor|altr[aoi] organizzazion|cross.?tenant)"
+    },
+    {
+      "id": "M03",
+      "titolo": "TicketController: filtro per organizzazione e per proprietario, corretto",
+      "file": [
+        "app/Http/Controllers/TicketController.php"
+      ],
+      "parole": "ticket"
+    },
+    {
+      "id": "M04",
+      "titolo": "Seed di sviluppo con password di prova, non usato nel deploy",
+      "file": [
+        "database/seeders/DatabaseSeeder.php"
+      ],
+      "parole": "seed|password"
+    },
+    {
+      "id": "M05",
+      "titolo": "Login con validazione e rigenerazione della sessione: corretto",
+      "file": [
+        "app/Http/Controllers/AuthController.php"
+      ],
+      "parole": "session|sessione|fixation"
+    }
+  ]
+}

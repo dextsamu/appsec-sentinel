@@ -8,6 +8,7 @@
 ![Lingua](https://img.shields.io/badge/lingua-italiano-22c55e?style=for-the-badge)
 ![Agenti](https://img.shields.io/badge/agenti-Claude%20%C2%B7%20Codex%20%C2%B7%20Antigravity-f59e0b?style=for-the-badge)
 ![Versione](https://img.shields.io/badge/versione-1.2.0-6366f1?style=for-the-badge)
+[![Sito](https://img.shields.io/badge/sito-dextsamu.github.io-0f172a?style=for-the-badge)](https://dextsamu.github.io/appsec-sentinel/)
 
 **Un report di sicurezza vale quanto la sua onestà.**
 Questa skill trasforma il tuo agente AI in un responsabile tecnico di assessment che *dimostra* ciò che dichiara, e scrive nero su bianco ciò che non ha potuto verificare. Nata per Claude, provata anche su Codex e Antigravity: vedi [`docs/ALTRI-AGENTI.md`](docs/ALTRI-AGENTI.md).

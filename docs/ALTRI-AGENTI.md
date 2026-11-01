@@ -24,7 +24,7 @@ Da queste prove sono nate le regole aggiunte alla 1.1.0: nessun valore di segret
 2. Ha lasciato come «non eseguito» ciò che non ha eseguito?
 3. Nessun valore di segreto o dato personale nei file e nei messaggi (`scripts/redact_check.py` sulla cartella di audit)?
 4. Nessun «conforme» né «sicuro»?
-5. I finding alti hanno una smentita fatta da un altro verificatore, o `non eseguita` dichiarato?
+5. I finding alti hanno una smentita fatta da un altro verificatore, o `non eseguita` dichiarato? Su un agente senza sottoagenti, la smentita si fa con `scripts/refutation_pack.py prepara` (pacchetto per una seconda sessione, anche con un altro agente) e `importa`.
 6. Ha lanciato `validate_findings.py` e `verify_findings.py`?
 
 Su Windows gli script si lanciano con `python` o `py` al posto di `python3`.

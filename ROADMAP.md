@@ -20,12 +20,12 @@ Cosa è fatto, cosa viene dopo e perché. Le priorità vengono dalle misure in [
 
 **1.2.3 (01/11/2026)**: `secret_triage.py` non declassa più un segreto casuale che contiene per caso una parola corta («dev», «xyz»). Rilasci automatici quando cambia la versione del plugin. Misure dello `standard` su PC in `docs/BENCHMARK.md`.
 
+**1.3.0 (01/11/2026)**: smentita senza sottoagenti (`refutation_pack.py`: pacchetto per una seconda sessione e reimportazione degli esiti, provato con una sessione nuova); PDF con threat model e test dinamici eseguiti; Juice Shop `rapido` 23/32 e 19/32.
+
 ## Prossimo
 
-1. **Smentita anche senza sottoagenti.** Oggi un agente singolo può solo scrivere «non eseguita». Proposta: un comando che prepara un pacchetto per una seconda sessione (brief e codice, niente motivazioni) e reimporta `esiti.json`. Obiettivo: zero finding alti consegnati senza smentita quando l'utente ha una seconda sessione.
-2. **Juice Shop: i casi ancora mancati, misurati con due giri per versione.** Lo `standard` è confermato su un PC (01/11/2026, Opus 4.8): da 7/32 a 13/32 con `punti-pericolosi.csv`. Restano le pagine «nascoste» del frontend e i dati di seed deboli: le categorie ci sono (1.2.2), ma l'agente le ha chiuse come «non difetto»; i criteri aggiunti vanno misurati con almeno due giri, perché fra un giro e l'altro la differenza è di 1–2 vulnerabilità. Obiettivo: oltre 16/32 per giro con Opus 4.8 senza aumentare i falsi allarmi sui banchi.
-3. **Report PDF completo per `standard` e `completo`**, con sintesi del threat model e dei test dinamici registrati.
-4. **Giro misurato su Codex e Antigravity.** Le skill sono state provate una sola volta su ciascuno (Windows, `rapido`, app finta). Obiettivo: un `rapido` sul banco Django e uno su Juice Shop con ciascun agente, con punteggio e note su cosa cambia (sottoagenti, permessi, comandi), così il README può dire che funzionano e non solo che sono state provate.
+1. **Juice Shop: i casi ancora mancati, misurati con due giri per versione.** Lo `standard` è confermato su un PC (01/11/2026, Opus 4.8): da 7/32 a 13/32 con `punti-pericolosi.csv`. Restano le pagine «nascoste» del frontend e i dati di seed deboli: le categorie ci sono (1.2.2), ma l'agente le ha chiuse come «non difetto»; i criteri aggiunti vanno misurati con almeno due giri, perché fra un giro e l'altro la differenza è di 1–2 vulnerabilità. Rapido in cloud con Opus 5.5 dopo la 1.2.3: 23/32 e 19/32. Obiettivo: oltre 16/32 per giro con Opus 4.8 senza aumentare i falsi allarmi sui banchi.
+2. **Giro misurato su Codex e Antigravity.** Le skill sono state provate una sola volta su ciascuno (Windows, `rapido`, app finta). Obiettivo: un `rapido` sul banco Django e uno su Juice Shop con ciascun agente, con punteggio e note su cosa cambia (sottoagenti, permessi, comandi), così il README può dire che funzionano e non solo che sono state provate.
 
 ## Dopo
 

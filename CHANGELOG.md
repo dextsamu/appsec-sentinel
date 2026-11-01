@@ -3,9 +3,15 @@
 Formato basato su [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/); versioni secondo [SemVer](https://semver.org/lang/it/).
 
 ## [Non rilasciato]
+
+## [1.3.0] - 2026-11-01
 ### Aggiunto
+- **Report PDF per `standard` e `completo`**: due sezioni nuove, «Threat model» (da `report/threat-model.md`: titoli, elenchi e tabelle resi come testo) e «Test dinamici eseguiti» (le righe della matrice endpoint con `test_eseguito=si`: identità, controllo atteso, esito osservato, finding). Prima il PDF mostrava solo il conteggio degli endpoint provati.
 - `punti.py` e `check_delivery.py` (condivisi) accettano le cartelle di gdpr-sentinel: esito `gap` con gli ID di `gaps.csv`, e per le cartelle con soli gap le categorie aperte fanno fallire `chiudi`.
 - **Smentita senza sottoagenti** (`scripts/refutation_pack.py`): `prepara <cartella> --repo <repo>` scrive in `smentite/pacchetto/` le istruzioni da incollare in una seconda sessione (altra conversazione, altro agente come Codex o Antigravity, un collega), il metodo e un brief per finding alto o critico, senza findings.json né motivazioni dell'autore; `importa <cartella> <esiti.json>` rifiuta gli esiti scritti dall'autore o nella stessa sessione e applica gli altri con `apply_refutations.py`. «non eseguita» resta solo se una seconda sessione non è possibile. `check_delivery.py` non cerca più parole vietate nei brief generati dagli script.
+
+### Corretto
+- `build_report_pdf.py`: una riga CSV con più colonne dell'intestazione (virgola fuori dalle virgolette) faceva fallire il PDF; ora le colonne in più vengono unite all'ultima. Emerso dal giro `standard` del 01/11/2026 sul PC dell'autore.
 
 ## [1.2.3] - 2026-11-01
 ### Corretto

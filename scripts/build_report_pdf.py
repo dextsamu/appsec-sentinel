@@ -30,6 +30,7 @@ essere redatti. Rileggi sempre il PDF prima di consegnarlo.
 import argparse
 import csv
 import json
+import re
 import sys
 from collections import Counter
 from datetime import date
@@ -106,6 +107,12 @@ TR = {
     "confermato da codice/config": "confirmed from code/config", "confermato da codice": "confirmed from code",
     "confidenza": "confidence",
     "sì": "yes", "si": "yes", "parziale": "partial", "no": "no", "applicabile": "applicable", "non applicabile": "not applicable",
+    "Threat model": "Threat model", "Test dinamici eseguiti": "Dynamic tests performed", "Controllo atteso": "Expected control", "Esito": "Result",
+    "Flussi, confini di fiducia e percorsi di attacco considerati (da report/threat-model.md). È la mappa che ha guidato l'esame, non un elenco di vulnerabilità.":
+        "Flows, trust boundaries and attack paths considered (from report/threat-model.md). It is the map that guided the review, not a list of vulnerabilities.",
+    "Il threat model continua nel file report/threat-model.md.": "The threat model continues in report/threat-model.md.",
+    "Le prove fatte davvero sull'istanza autorizzata, come registrate nella matrice degli endpoint: identità usata, esito osservato e finding collegato. Un endpoint che non compare qui non è stato provato.":
+        "The tests actually run against the authorized instance, as recorded in the endpoint matrix: identity used, observed result and linked finding. An endpoint not listed here was not tested.",
     "Risolti": "Resolved", "Nuovi": "New", "Cambiati": "Changed", "Ancora aperti": "Still open",
 }
 
@@ -162,6 +169,12 @@ def read_csv(path):
         return None
     with path.open(newline="", encoding="utf-8") as fh:
         rows = list(csv.DictReader(fh))
+    for r in rows:   # una riga con più colonne dell'intestazione (virgola non tra virgolette) finisce sotto None: unirla all'ultima
+        extra = r.pop(None, None)
+        if extra:
+            last = list(r.keys())[-1] if r else None
+            if last:
+                r[last] = ", ".join([r[last] or ""] + [x for x in extra if x])
     return [r for r in rows if not (next(iter(r.values()), "") or "").strip().upper().startswith("ESEMPIO")]
 
 
@@ -640,6 +653,37 @@ def build(audit: Path, out: Path, meta_path: Path, lang="it", short=False, previ
         S += [Spacer(1, 4), P("Severità con due valori: i giri le hanno valutate in modo diverso; nel report vale la più alta finché non viene decisa a mano.", small)]
         if unione.get("possibili_stessa_causa"):
             S += [Spacer(1, 3), P(f"Coppie «possibile stessa causa» lasciate separate e da decidere a mano: {len(unione['possibili_stessa_causa'])}.", small)]
+
+    # Threat model e test dinamici (standard e completo): due giri reali avevano entrambi i file ma il PDF non li mostrava
+    tm = audit / "report" / "threat-model.md"
+    if tm.exists() and tm.stat().st_size > 200 and not short:
+        S += [PageBreak(), SectionHead("Threat model", ACC),
+              P("Flussi, confini di fiducia e percorsi di attacco considerati (da report/threat-model.md). È la mappa che ha guidato l'esame, non un elenco di vulnerabilità.", lead), Spacer(1, 4)]
+        righe, intab = tm.read_text(encoding="utf-8", errors="replace").splitlines(), []
+        for line in righe[:160]:
+            t = line.strip()
+            if not t or t.startswith("```") or set(t) <= set("|-: "):
+                continue
+            if t.startswith("|"):
+                cells = [c.strip() for c in t.strip("|").split("|")]
+                S.append(bl(" · ".join(c for c in cells if c)))
+            elif t.startswith("#"):
+                S.append(P(t.lstrip("#").strip(), h2))
+            elif t[:2] in ("- ", "* ") or re.match(r"\d+[.)] ", t):
+                S.append(bl(re.sub(r"^(?:[-*]|\d+[.)])\s+", "", t).replace("**", "").replace("`", "")))
+            else:
+                S.append(P(t.replace("**", "").replace("`", ""), body))
+        if len(righe) > 160:
+            S.append(P("Il threat model continua nel file report/threat-model.md.", small))
+    done = [r for r in ep if (r.get("test_eseguito") or "").strip().lower() in {"si", "sì", "yes"}] if ep else []
+    if done and not short:
+        S += [PageBreak(), SectionHead("Test dinamici eseguiti", ACC),
+              P("Le prove fatte davvero sull'istanza autorizzata, come registrate nella matrice degli endpoint: identità usata, esito osservato e finding collegato. Un endpoint che non compare qui non è stato provato.", lead), Spacer(1, 4)]
+        data = [hd("Endpoint", "Metodo", "Identità e ruolo", "Controllo atteso", "Esito", "Finding")]
+        for r in done:
+            data.append([P(r["endpoint"], cellb), P(r.get("metodo", ""), cell), P(f"{r.get('identita', '')} / {r.get('ruolo', '')}", cell),
+                         P(r.get("controllo_atteso", ""), cell), P(r.get("esito", ""), cell), P(r.get("finding_id", ""), cell)])
+        S.append(table(data, [38 * mm, 18 * mm, 28 * mm, 25 * mm, 43 * mm, 18 * mm]))
 
     # Copertura
     S += [PageBreak(), SectionHead("Copertura e limiti", ACC),

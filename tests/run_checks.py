@@ -508,6 +508,20 @@ if have("build_report_pdf.py"):
         out = tmp / f"{label}.pdf"
         r = run("build_report_pdf.py", ex, "--meta", ex / "meta.json", "--out", out, *extra)
         check(f"PDF {label}", r.returncode == 0 and out.exists() and out.stat().st_size > 5000, r.stderr[-200:])
+    import shutil as _shp
+    exs = tmp / "ex-standard"; _shp.copytree(ex, exs)
+    (exs / "report").mkdir(exist_ok=True)
+    (exs / "report" / "threat-model.md").write_text("# Threat model\n\n## Flussi\n- Login -> API -> DB\n- Upload -> parser XML\n" + "Confine di fiducia: rete pubblica.\n" * 10, encoding="utf-8")
+    with (exs / "endpoint-matrix.csv").open("a", encoding="utf-8") as fh:
+        fh.write("/api/orders/:id,GET,codice,utente-B,utente,altro,ordine,lettura,403,si,utente-B: 200 (DIFFORME),APP-001\n")
+    outs = tmp / "standard.pdf"
+    rs = run("build_report_pdf.py", exs, "--meta", exs / "meta.json", "--out", outs)
+    try:
+        from pypdf import PdfReader
+        txt = " ".join(pg.extract_text() or "" for pg in PdfReader(str(outs)).pages)
+        check("PDF standard: sezioni «Threat model» e «Test dinamici eseguiti» dai file dell'audit", "Threat model" in txt and "dinamici eseguiti" in txt and "/api/orders/:id" in txt, rs.stderr[-200:])
+    except ImportError:
+        check("PDF standard: generato con threat model e test dinamici", rs.returncode == 0 and outs.exists(), rs.stderr[-200:])
 
 
 if have("check_delivery.py"):

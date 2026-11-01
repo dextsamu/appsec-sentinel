@@ -23,6 +23,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          # se la release è già stata creata a mano, aggiorna solo l'allegato
+          if gh release view "${GITHUB_REF_NAME}" >/dev/null 2>&1; then
+            gh release upload "${GITHUB_REF_NAME}" dist/appsec-sentinel.skill --clobber
+            exit 0
+          fi
           gh release create "${GITHUB_REF_NAME}" dist/appsec-sentinel.skill \
             --title "${GITHUB_REF_NAME}" \
             --notes-file <(awk -v v="${GITHUB_REF_NAME#v}" '/^## \[/{p = index($0, "[" v "]") > 0} p' CHANGELOG.md)

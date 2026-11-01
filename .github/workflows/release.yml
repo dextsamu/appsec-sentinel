@@ -1,8 +1,13 @@
 name: Release
 
+# Automatico: quando cambia la versione in .claude-plugin/plugin.json su main, crea il tag v<versione> e la release
+# con le note del CHANGELOG e il pacchetto .skill. Funziona anche con un tag v* creato a mano o lanciato a mano.
 on:
   push:
+    branches: [main]
+    paths: [".claude-plugin/plugin.json"]
     tags: ["v*"]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -12,6 +17,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Versione
+        id: v
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then tag="${GITHUB_REF_NAME}"; else
+            tag="v$(python3 -c 'import json; print(json.load(open(".claude-plugin/plugin.json"))["version"])')"; fi
+          grep -q "^## \[${tag#v}\]" CHANGELOG.md || { echo "manca la sezione [${tag#v}] nel CHANGELOG"; exit 1; }
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
       - name: Pacchetto della skill
         run: |
           mkdir -p dist/appsec-sentinel
@@ -22,12 +34,12 @@ jobs:
       - name: Release
         env:
           GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.v.outputs.tag }}
         run: |
-          # se la release è già stata creata a mano, aggiorna solo l'allegato
-          if gh release view "${GITHUB_REF_NAME}" >/dev/null 2>&1; then
-            gh release upload "${GITHUB_REF_NAME}" dist/appsec-sentinel.skill --clobber
+          # release già esistente (creata a mano o in un giro precedente): aggiorna solo l'allegato
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" dist/appsec-sentinel.skill --clobber
             exit 0
           fi
-          gh release create "${GITHUB_REF_NAME}" dist/appsec-sentinel.skill \
-            --title "${GITHUB_REF_NAME}" \
-            --notes-file <(awk -v v="${GITHUB_REF_NAME#v}" '/^## \[/{p = index($0, "[" v "]") > 0} p' CHANGELOG.md)
+          gh release create "$TAG" dist/appsec-sentinel.skill --target "$GITHUB_SHA" --title "$TAG" \
+            --notes-file <(awk -v v="${TAG#v}" '/^## \[/{p = index($0, "[" v "]") > 0} p' CHANGELOG.md)

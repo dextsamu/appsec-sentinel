@@ -5,6 +5,7 @@ Formato basato su [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/); v
 ## [Non rilasciato]
 ### Aggiunto
 - Due categorie in `punti-pericolosi.csv`: **route del client** (pagine riservate o protette solo da un guard nel browser, nei file di routing del frontend) e **dati di seed e credenziali** (file YAML/JSON di dati iniziali con password, segreti, domande o risposte di sicurezza). Motivo: nel giro std6 su Juice Shop (13/32) le mancate erano quasi tutte nelle route del frontend e nel file delle domande di sicurezza, che nessuna categoria apriva.
+- Criteri per «non difetto» su queste due categorie (`references/commands.md`): «dati di demo» non basta se i dati sono caricati all'avvio; per le route del client serve il controllo lato server. Motivo: nel giro std7 (12/32, entro la variabilità del 13/32 di std6) l'agente le ha chiuse come «dati di demo» e «solo navigazione lato client».
 
 ## [1.2.1] - 2026-11-01
 ### Misurato

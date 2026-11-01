@@ -12,3 +12,5 @@ Non è un'app da eseguire né da copiare: contiene volutamente errori. Tutti i v
 | Dipendenze datate | `package.json` |
 | Dati personali nello schema senza cancellazione | `prisma/schema.prisma` |
 | Font e SMS verso terzi non dichiarati | `src/app/layout.tsx`, `package.json` |
+
+Il manifest delle dipendenze è salvato come `package.json.bench` (versioni vulnerabili apposta: così Dependabot non lo segnala nel repository pubblico). `tests/run_checks.py` lavora su una copia con il nome vero; per un uso a mano, copia la cartella e rinomina il file.

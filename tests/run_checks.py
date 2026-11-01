@@ -43,6 +43,13 @@ def have(s):
 
 
 tmp = Path(tempfile.mkdtemp())
+# i manifest delle app di prova sono salvati come *.bench (versioni vulnerabili apposta: così Dependabot non li segnala);
+# i collaudi usano una copia con i nomi veri
+import shutil as _sh
+_sh.copytree(FX / "vuln-app", tmp / "vuln-app")
+for _b in (tmp / "vuln-app").rglob("*.bench"):
+    _b.rename(_b.with_suffix(""))
+APP = tmp / "vuln-app"
 print("appsec-sentinel / gdpr-sentinel: collaudo script")
 
 if have("inventory_routes.py"):

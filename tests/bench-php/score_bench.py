@@ -36,6 +36,8 @@ def prepare(dest):
     if app.exists():
         sys.exit(f"esiste già: {app}")
     shutil.copytree(HERE / "template", app)
+    for b in app.rglob("*.bench"):   # manifest salvati come *.bench nel repository (dipendenze vulnerabili apposta)
+        b.rename(b.with_suffix(""))
     for f in app.rglob("*"):   # segnaposto __NOME__ del modello → valori casuali (segreti «veri» diversi a ogni prova)
         if f.is_file() and f.suffix in {".yml", ".yaml", ".env", ".php", ".py", ".ts", ".js", ".json", ""}:
             s = f.read_text(encoding="utf-8", errors="replace")

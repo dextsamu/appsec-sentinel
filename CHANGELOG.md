@@ -3,6 +3,9 @@
 Formato basato su [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/); versioni secondo [SemVer](https://semver.org/lang/it/).
 
 ## [Non rilasciato]
+### Misurato
+- **Antigravity e Codex**: `gdpr-sentinel statica` sul secondo banco privacy, stesso prompt: 14/15 difetti e 0 falsi allarmi per entrambi, smentita indipendente fatta in entrambi i casi (Antigravity con il pacchetto in una sessione nuova, Codex con un sottoagente). Tabella in `docs/ALTRI-AGENTI.md`. Corretta l'esca T02 del banco (si attivava su «preventiva»).
+
 ### Corretto
 - Parole vietate e giudizi di conformità: «conforme all'informativa», «conforme a quanto dichiarato» confrontano due testi e non sono più segnalati; «il sito è conforme» resta vietato. Emerso dal giro di Antigravity sul secondo banco privacy (01/11/2026): il verificatore aveva scritto l'ipotesi che stava smentendo e `chiudi` falliva.
 

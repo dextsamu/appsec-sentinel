@@ -2,7 +2,18 @@
 
 La skill è una cartella con `SKILL.md`, riferimenti in Markdown e script in Python (solo libreria standard, `reportlab` per il PDF). Il formato `SKILL.md` è letto anche da altri agenti oltre a Claude. Qui trovi cosa è stato **provato** e cosa no.
 
-## Stato delle prove
+## Giro misurato (01/11/2026)
+Stesso compito e stesso prompt per i due agenti, su Windows, con la versione 1.3.0: `gdpr-sentinel` in modalità `statica` sul secondo banco privacy (`tests/bench-pa`, sito di una scuola in PHP, 15 difetti noti e 5 esche), lanciato dall'autore sul proprio PC. Punteggio con `tests/bench-pa/score_bench.py`.
+
+| Agente | Difetti | Alti | Falsi allarmi | Gap | Smentita | `chiudi` |
+|---|---|---|---|---|---|---|
+| Antigravity (Gemini) | 14/15 | 6/6 | 0/5 | 9 | pacchetto `refutation_pack.py` dato a una **sessione nuova** di Antigravity: 8 gap verificati con 25 tentativi citati per file e riga, tutti resistono | 0 falliti (dopo la correzione su «conforme all'informativa», vedi CHANGELOG) |
+| Codex | 14/15 | 6/6 | 0/5 | 19 | sottoagente indipendente avviato da Codex con i soli brief: 12 gap ad alta priorità, tutti resistono, con tentativi citati | 0 falliti, 0 da verificare |
+| Claude (riferimento, due giri in cloud) | 15/15 e 15/15 | 6/6 | 0/5 | 18 e 18 | — | 0 falliti |
+
+Cosa è emerso: entrambi hanno rispettato il mandato (repository non modificato, nessuna rete, nessun «conforme», nessun valore di segreto) e nessuno ha smentito da solo i propri gap. Antigravity ha raggruppato più cause in un gap (9 gap per 14 difetti: reCAPTCHA, Maps, YouTube e Fonts in uno solo), contro la regola «un gap = una causa»; ha mancato la galleria con le foto degli alunni. Codex ha scritto 19 gap ben separati e due fuori elenco ragionevoli (backup e procedura data breach non verificabili); ha mancato Google Fonts come gap a sé (il file è citato in un gap sull'informativa). Codex ha scritto propri script di supporto nella cartella di audit. Antigravity non partiva con Cloudflare WARP attivo: l'API di Google rifiutava la posizione («User location is not supported»). Un giro per agente: misura che la skill funziona su questi agenti, non quanto siano stabili.
+
+## Prima prova (30/10/2026)
 Prova del 30/10/2026, su Windows, un solo giro per agente: audit in modalità `rapido`, solo analisi statica, su un'app finta creata dall'agente stesso, con entrambe le skill (`appsec-sentinel` e `gdpr-sentinel`). Le versioni degli agenti non sono state registrate.
 
 | Agente | Letta ed eseguita | Esito | Cosa ha messo in luce |

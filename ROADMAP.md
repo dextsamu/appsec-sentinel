@@ -18,14 +18,14 @@ Cosa è fatto, cosa viene dopo e perché. Le priorità vengono dalle misure in [
 
 **1.2.2 (01/11/2026)**: categorie «route del client» e «dati di seed e credenziali» in `punti-pericolosi.csv`, criteri per «non difetto». Effetto non ancora distinguibile dalla variabilità con un giro solo (12/32 contro 13/32): da misurare con due giri.
 
+**1.2.3 (01/11/2026)**: `secret_triage.py` non declassa più un segreto casuale che contiene per caso una parola corta («dev», «xyz»). Rilasci automatici quando cambia la versione del plugin. Misure dello `standard` su PC in `docs/BENCHMARK.md`.
+
 ## Prossimo
 
-1. **Confermare lo `standard` con un giro reale.** Le ultime correzioni (base del `rapido`, righe obbligatorie, riferimenti `audit:`) sono provate solo dai test. Obiettivo: un giro `standard` su Juice Shop locale con almeno i finding di un `rapido` (22/32 nei file citati) e i critici riprodotti dinamicamente. Pronto da lanciare: `_prove/avvia-standard.ps1` nella cartella di lavoro dell'autore.
-2. **Rilascio 1.3.0** con le correzioni confermate dal punto 1, note dal CHANGELOG e pacchetti `.skill` allegati.
-3. **Smentita anche senza sottoagenti.** Oggi un agente singolo può solo scrivere «non eseguita». Proposta: un comando che prepara un pacchetto per una seconda sessione (brief e codice, niente motivazioni) e reimporta `esiti.json`. Obiettivo: zero finding alti consegnati senza smentita quando l'utente ha una seconda sessione.
-4. **Juice Shop: i casi ancora mancati.** Le pagine «nascoste» del frontend (route senza link nel client) e i dati di esempio deboli (domande e risposte di sicurezza, account di seed). Obiettivo: oltre 24/32 per giro senza aumentare i falsi allarmi sui banchi.
-5. **Report PDF completo per `standard` e `completo`**, con sintesi del threat model e dei test dinamici registrati.
-6. **Giro misurato su Codex e Antigravity.** Le skill sono state provate una sola volta su ciascuno (Windows, `rapido`, app finta). Obiettivo: un `rapido` sul banco Django e uno su Juice Shop con ciascun agente, con punteggio e note su cosa cambia (sottoagenti, permessi, comandi), così il README può dire che funzionano e non solo che sono state provate.
+1. **Smentita anche senza sottoagenti.** Oggi un agente singolo può solo scrivere «non eseguita». Proposta: un comando che prepara un pacchetto per una seconda sessione (brief e codice, niente motivazioni) e reimporta `esiti.json`. Obiettivo: zero finding alti consegnati senza smentita quando l'utente ha una seconda sessione.
+2. **Juice Shop: i casi ancora mancati, misurati con due giri per versione.** Lo `standard` è confermato su un PC (01/11/2026, Opus 4.8): da 7/32 a 13/32 con `punti-pericolosi.csv`. Restano le pagine «nascoste» del frontend e i dati di seed deboli: le categorie ci sono (1.2.2), ma l'agente le ha chiuse come «non difetto»; i criteri aggiunti vanno misurati con almeno due giri, perché fra un giro e l'altro la differenza è di 1–2 vulnerabilità. Obiettivo: oltre 16/32 per giro con Opus 4.8 senza aumentare i falsi allarmi sui banchi.
+3. **Report PDF completo per `standard` e `completo`**, con sintesi del threat model e dei test dinamici registrati.
+4. **Giro misurato su Codex e Antigravity.** Le skill sono state provate una sola volta su ciascuno (Windows, `rapido`, app finta). Obiettivo: un `rapido` sul banco Django e uno su Juice Shop con ciascun agente, con punteggio e note su cosa cambia (sottoagenti, permessi, comandi), così il README può dire che funzionano e non solo che sono state provate.
 
 ## Dopo
 

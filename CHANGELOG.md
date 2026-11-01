@@ -3,6 +3,8 @@
 Formato basato su [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/); versioni secondo [SemVer](https://semver.org/lang/it/).
 
 ## [Non rilasciato]
+
+## [1.2.1] - 2026-11-01
 ### Misurato
 - Giro `standard` su Juice Shop con istanza locale, stesso modello (Opus 4.8) e stesso prompt, PC dell'autore: skill 1.2.0 7/32 (9 finding), con il controllo sulle parole 8/32 (13), con `punti-pericolosi.csv` **13/32, 15/32 entro 15 righe (22 finding, 11 riprodotti dinamicamente, 9 alti smentiti senza respinti)**; `chiudi` 15 ok, 0 da verificare. Restano mancate soprattutto le route del frontend e le risposte nel file delle domande di sicurezza.
 

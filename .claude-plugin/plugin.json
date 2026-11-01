@@ -1,7 +1,7 @@
 {
   "name": "appsec-sentinel",
   "description": "Assessment di sicurezza applicativa e cloud per agenti AI: regole di ingaggio, finding dimostrati, copertura con denominatori reali. Italiano e inglese.",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "author": {
     "name": "Samuele Cucurnia e Pietro Previtali",
     "url": "https://github.com/dextsamu"

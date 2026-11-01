@@ -42,7 +42,8 @@ def problems(rows):
 # Un problema visto e lasciato nel motivo non arriva al proprietario. Su Juice Shop un giro `standard` ha scritto
 # «non promosso a finding» o «da approfondire» su recupero password, SSRF, XSS e chatbot: 7/32 trovate, e le mancate
 # erano quasi tutte lì.
-LASCIATI = re.compile(r"non promoss|non promuov|non (?:ri)?dimostrat|da approfondire|rischio latente|da valutare in (?:standard|completo)", re.I)
+LASCIATI = re.compile(r"non promoss|non promuov|non (?:ri)?dimostrat|da approfondire|rischio latente|da valutare in (?:standard|completo)"
+                      r"|\bannotat[oaie]\b(?! in R\d)|superfici\w* not\w|verifica mancante|potenzial\w+ (?:ssrf|xss|injection)", re.I)
 
 
 def lasciati(rows, risposte=""):
@@ -52,12 +53,16 @@ def lasciati(rows, risposte=""):
 
 
 def risposte(audit):
-    p = Path(audit) / "revisione.md"
-    try:
-        t = p.read_text(encoding="utf-8")
-    except OSError:
-        return ""
-    return t[t.index("\n## Risposte"):] if "\n## Risposte" in t else ""
+    """Sezione «## Risposte» di revisione.md, nella cartella di audit o in report/ (un giro reale l'aveva messa lì)."""
+    out = ""
+    for p in (Path(audit) / "revisione.md", Path(audit) / "report" / "revisione.md"):
+        try:
+            t = p.read_text(encoding="utf-8")
+        except OSError:
+            continue
+        if "\n## Risposte" in t:
+            out += t[t.index("\n## Risposte"):]
+    return out
 
 
 def write(audit, rows):

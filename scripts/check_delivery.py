@@ -253,7 +253,7 @@ def main() -> int:
             c = Counter((r.get("esito") or "").strip().lower() for r in cl)
             add("checklist delle aree (checklist-rapido.csv)", "OK", ", ".join(f"{k} {v}" for k, v in c.most_common()))
         las = checklist.lasciati(cl, checklist.risposte(audit))
-        add("problemi annotati nella checklist e non diventati finding", "DA VERIFICARE" if las else "OK",
+        add("problemi annotati nella checklist e non diventati finding", ("FALLITO" if strict_mode(audit) else "DA VERIFICARE") if las else "OK",
             (f"{', '.join(las)}: il motivo dice «non promosso», «da approfondire» o simili. Ogni problema visto con file e riga "
              "diventa un finding, anche come «ipotesi da validare»; se non è un difetto, scrivi perché in revisione.md sotto "
              "«## Risposte» citando l'area") if las else "")
@@ -265,8 +265,23 @@ def main() -> int:
         add("aree minime nel registro (dipendenze, segreti)", "DA VERIFICARE" if mancano else "OK",
             ("nel registro di copertura manca: " + ", ".join(mancano) + " (anche come «non eseguito», con il motivo; vedi run_scanners.py)") if mancano else "")
 
+    # 9. punti pericolosi: una riga chiusa per categoria trovata dal pre-passaggio
+    import punti
+    pp = punti.problems(audit, strict_mode(audit))
+    if pp:
+        add("punti pericolosi chiusi per categoria (punti-pericolosi.csv)", *pp)
+
     deliverables(audit)
     return finish(a)
+
+
+def strict_mode(audit: Path) -> bool:
+    """standard e completo: le aree lasciate aperte bloccano la consegna; nel rapido sono da verificare."""
+    try:
+        mod = str(json.loads((audit / "meta.json").read_text(encoding="utf-8")).get("modalita", "")).lower()
+    except (OSError, ValueError):
+        return False
+    return mod.startswith(("standard", "completo"))
 
 
 def deliverables(audit: Path):

@@ -126,7 +126,8 @@ def main():
             ("deserializzazione", r"pickle\.loads?|yaml\.load\(|unserialize\(|ObjectInputStream|node-serialize|BinaryFormatter|Marshal\.load"),
             ("parser XML", r"libxml|parseXml|noent\s*:\s*true|XMLParser|DocumentBuilderFactory|etree\.(parse|fromstring)|simplexml_load"),
             ("AI e prompt", r"openai|anthropic|langchain|ollama|\bllm\b|chat.?bot|messages\.create|chat\.completions|system.?prompt"),
-            ("recupero password", r"security.?(question|answer)|domand\w* di sicurezza|reset.?token|forgot.?password")]
+            ("recupero password", r"security.?(question|answer)|domand\w* di sicurezza|reset.?token|forgot.?password"),
+            ("URL dall'utente (SSRF)", r"(\bfetch|\brequest(\.get)?|axios\.(get|post)|\bgot|urlopen|requests\.(get|post)|file_get_contents|curl_exec|http\.get)\s*\(\s*[\w.\[\]'\"]*(url|link|href|uri)\b")]
     hits = []
     for p_ in sorted(repo.rglob("*")):
         rel = p_.relative_to(repo)
@@ -142,7 +143,7 @@ def main():
             if len(line) > 400:
                 continue
             for cat, rx in SINK:
-                if re.search(rx, line, re.I if cat in ("AI e prompt", "recupero password") else 0):
+                if re.search(rx, line, re.I if cat in ("AI e prompt", "recupero password", "URL dall'utente (SSRF)") else 0):
                     hits.append((cat, rel.as_posix(), n))
     by, per_file = {}, {}
     for cat, f, n in hits:   # al massimo 2 righe per file e categoria: conta quali file aprire, non quante righe
@@ -155,7 +156,11 @@ def main():
         out_lines.append(f"## {cat}: {len(v)}" + (" (primi 60)" if len(v) > 60 else ""))
         out_lines += v[:60]
     (reg / "punti-pericolosi.txt").write_text("\n".join(out_lines) + "\n", encoding="utf-8")
-    prefill["R11"] = ("parziale", "punti pericolosi elencati per categoria (html senza escape anche nel client, esecuzione di codice, deserializzazione, XML, AI, recupero password): "
+    # Una riga da chiudere per categoria trovata: su Juice Shop due giri `standard` avevano visto XSS nel client, SSRF,
+    # chatbot e recupero password e li avevano lasciati nel motivo della checklist («annotato», «non promosso»).
+    import punti
+    punti.write(audit, [(c, len(by.get(c, []))) for c, _ in SINK if by.get(c)])
+    prefill["R11"] = ("parziale", "punti pericolosi elencati per categoria, da chiudere uno per uno in punti-pericolosi.csv (html senza escape anche nel client, esecuzione di codice, deserializzazione, XML, AI, recupero password, URL dall'utente): "
                       + ", ".join(f"{c} {len(by.get(c, []))}" for c, _ in SINK) + "; da leggere a mano, con upload, SSRF, query e redirect",
                       "registro-tool/punti-pericolosi.txt")
 

@@ -1,0 +1,88 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Samuele Cucurnia e Pietro Previtali
+"""punti-pericolosi.csv: una riga per ogni categoria di punti pericolosi trovata dal pre-passaggio.
+
+Ogni riga chiude con uno di questi esiti:
+  finding        → id dei finding (anche «ipotesi da validare») in `finding`; almeno uno deve citare un file della categoria
+  non difetto    → `motivo` con almeno un file:riga della categoria letto, e perché non è un difetto
+  non esaminato  → `motivo`; accettato nel `rapido`, non nello `standard` e nel `completo`
+
+Perché: su Juice Shop due giri `standard` avevano visto XSS nel client, SSRF, chatbot e recupero password e li avevano
+lasciati nel motivo della checklist («annotato», «non promosso», «superficie nota»): 7–8 vulnerabilità su 32. Un
+controllo sulle parole del motivo si aggira con un sinonimo; una riga per categoria con un esito chiuso no.
+"""
+import csv
+import json
+import re
+from pathlib import Path
+
+CAMPI = ["categoria", "punti", "esito", "finding", "motivo"]
+ESITI = ("finding", "non difetto", "non esaminato")
+
+
+def write(audit, cats):
+    p = Path(audit) / "punti-pericolosi.csv"
+    with p.open("w", newline="", encoding="utf-8") as fh:
+        w = csv.DictWriter(fh, fieldnames=CAMPI)
+        w.writeheader()
+        for c, n in cats:
+            w.writerow({"categoria": c, "punti": n, "esito": "", "finding": "", "motivo": ""})
+
+
+def _files_by_cat(audit):
+    t = Path(audit) / "registro-tool" / "punti-pericolosi.txt"
+    out, cur = {}, None
+    if not t.exists():
+        return out
+    for line in t.read_text(encoding="utf-8").splitlines():
+        m = re.match(r"## (.+?): \d+", line)
+        if m:
+            cur = m.group(1)
+            out[cur] = []
+        elif cur and line.strip():
+            out[cur].append(line.strip())
+    return out
+
+
+def problems(audit, strict):
+    """Restituisce (stato, dettaglio) oppure None se il file non c'è. strict = standard/completo."""
+    p = Path(audit) / "punti-pericolosi.csv"
+    if not p.exists():
+        return None
+    rows = list(csv.DictReader(p.open(encoding="utf-8")))
+    if not rows:
+        return ("OK", "nessuna categoria trovata dal pre-passaggio")
+    try:
+        fl = json.loads((Path(audit) / "findings" / "findings.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        fl = []
+    refs = {f.get("id"): " ".join(map(str, (f.get("prova") or {}).get("riferimenti_file") or [])) + " " + json.dumps(f, ensure_ascii=False)
+            for f in fl if isinstance(f, dict)}
+    files = _files_by_cat(audit)
+    bad, aperti = [], []
+    for r in rows:
+        c, e = r.get("categoria", "").strip(), (r.get("esito") or "").strip().lower()
+        mot, ids = (r.get("motivo") or "").strip(), [x for x in re.split(r"[\s,;]+", r.get("finding") or "") if x]
+        nomi = {x.split(":")[0] for x in files.get(c, [])}
+        if e not in ESITI:
+            bad.append(f"{c} (esito mancante: finding, non difetto o non esaminato)")
+        elif e == "finding":
+            miss = [i for i in ids if i not in refs]
+            if not ids or miss:
+                bad.append(f"{c} (finding {'assenti' if not ids else 'inesistenti: ' + ', '.join(miss)})")
+            elif nomi and not any(any(n in refs[i] for n in nomi) for i in ids):
+                bad.append(f"{c} (nessuno dei finding cita un file della categoria)")
+        elif e == "non difetto":
+            if not mot or (nomi and not any(n in mot for n in nomi)):
+                bad.append(f"{c} (non difetto: il motivo deve citare almeno un file:riga letto della categoria)")
+        elif e == "non esaminato":
+            if not mot:
+                bad.append(f"{c} (non esaminato senza motivo)")
+            else:
+                aperti.append(c)
+    if bad:
+        return ("FALLITO" if strict else "DA VERIFICARE", "; ".join(bad))
+    if aperti:
+        return ("FALLITO" if strict else "DA VERIFICARE", "non esaminate: " + ", ".join(aperti)
+                + (" (nello standard e nel completo ogni categoria chiude con un finding o con «non difetto»)" if strict else ""))
+    return ("OK", f"{len(rows)} categorie chiuse")

@@ -4,6 +4,7 @@ Formato basato su [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/); v
 
 ## [Non rilasciato]
 ### Aggiunto
+- **`punti-pericolosi.csv`**: il pre-passaggio scrive una riga per ogni categoria di punti pericolosi trovata (nuova categoria «URL dall'utente (SSRF)»: su Juice Shop trova esattamente `profileImageUrlUpload.ts:24`); ogni riga chiude con un finding che cita un file della categoria, con «non difetto» e un `file:riga` letto, o con «non esaminato» (solo nel `rapido`). Nello `standard` e nel `completo` le aree lasciate aperte nella checklist ora fanno **fallire** `chiudi`, e `revisione.md` è letta anche in `report/`. Motivo: il giro successivo (std5, 8/32) ha aggirato il controllo sulle parole scrivendo «annotato» e «superfici note con la verifica mancante» invece di «non promosso».
 - **Problemi annotati e non diventati finding**: `chiudi` segnala le aree della checklist il cui motivo dice «non promosso», «da approfondire», «non ridimostrato» o simili; si chiude facendone un finding (anche «ipotesi da validare») o motivando in `revisione.md` sotto «## Risposte». Nello `standard` segnala anche quando la modalità non aggiunge nessun finding al rapido; la procedura ha un passo di **approfondimento** (4b). Motivo: un giro `standard` con la 1.2.0 su Juice Shop (Opus 4.8, PC dell'autore) ha chiuso pulito, con 5 smentite su 5, ma con gli stessi 9 finding del rapido e 7/32 vulnerabilità: recupero password, SSRF, XSS nel client e chatbot erano annotati nella checklist e mai riportati.
 
 ## [1.2.0] - 2026-11-01

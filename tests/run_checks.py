@@ -724,10 +724,30 @@ if have("check_delivery.py") and have("init_audit.py"):
         w = _c.DictWriter(fh, fieldnames=list(rows[0].keys())); w.writeheader(); w.writerows(rows)
     r4 = run("check_delivery.py", md)
     check("checklist: «non promosso» e «da approfondire» nel motivo sono segnalati con l'area",
-          "!!   problemi annotati nella checklist" in r4.stdout and "R04, R11" in r4.stdout, r4.stdout[-600:])
+          "problemi annotati nella checklist" in r4.stdout and "R04, R11" in r4.stdout, r4.stdout[-600:])
     (md / "revisione.md").write_text("# Revisione\n\n## Risposte\nNessun nuovo finding.\nR04: le domande sono solo per account demo, non un difetto.\n", encoding="utf-8")
     r5 = run("check_delivery.py", md)
     check("checklist: un'area motivata in ## Risposte non è più segnalata", "R11" in r5.stdout and "R04" not in r5.stdout.split("problemi annotati")[1].split("\n")[0], r5.stdout[-600:])
+    (md / "registro-tool" / "punti-pericolosi.txt").write_text("## html senza escape: 1\nsrc/view.ts:9\n## URL dall'utente (SSRF): 1\nsrc/img.ts:24\n", encoding="utf-8")
+    pc = md / "punti-pericolosi.csv"
+    pc.write_text("categoria,punti,esito,finding,motivo\nhtml senza escape,1,,,\nURL dall'utente (SSRF),1,non esaminato,,manca tempo\n", encoding="utf-8")
+    r6 = run("check_delivery.py", md)
+    check("punti pericolosi: nello standard una categoria senza esito o «non esaminato» fa fallire `chiudi`",
+          "FAIL punti pericolosi" in r6.stdout and "html senza escape (esito mancante" in r6.stdout, r6.stdout[-600:])
+    fz = {"id": "APP-001", "titolo": "x", "prova": {"riferimenti_file": ["src/altro.ts:1"]}}
+    (md / "findings" / "findings.json").write_text(json.dumps([fz]), encoding="utf-8")
+    pc.write_text("categoria,punti,esito,finding,motivo\nhtml senza escape,1,finding,APP-001,\nURL dall'utente (SSRF),1,non difetto,,l'URL è una costante\n", encoding="utf-8")
+    r7 = run("check_delivery.py", md)
+    check("punti pericolosi: un finding che non cita file della categoria e un «non difetto» senza file letto non bastano",
+          "nessuno dei finding cita un file della categoria" in r7.stdout and "SSRF) (non difetto" in r7.stdout, r7.stdout[-600:])
+    fz["prova"]["riferimenti_file"] = ["src/view.ts:9"]
+    (md / "findings" / "findings.json").write_text(json.dumps([fz]), encoding="utf-8")
+    pc.write_text("categoria,punti,esito,finding,motivo\nhtml senza escape,1,finding,APP-001,\nURL dall'utente (SSRF),1,non difetto,,src/img.ts:24 usa solo URL della allowlist interna\n", encoding="utf-8")
+    r8 = run("check_delivery.py", md)
+    check("punti pericolosi: finding sul file della categoria e «non difetto» con file:riga chiudono le righe",
+          "ok   punti pericolosi chiusi per categoria" in r8.stdout, r8.stdout[-600:])
+    (md / "findings" / "findings.json").write_text("[]", encoding="utf-8")
+    check("checklist: nello standard un problema lasciato nel motivo fa fallire `chiudi`", "FAIL problemi annotati" in r4.stdout, r4.stdout[-400:])
     cs = run("coverage_summary.py", md)
     check("coverage_summary: «si (L2)» conta come applicabile", "applicabili: **1**" in cs.stdout, cs.stdout[-400:])
 

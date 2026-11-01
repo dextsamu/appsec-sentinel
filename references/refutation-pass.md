@@ -6,7 +6,7 @@ Un finding scritto da chi l'ha trovato tende a sembrare solido a chi l'ha scritt
 - un secondo agente con lo stesso perimetro e gli stessi divieti, che non ha visto il ragionamento dell'autore;
 - una sessione nuova (altra conversazione o altro agente) che riparte dal solo brief: un secondo passaggio nella **stessa** conversazione non conta, perché il ragionamento dell'autore è ancora lì;
 - una persona del team.
-Nessuna di queste figure amplia il mandato: non si fanno test nuovi se non erano già autorizzati. Se non c'è nessun verificatore indipendente, registra `esito: non eseguita` e dichiaralo nel report come limite.
+Nessuna di queste figure amplia il mandato: non si fanno test nuovi se non erano già autorizzati. Se non c'è nessun verificatore indipendente, prepara il pacchetto per una seconda sessione (sezione in fondo); solo se non è possibile, registra `esito: non eseguita` e dichiaralo nel report come limite.
 
 ## Procedura
 1. `verify_findings.py findings/findings.json --repo <codice> --brief-dir smentite/` crea un brief per ogni finding alto o critico. Il brief contiene l'affermazione, l'attore dichiarato e i riferimenti, **non** la motivazione dell'autore.
@@ -23,3 +23,6 @@ Lo stesso agente che ha scritto il finding, nella stessa conversazione, non è u
 
 ## Limiti
 La smentita riduce i falsi positivi, non garantisce che un finding «resista» perché è vero: dipende da cosa il verificatore ha davvero controllato. Riportalo nei limiti del finding.
+
+## Senza sottoagenti: pacchetto per una seconda sessione
+Se nella tua sessione non puoi avviare un verificatore nuovo, non fermarti a «non eseguita»: proponi all'utente una seconda sessione (un'altra conversazione, un altro agente come Codex o Antigravity, un collega) e prepara il pacchetto con `scripts/refutation_pack.py prepara <cartella-audit> --repo <repository>`. Scrive in `smentite/pacchetto/` le istruzioni da incollare come primo messaggio (`ISTRUZIONI.md`), questo metodo e un brief per ogni finding alto o critico, senza le conclusioni dell'autore. Quando la seconda sessione ha scritto `esiti.json`, `scripts/refutation_pack.py importa <cartella-audit> <esiti.json>` li controlla e li applica. «non eseguita» resta solo se l'utente non può o non vuole aprire una seconda sessione.

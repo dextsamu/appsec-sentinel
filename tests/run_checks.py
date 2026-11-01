@@ -776,5 +776,26 @@ if have("check_delivery.py") and have("init_audit.py"):
     check("tempi: init registra l'inizio, la chiusura stampa durata e pre-passaggio e li registra",
           "pre-passaggio 42 s" in rc.stdout and tj.get("inizio") and tj.get("chiusure", [{}])[-1].get("secondi_prepass") == 42.5, rc.stdout[-400:])
 
+if have("refutation_pack.py"):
+    rpk = tmp / "rpack"; (rpk / "findings").mkdir(parents=True); rrepo = tmp / "rpack-repo"; (rrepo / "src").mkdir(parents=True)
+    (rrepo / "src" / "api.ts").write_text("app.get('/x/:id', (q, r) => r.json(db.get(q.params.id)))\n", encoding="utf-8")
+    ff = {"id": "APP-001", "titolo": "BOLA su /x/:id", "asset": "/x/:id", "attore": "utente", "categoria": "autorizzazione", "cwe": ["CWE-639"],
+          "severita": "alta", "stato": "confermato da codice o configurazione", "motivazione_severita": "MOTIVAZIONE-DELL-AUTORE",
+          "prova": {"tipo": "codice", "riferimenti_file": ["src/api.ts:1"], "descrizione": "x"}}
+    (rpk / "findings" / "findings.json").write_text(json.dumps([ff]), encoding="utf-8")
+    r1 = run("refutation_pack.py", "prepara", rpk, "--repo", rrepo)
+    pkd = rpk / "smentite" / "pacchetto"
+    allp = " ".join(x.read_text(encoding="utf-8") for x in pkd.glob("*.md"))
+    check("pacchetto di smentita: istruzioni, metodo e un brief per finding alto, senza le motivazioni dell'autore",
+          (pkd / "ISTRUZIONI.md").exists() and (pkd / "smentita-APP-001.md").exists() and "MOTIVAZIONE-DELL-AUTORE" not in allp
+          and str(pkd.resolve()) in (pkd / "ISTRUZIONI.md").read_text(encoding="utf-8"), r1.stdout + r1.stderr)
+    (pkd / "esiti.json").write_text(json.dumps([{"id": "APP-001", "esito": "resiste", "verificatore": "stessa sessione dell'autore", "tentativi": ["x"]}]), encoding="utf-8")
+    r2 = run("refutation_pack.py", "importa", rpk, pkd / "esiti.json")
+    (pkd / "esiti.json").write_text(json.dumps([{"id": "APP-001", "esito": "resiste", "verificatore": "sessione nuova di un altro agente, solo con il pacchetto", "tentativi": ["cercato un controllo di proprietà: assente"]}]), encoding="utf-8")
+    r3 = run("refutation_pack.py", "importa", rpk, pkd / "esiti.json")
+    fz = json.loads((rpk / "findings" / "findings.json").read_text(encoding="utf-8"))[0]
+    check("pacchetto di smentita: rifiuta esiti dell'autore, applica quelli di una sessione nuova",
+          r2.returncode != 0 and r3.returncode == 0 and (fz.get("smentita") or {}).get("esito") == "resiste", r2.stdout + r3.stdout)
+
 print(f"\nriusciti: {ok}  falliti: {fail}")
 sys.exit(1 if fail else 0)

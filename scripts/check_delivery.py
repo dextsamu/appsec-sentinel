@@ -203,6 +203,8 @@ def main() -> int:
             continue
         if f.parent.name == "registro-tool" and f.name in AUTO_OUT:
             continue   # uscite degli script: copiano estratti del repository, non sono giudizi dell'auditor
+        if "smentite" in f.parts and (f.name.startswith("smentita-") or f.name in ("ISTRUZIONI.md", "refutation-pass.md")):
+            continue   # brief e pacchetto di smentita: generati dagli script, con estratti del codice
         for n, line in enumerate(f.read_text(encoding="utf-8", errors="replace").splitlines(), 1):
             for m in VIETATE.finditer(line):
                 pre = line[max(0, m.start() - 70):m.start()]

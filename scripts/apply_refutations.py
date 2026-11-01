@@ -84,7 +84,36 @@ def apply_gaps(audit: Path, es: list) -> int:
         w.writeheader(); w.writerows(rows)
     print(f"smentite applicate ai gap: {n['resiste']} resistono, {n['declassato']} declassati, {n['respinto']} respinti"
           + (" (in gaps-respinti.csv)" if respinti else ""))
+    sync_matrix(audit, {e["id"]: e for e in es})
     return 0
+
+
+def sync_matrix(audit: Path, by_id: dict):
+    """Riporta gli esiti nella colonna `smentita` delle righe di gdpr-matrix.csv che citano i gap smentiti. La riga
+    prende «resiste» solo se tutti i suoi gap smentiti resistono, altrimenti «declassato»; righe con gap non smentiti
+    non vengono toccate (restano «non eseguita»: è un limite vero)."""
+    mp = audit / "gdpr-matrix.csv"
+    if not mp.exists():
+        return
+    rows = list(csv.DictReader(mp.open(encoding="utf-8")))
+    if not rows or "smentita" not in rows[0] or "gap" not in rows[0]:
+        return
+    import re
+    cambiate = 0
+    for r in rows:
+        ids = re.findall(r"GDPR-\d+", r.get("gap") or "")
+        if not ids or not all(i in by_id for i in ids):
+            continue
+        es = [by_id[i] for i in ids]
+        esito = "resiste" if all(e["esito"] == "resiste" for e in es) else "declassato"
+        ver = "; ".join(sorted({e["verificatore"] for e in es}))
+        r["smentita"] = f"{esito} | {ver} | " + "; ".join(f"{e['id']}: {e['esito']}" for e in es)
+        cambiate += 1
+    if cambiate:
+        with mp.open("w", newline="", encoding="utf-8") as fh:
+            w = csv.DictWriter(fh, fieldnames=list(rows[0].keys()))
+            w.writeheader(); w.writerows(rows)
+        print(f"gdpr-matrix.csv: smentita aggiornata in {cambiate} righe (quelle con tutti i gap smentiti)")
 
 
 def main():

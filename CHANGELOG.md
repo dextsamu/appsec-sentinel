@@ -3,6 +3,8 @@
 Formato basato su [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/); versioni secondo [SemVer](https://semver.org/lang/it/).
 
 ## [Non rilasciato]
+### Aggiunto
+- **Smentita senza sottoagenti** (`scripts/refutation_pack.py`): `prepara <cartella> --repo <repo>` scrive in `smentite/pacchetto/` le istruzioni da incollare in una seconda sessione (altra conversazione, altro agente come Codex o Antigravity, un collega), il metodo e un brief per finding alto o critico, senza findings.json né motivazioni dell'autore; `importa <cartella> <esiti.json>` rifiuta gli esiti scritti dall'autore o nella stessa sessione e applica gli altri con `apply_refutations.py`. «non eseguita» resta solo se una seconda sessione non è possibile. `check_delivery.py` non cerca più parole vietate nei brief generati dagli script.
 
 ## [1.2.3] - 2026-11-01
 ### Corretto

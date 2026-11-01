@@ -50,7 +50,7 @@ Se la richiesta inizia con una di queste parole (anche dopo `/appsec-sentinel`),
 - `scanner` (senza file): dipendenze sul solo lockfile e segreti nella storia Git (`scripts/run_scanners.py`); se non parte, motivo vero e comando preparato.
 - `scanner <file…>`: importa npm audit, SARIF, gitleaks, osv, semgrep, trivy, ZAP come candidati «ipotesi da validare».
 - `revisione [cartella]`: revisione indipendente dei finding (`references/review-pass.md`).
-- `smentita [cartella]`: un verificatore diverso dall'autore prova a confutare ogni finding alto (`references/refutation-pass.md`); l'autore non può smentire se stesso.
+- `smentita [cartella]`: un verificatore diverso dall'autore prova a confutare ogni finding alto (`references/refutation-pass.md`); l'autore non può smentire se stesso; senza sottoagenti, `scripts/refutation_pack.py prepara` scrive il pacchetto per una seconda sessione e `importa` ne applica gli esiti.
 - `riprendi <audit-precedente> <audit-nuovo>`: riporta la copertura ancora valida.
 - `confronta <vecchio> <nuovo>`: risolti, nuovi, cambiati.
 - `chiudi [cartella]`: controllo di consegna (`scripts/check_delivery.py`), obbligatorio prima di consegnare.

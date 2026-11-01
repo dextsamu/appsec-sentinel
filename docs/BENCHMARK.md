@@ -140,6 +140,9 @@ Giri `standard` su Juice Shop con istanza locale (127.0.0.1, dati sintetici), la
 
 Cosa mostra: con lo stesso modello il salto viene da `punti-pericolosi.csv`, una riga da chiudere per categoria di punti pericolosi, che ha portato nei finding XSS nel client, SSRF, XXE, chatbot e domande di sicurezza, prima annotati nella checklist e mai riportati. Un controllo sulle parole del motivo («non promosso») non bastava: il giro successivo ha scritto «annotato» e «superfici note». Fra 1.2.1 e 1.2.2 la differenza (13 contro 12) sta nella variabilità di un giro solo: le due categorie nuove sono state aperte e chiuse come «non difetto» con motivi deboli («dati di demo», «solo navigazione»), da cui i criteri aggiunti in `references/commands.md`. Per misurare un effetto di questa grandezza servono almeno due giri per versione. Con Opus 5.5 in cloud il `rapido` aveva dato 18–20/32: il modello conta quanto la procedura.
 
+## Rapido in cloud dopo la 1.2.3 (01/11/2026)
+Due giri `rapido` indipendenti (sottoagenti nuovi, Opus 5.5, solo analisi statica) sulla stessa copia di Juice Shop: **23/32 e 19/32** (vicino: 27 e 23; unione 23/32), 37 e 36 finding, `chiudi` senza falliti, tutte le 9 categorie di `punti-pericolosi.csv` chiuse con un finding. Prima delle categorie: 18 e 20. Entrano ora le funzioni amministrative protette solo nel client, gli account di seed caricati all'avvio, il chatbot, lo zip slip, la chiave TLS in Terraform. Restano fuori le singole domande di sicurezza in `securityQuestions.yml` (i finding citano il codice del reset o `users.yml`), le pagine nascoste senza guard (score board, token sale, web3 sandbox) e la registrazione come admin quando il finding cita una riga diversa da quella marcata.
+
 ## Come ripeterlo
 ```bash
 git clone --depth 1 https://github.com/juice-shop/juice-shop /tmp/juice-shop

@@ -282,8 +282,8 @@ def strict_mode(audit: Path) -> bool:
     try:
         mod = str(json.loads((audit / "meta.json").read_text(encoding="utf-8")).get("modalita", "")).lower()
     except (OSError, ValueError):
-        return False
-    return mod.startswith(("standard", "completo"))
+        mod = ""
+    return mod.startswith(("standard", "completo")) or ((audit / "gaps.csv").exists() and not (audit / "findings" / "findings.json").exists())
 
 
 def deliverables(audit: Path):

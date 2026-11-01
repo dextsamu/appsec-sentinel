@@ -17,7 +17,7 @@ import re
 from pathlib import Path
 
 CAMPI = ["categoria", "punti", "esito", "finding", "motivo"]
-ESITI = ("finding", "non difetto", "non esaminato")
+ESITI = ("finding", "gap", "non difetto", "non esaminato")   # «gap» per le cartelle di gdpr-sentinel
 
 
 def write(audit, cats):
@@ -58,6 +58,9 @@ def problems(audit, strict):
         fl = []
     refs = {f.get("id"): " ".join(map(str, (f.get("prova") or {}).get("riferimenti_file") or [])) + " " + json.dumps(f, ensure_ascii=False)
             for f in fl if isinstance(f, dict)}
+    gp = Path(audit) / "gaps.csv"
+    if not fl and gp.exists():   # gdpr-sentinel: i gap al posto dei finding
+        refs = {r.get("id"): f"{r.get('riferimenti', '')} {r.get('titolo', '')}" for r in csv.DictReader(gp.open(encoding="utf-8"))}
     files = _files_by_cat(audit)
     bad, aperti = [], []
     for r in rows:
@@ -65,8 +68,8 @@ def problems(audit, strict):
         mot, ids = (r.get("motivo") or "").strip(), [x for x in re.split(r"[\s,;]+", r.get("finding") or "") if x]
         nomi = {x.split(":")[0] for x in files.get(c, [])}
         if e not in ESITI:
-            bad.append(f"{c} (esito mancante: finding, non difetto o non esaminato)")
-        elif e == "finding":
+            bad.append(f"{c} (esito mancante: finding o gap, non difetto, non esaminato)")
+        elif e in ("finding", "gap"):
             miss = [i for i in ids if i not in refs]
             if not ids or miss:
                 bad.append(f"{c} (finding {'assenti' if not ids else 'inesistenti: ' + ', '.join(miss)})")

@@ -4,6 +4,7 @@ Formato basato su [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/); v
 
 ## [Non rilasciato]
 ### Aggiunto
+- `punti.py` e `check_delivery.py` (condivisi) accettano le cartelle di gdpr-sentinel: esito `gap` con gli ID di `gaps.csv`, e per le cartelle con soli gap le categorie aperte fanno fallire `chiudi`.
 - **Smentita senza sottoagenti** (`scripts/refutation_pack.py`): `prepara <cartella> --repo <repo>` scrive in `smentite/pacchetto/` le istruzioni da incollare in una seconda sessione (altra conversazione, altro agente come Codex o Antigravity, un collega), il metodo e un brief per finding alto o critico, senza findings.json né motivazioni dell'autore; `importa <cartella> <esiti.json>` rifiuta gli esiti scritti dall'autore o nella stessa sessione e applica gli altri con `apply_refutations.py`. «non eseguita» resta solo se una seconda sessione non è possibile. `check_delivery.py` non cerca più parole vietate nei brief generati dagli script.
 
 ## [1.2.3] - 2026-11-01

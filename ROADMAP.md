@@ -16,6 +16,8 @@ Cosa è fatto, cosa viene dopo e perché. Le priorità vengono dalle misure in [
 
 **1.2.1 (01/11/2026)**: `punti-pericolosi.csv` (una riga da chiudere per categoria di punti pericolosi, nuova categoria SSRF), aree lasciate aperte che bloccano `standard` e `completo`, passo di approfondimento. Stesso giro `standard` su Juice Shop con lo stesso modello: da 7/32 a 13/32 (22 finding).
 
+**1.2.2 (01/11/2026)**: categorie «route del client» e «dati di seed e credenziali» in `punti-pericolosi.csv`, criteri per «non difetto». Effetto non ancora distinguibile dalla variabilità con un giro solo (12/32 contro 13/32): da misurare con due giri.
+
 ## Prossimo
 
 1. **Confermare lo `standard` con un giro reale.** Le ultime correzioni (base del `rapido`, righe obbligatorie, riferimenti `audit:`) sono provate solo dai test. Obiettivo: un giro `standard` su Juice Shop locale con almeno i finding di un `rapido` (22/32 nei file citati) e i critici riprodotti dinamicamente. Pronto da lanciare: `_prove/avvia-standard.ps1` nella cartella di lavoro dell'autore.

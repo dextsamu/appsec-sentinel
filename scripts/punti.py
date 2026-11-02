@@ -126,6 +126,10 @@ def entita_problems(audit, strict):
             aperte.append(k)
         elif e == "gap" and not any(x in ids for x in re.split(r"[\s,;]+", r.get("gap_id") or "") if x):
             bad.append(f"{k} (gap senza gap_id esistente)")
+        elif e == "gap" and r.get("domanda") == "isolamento" and not re.search(r"[\w./-]+\.\w+:\d+", r.get("note") or ""):
+            bad.append(f"{k} (gap di isolamento senza il file:riga della lettura non filtrata in note)")
+        elif e == "non verificabile" and r.get("domanda") == "isolamento" and re.search(r"letture di elenco nelle API: [1-9]", pre):
+            bad.append(f"{k} (isolamento «non verificabile» con letture elencate dal pre-passaggio: vanno guardate e chiuse con ok o gap)")
         elif e == "non verificabile" and not (r.get("note") or "").strip():
             bad.append(f"{k} (non verificabile senza motivo)")
     if aperte or bad:

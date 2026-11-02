@@ -4,6 +4,10 @@ Formato basato su [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/); v
 
 ## [Non rilasciato]
 
+## [1.4.1] - 2026-11-02
+### Cambiato
+- Script condivisi allineati a gdpr-sentinel (`merge_audits.py`: accordo cella per cella sulla matrice per entità; `punti.py`: regole della matrice). Nessun cambiamento per le cartelle di appsec-sentinel.
+
 ## [1.4.0] - 2026-11-02
 ### Cambiato
 - `punti.py` e `check_delivery.py` (condivisi con gdpr-sentinel): controllo della matrice per entità `entita.csv` di gdpr-sentinel; nessun cambiamento per le cartelle di appsec-sentinel. Versione allineata a gdpr-sentinel.

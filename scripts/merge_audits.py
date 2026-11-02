@@ -227,8 +227,32 @@ def main():
     corr = sum(1 for i in range(len(items)) if any(sim.get((i, j), 0) >= MERGE for j in range(len(items)) if items[j][0] != items[i][0]))
     res["con_corrispondente"] = round(corr / len(items), 2) if items else 0
 
+    # matrice per entità (gdpr-sentinel): accordo cella per cella sulle righe che lo script non chiude da solo. È la misura
+    # di stabilità giusta per le domande strutturate: due giri possono dare le stesse risposte e raggrupparle in gap diversi.
+    mats = []
+    for d in a.audits:
+        ep = d / "entita.csv"
+        mats.append({(r["entita"], r["domanda"]): r for r in csv.DictReader(ep.open(encoding="utf-8"))} if ep.exists() else None)
+    if all(m is not None for m in mats) and mats:
+        keys = [k for k in mats[0] if all(k in m for m in mats[1:])
+                and not any((m[k].get("prepass") or "").strip().lower().startswith(("si", "n/a")) and not (m[k].get("esito") or "").strip() for m in mats)]
+        isgap = lambda m, k: (m[k].get("esito") or "").strip().lower() == "gap"
+        same = [k for k in keys if len({isgap(m, k) for m in mats}) == 1]
+        perq = {}
+        for k in keys:
+            t = perq.setdefault(k[1], [0, 0]); t[1] += 1; t[0] += k in same
+        res["matrice_entita"] = {"righe": len(keys), "stesso_giudizio": len(same), "per_domanda": perq}
     out = a.out
     out.mkdir(parents=True, exist_ok=True)
+    if res.get("matrice_entita"):   # unione della matrice: gap se almeno un giro lo dice, con la provenienza
+        with (out / "entita.csv").open("w", newline="", encoding="utf-8") as fh:
+            w = csv.writer(fh)
+            w.writerow(["entita", "dati", "fonte", "domanda", "prepass", "esito", "gap_id", "note"])
+            for k, r in mats[0].items():
+                es = [(lab, (m.get(k, {}).get("esito") or "").strip().lower()) for lab, m in zip(labels, mats)]
+                g = [lab for lab, e in es if e == "gap"]
+                w.writerow([r["entita"], r["dati"], r["fonte"], r["domanda"], r["prepass"], "gap" if g else (es[0][1] or ""), "",
+                            ("gap per " + ", ".join(g) + "; " if g and len(g) < len(es) else "") + " | ".join(f"{lab}: {e or '-'}" for lab, e in es)])
     gaps_mode = all("_gap" in f for f in merged) and merged
     if gaps_mode:
         with (out / "gaps.csv").open("w", newline="", encoding="utf-8") as fh:
@@ -263,6 +287,10 @@ def main():
     (out / "unione-giri.md").write_text("\n".join(md) + "\n", encoding="utf-8")
     print(f"giri: {len(labels)} · finding: {', '.join(f'{k} {v}' for k, v in per.items())} · cause distinte: {len(report_groups)} · "
           f"viste da tutti: {n_all} · accordo: {acc:.0%}")
+    if res.get("matrice_entita"):
+        me = res["matrice_entita"]
+        print(f"matrice per entità: stesso giudizio (gap o no) su {me['stesso_giudizio']}/{me['righe']} righe aperte "
+              f"({me['stesso_giudizio'] / max(1, me['righe']):.0%}) · " + ", ".join(f"{q} {v[0]}/{v[1]}" for q, v in sorted(me['per_domanda'].items())))
     print(f"finding con un corrispondente in un altro giro: {res['con_corrispondente']:.0%} (stima alta: conta anche i giri che dividono "
           "o raggruppano le cause in modo diverso; da leggere insieme all'accordo)")
     durate = []

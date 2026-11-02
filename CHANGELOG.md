@@ -3,6 +3,8 @@
 Formato basato su [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/); versioni secondo [SemVer](https://semver.org/lang/it/).
 
 ## [Non rilasciato]
+### Cambiato
+- `merge_audits.py` (condiviso con gdpr-sentinel): citazioni dello stesso file a meno di 3 righe contano come citazione vicina; sui giri appsec esistenti l'accordo non cambia (Juice 75%, Django 88%, Laravel 94%).
 
 ## [1.3.2] - 2026-11-02
 ### Misurato

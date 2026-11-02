@@ -4,6 +4,10 @@ Formato basato su [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/); v
 
 ## [Non rilasciato]
 
+## [1.4.0] - 2026-11-02
+### Cambiato
+- `punti.py` e `check_delivery.py` (condivisi con gdpr-sentinel): controllo della matrice per entità `entita.csv` di gdpr-sentinel; nessun cambiamento per le cartelle di appsec-sentinel. Versione allineata a gdpr-sentinel.
+
 ## [1.3.3] - 2026-11-02
 ### Misurato (Juice Shop con altri agenti)
 - `appsec-sentinel rapido` su Juice Shop, stesso prompt: Codex 18/32 (vicino 22), Antigravity 6/32 (vicino 9), Claude 19–23/32. Tabella in `docs/ALTRI-AGENTI.md`.

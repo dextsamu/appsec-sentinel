@@ -275,6 +275,9 @@ def main() -> int:
     lt = punti.letture_problems(audit, strict_mode(audit))
     if lt:
         add("letture obbligatorie (letture.csv)", *lt)
+    em = punti.entita_problems(audit, strict_mode(audit))
+    if em:
+        add("matrice per entità (entita.csv)", *em)
 
     deliverables(audit)
     return finish(a)

@@ -104,3 +104,33 @@ def letture_problems(audit, strict):
                 f"{len(aperti)} su {len(rows)} senza «si» o «no» con motivo: {', '.join(aperti[:5])}{'…' if len(aperti) > 5 else ''}")
     n = sum(1 for r in rows if (r.get("letto") or "").strip().lower() in ("si", "sì"))
     return ("OK", f"{n} letti su {len(rows)}")
+
+
+def entita_problems(audit, strict):
+    """entita.csv (gdpr-sentinel): ogni riga con prepass «non trovato» va chiusa con un esito; «gap» richiede un gap_id
+    presente in gaps.csv, «non verificabile» il motivo in note."""
+    p = Path(audit) / "entita.csv"
+    if not p.exists():
+        return None
+    rows = list(csv.DictReader(p.open(encoding="utf-8")))
+    gp = Path(audit) / "gaps.csv"
+    ids = {r.get("id") for r in csv.DictReader(gp.open(encoding="utf-8"))} if gp.exists() else set()
+    aperte, bad = [], []
+    for r in rows:
+        pre = (r.get("prepass") or "").strip().lower()
+        e = (r.get("esito") or "").strip().lower()
+        k = f"{r.get('entita')}/{r.get('domanda')}"
+        if pre.startswith(("si", "n/a")) and not e:
+            continue
+        if e not in ("ok", "gap", "non applicabile", "non verificabile"):
+            aperte.append(k)
+        elif e == "gap" and not any(x in ids for x in re.split(r"[\s,;]+", r.get("gap_id") or "") if x):
+            bad.append(f"{k} (gap senza gap_id esistente)")
+        elif e == "non verificabile" and not (r.get("note") or "").strip():
+            bad.append(f"{k} (non verificabile senza motivo)")
+    if aperte or bad:
+        det = (f"{len(aperte)} righe «non trovato» senza esito: {', '.join(aperte[:5])}{'…' if len(aperte) > 5 else ''}" if aperte else "")
+        det += ("; " if aperte and bad else "") + "; ".join(bad[:5])
+        return ("FALLITO" if strict else "DA VERIFICARE", det)
+    g = sum(1 for r in rows if (r.get("esito") or "").strip().lower() == "gap")
+    return ("OK", f"{len(rows)} righe, {g} con gap")

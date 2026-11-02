@@ -23,6 +23,16 @@ Stesso giorno, `appsec-sentinel rapido` (solo analisi statica) sul banco Django 
 
 Antigravity ha trovato anche il segreto presente solo nella storia Git senza riportarne il valore; ha mancato le dipendenze con vulnerabilità note (D09). Codex li ha trovati tutti e 11, più due rilievi fuori elenco ragionevoli (login senza limite di tentativi, immagine Docker senza utente dedicato), ma assegna severità più basse (la chiave di firma Django è «media») e lascia come ipotesi il segreto nella storia Git e le dipendenze. Il «da verificare» è «deserializzazione sicura», termine tecnico.
 
+Juice Shop (`tests/bench-juice`, verità scritta da altri, 32 vulnerabilità con file e riga), `rapido` statico, stesso prompt, 02/11/2026:
+
+| Agente | Con file e riga | Vicino (15 righe) | Finding | Smentita |
+|---|---|---|---|---|
+| Antigravity (Gemini) | 6/32 | 9/32 | 12 | pacchetto preparato, smentita non eseguita |
+| Codex | 18/32 | 22/32 | 28 | sottoagente indipendente: 14 resistono, 1 declassato |
+| Claude (riferimento, Opus 5.5 in cloud) | 23/32 e 19/32 | 27 e 23 | 37 e 36 | — |
+
+Sul banco piccolo (Django, 11 difetti) Antigravity e Codex erano vicini (10 e 11); su un'app grande e densa come Juice Shop la differenza fra agenti è ampia. Antigravity ha scritto pochi finding (12) e ha raggruppato più cause in ciascuno.
+
 ## Prima prova (30/10/2026)
 Prova del 30/10/2026, su Windows, un solo giro per agente: audit in modalità `rapido`, solo analisi statica, su un'app finta creata dall'agente stesso, con entrambe le skill (`appsec-sentinel` e `gdpr-sentinel`). Le versioni degli agenti non sono state registrate.
 

@@ -25,7 +25,7 @@ Cosa è fatto, cosa viene dopo e perché. Le priorità vengono dalle misure in [
 ## Prossimo
 
 1. **Juice Shop: i casi ancora mancati, misurati con due giri per versione.** Lo `standard` è confermato su un PC (01/11/2026, Opus 4.8): da 7/32 a 13/32 con `punti-pericolosi.csv`. Restano le pagine «nascoste» del frontend e i dati di seed deboli: le categorie ci sono (1.2.2), ma l'agente le ha chiuse come «non difetto»; i criteri aggiunti vanno misurati con almeno due giri, perché fra un giro e l'altro la differenza è di 1–2 vulnerabilità. Rapido in cloud con Opus 5.5 dopo la 1.2.3: 23/32 e 19/32. Obiettivo: oltre 16/32 per giro con Opus 4.8 senza aumentare i falsi allarmi sui banchi.
-2. **Juice Shop con Codex e Antigravity.** Il `rapido` sul banco Django è misurato su entrambi (01–02/11/2026: Antigravity 10/11, Codex 11/11, 0 falsi allarmi); manca la misura di generalizzazione su Juice Shop, dove la verità è scritta da altri.
+2. **Juice Shop con gli altri agenti: misurato** (02/11/2026: Codex 18/32, Antigravity 6/32, Claude 19–23/32). Prossimo: capire perché Antigravity scrive pochi finding su un'app grande (raggruppa le cause, chiude presto) e se una soglia minima per categoria in `punti-pericolosi.csv` aiuta.
 
 ## Dopo
 

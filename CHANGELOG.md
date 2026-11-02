@@ -3,6 +3,9 @@
 Formato basato su [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/); versioni secondo [SemVer](https://semver.org/lang/it/).
 
 ## [Non rilasciato]
+### Misurato (Juice Shop con altri agenti)
+- `appsec-sentinel rapido` su Juice Shop, stesso prompt: Codex 18/32 (vicino 22), Antigravity 6/32 (vicino 9), Claude 19–23/32. Tabella in `docs/ALTRI-AGENTI.md`.
+
 ### Cambiato
 - `merge_audits.py` (condiviso con gdpr-sentinel): righe o intervalli dello stesso file che si sovrappongono (± 3 righe) contano come citazione vicina; sui giri appsec esistenti l'accordo non cambia (Juice 75%, Django 88%, Laravel 94%).
 

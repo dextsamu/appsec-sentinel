@@ -272,6 +272,9 @@ def main() -> int:
     pp = punti.problems(audit, strict_mode(audit))
     if pp:
         add("punti pericolosi chiusi per categoria (punti-pericolosi.csv)", *pp)
+    lt = punti.letture_problems(audit, strict_mode(audit))
+    if lt:
+        add("letture obbligatorie (letture.csv)", *lt)
 
     deliverables(audit)
     return finish(a)

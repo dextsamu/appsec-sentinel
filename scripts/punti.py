@@ -89,3 +89,18 @@ def problems(audit, strict):
         return ("FALLITO" if strict else "DA VERIFICARE", "non esaminate: " + ", ".join(aperti)
                 + (" (nello standard e nel completo ogni categoria chiude con un finding o con «non difetto»)" if strict else ""))
     return ("OK", f"{len(rows)} categorie chiuse")
+
+
+def letture_problems(audit, strict):
+    """letture.csv (gdpr-sentinel): ogni file dell'elenco fisso va letto («si») o escluso («no» con il motivo in note)."""
+    p = Path(audit) / "letture.csv"
+    if not p.exists():
+        return None
+    rows = list(csv.DictReader(p.open(encoding="utf-8")))
+    aperti = [r["file"] for r in rows if (r.get("letto") or "").strip().lower().replace("sì", "si") not in ("si", "no")
+              or ((r.get("letto") or "").strip().lower() == "no" and not (r.get("note") or "").strip())]
+    if aperti:
+        return ("FALLITO" if strict else "DA VERIFICARE",
+                f"{len(aperti)} su {len(rows)} senza «si» o «no» con motivo: {', '.join(aperti[:5])}{'…' if len(aperti) > 5 else ''}")
+    n = sum(1 for r in rows if (r.get("letto") or "").strip().lower() in ("si", "sì"))
+    return ("OK", f"{n} letti su {len(rows)}")

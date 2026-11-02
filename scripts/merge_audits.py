@@ -13,7 +13,7 @@ riproducibile né esaustivo; l'unione di più giri lo è di più, e l'accordo tr
 
 Abbinamento per contenuto, mai per ID (tra giri indipendenti «APP-001» indica cose diverse):
   - citazioni file:riga identiche                 +0.5 (+0.1 per ogni altra, fino a +0.3)
-  - se nessuna è identica, citazioni a ≤ 3 righe   +0.4 (+0.1 per ogni altra, fino a +0.2)
+  - se nessuna è identica, righe o intervalli dello stesso file che si sovrappongono (± 3 righe)   +0.4 (+0.1 per ogni altra, fino a +0.2)
   - file citati in comune                         +0.4 × Jaccard
   - almeno un CWE in comune                       +0.15
   - parole in comune di titolo, osservato, asset, categoria   +0.8 × Jaccard
@@ -96,10 +96,13 @@ def similarity(a, b):
     exact = len(la & lb)
     if exact:
         s += 0.5 + min(0.3, 0.1 * (exact - 1)); why.append(f"{exact} citazioni file:riga identiche")
-    if not exact:   # stessa riga a meno di 3: due giri citano la stessa istruzione con un numero di riga diverso (route.ts:312 e :313)
-        near = sum(1 for f, l in la if any(f == g and abs(l - k) <= 3 for g, k in lb))
+    if not exact:   # righe o intervalli che si toccano (a meno di 3 righe): la stessa istruzione citata come route.ts:312 e :313,
+        # o come 330-346 e 313-346; un intervallo conta per tutte le sue righe, non solo per la prima
+        ia = [(f, a1, a2 or a1) for f, a1, a2 in ra if a1]
+        ib = [(f, b1, b2 or b1) for f, b1, b2 in rb if b1]
+        near = sum(1 for f, a1, a2 in ia if any(f == g and a1 <= b2 + 3 and b1 <= a2 + 3 for g, b1, b2 in ib))
         if near:
-            s += 0.4 + min(0.2, 0.1 * (near - 1)); why.append(f"{near} citazioni a meno di 3 righe")
+            s += 0.4 + min(0.2, 0.1 * (near - 1)); why.append(f"{near} citazioni sovrapposte o a meno di 3 righe")
     fa, fb = {f for f, _, _ in ra}, {f for f, _, _ in rb}
     if fa | fb:
         fj = len(fa & fb) / len(fa | fb)

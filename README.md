@@ -7,7 +7,7 @@
 ![Licenza](https://img.shields.io/badge/licenza-Apache--2.0-0ea5a4?style=for-the-badge)
 ![Lingua](https://img.shields.io/badge/lingua-italiano-22c55e?style=for-the-badge)
 ![Agenti](https://img.shields.io/badge/agenti-Claude%20%C2%B7%20Codex%20%C2%B7%20Antigravity-f59e0b?style=for-the-badge)
-![Versione](https://img.shields.io/badge/versione-1.4.1-6366f1?style=for-the-badge)
+![Versione](https://img.shields.io/badge/versione-1.4.2-6366f1?style=for-the-badge)
 [![Sito](https://img.shields.io/badge/sito-dextsamu.github.io-0f172a?style=for-the-badge)](https://dextsamu.github.io/appsec-sentinel/)
 
 **Un report di sicurezza vale quanto la sua onestà.**
@@ -346,7 +346,7 @@ Sì: vedi la sezione «Baseline e fonti» e `references/optional-baselines.md`.
 
 Cosa viene dopo, in ordine e con il numero che ogni voce deve migliorare: [ROADMAP.md](ROADMAP.md).
 
-Versione 1.4.1. Cosa è già verificato e cosa no, in modo esplicito:
+Versione 1.4.2. Cosa è già verificato e cosa no, in modo esplicito:
 
 - Gli script e i template sono controllati automaticamente a ogni modifica (GitHub Actions), insieme ai link relativi e al finding di riferimento. `tests/run_checks.py` prova gli script contro un'app finta con difetti noti; per ora la CI su GitHub dipende dal limite di spesa dell'account, quindi il collaudo è stato eseguito in locale.
 - **Primo collaudo su un caso reale** (30/10/2026): applicazione web Next.js di proprietà dell'autore, modalità `rapido`, sola analisi statica. Ha prodotto 7 finding e ha fatto correggere script, template e istruzioni (vedi CHANGELOG). Dopo: 12 giri reali di agenti indipendenti su Laravel, Django e Juice Shop (31/10/2026, vedi docs/BENCHMARK.md). Resta da collaudare: modalità `standard` e `completo`, i test dinamici su un'istanza reale (`dynamic_authz_check.py` è provato solo contro un server di prova), la smentita indipendente dei finding alti dentro `doppio`, stack diversi da JavaScript, PHP e Python. Segnala ciò che si rompe o confonde con una issue.

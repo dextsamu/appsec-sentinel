@@ -106,10 +106,10 @@ def letture_problems(audit, strict):
     return ("OK", f"{n} letti su {len(rows)}")
 
 
-def entita_problems(audit, strict):
-    """entita.csv (gdpr-sentinel): ogni riga con prepass «non trovato» va chiusa con un esito; «gap» richiede un gap_id
-    presente in gaps.csv, «non verificabile» il motivo in note."""
-    p = Path(audit) / "entita.csv"
+def entita_problems(audit, strict, nome="entita.csv"):
+    """entita.csv e informativa.csv (gdpr-sentinel): ogni riga con prepass «non trovato» va chiusa con un esito; «gap»
+    richiede un gap_id presente in gaps.csv, «non verificabile» il motivo in note."""
+    p = Path(audit) / nome
     if not p.exists():
         return None
     rows = list(csv.DictReader(p.open(encoding="utf-8")))
@@ -119,7 +119,7 @@ def entita_problems(audit, strict):
     for r in rows:
         pre = (r.get("prepass") or "").strip().lower()
         e = (r.get("esito") or "").strip().lower()
-        k = f"{r.get('entita')}/{r.get('domanda')}"
+        k = f"{r.get('entita')}/{r.get('domanda')}" if "entita" in r else (r.get("voce") or "")
         if pre.startswith(("si", "n/a")) and not e:
             continue
         if e not in ("ok", "gap", "non applicabile", "non verificabile"):

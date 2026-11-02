@@ -242,6 +242,15 @@ def main():
         for k in keys:
             t = perq.setdefault(k[1], [0, 0]); t[1] += 1; t[0] += k in same
         res["matrice_entita"] = {"righe": len(keys), "stesso_giudizio": len(same), "per_domanda": perq}
+    infs = []
+    for d in a.audits:
+        ip_ = d / "informativa.csv"
+        infs.append({r["voce"]: r for r in csv.DictReader(ip_.open(encoding="utf-8"))} if ip_.exists() else None)
+    if all(m is not None for m in infs) and infs:
+        ks = [k for k in infs[0] if all(k in m for m in infs[1:])
+              and not any((m[k].get("prepass") or "").strip().lower().startswith(("si", "n/a")) and not (m[k].get("esito") or "").strip() for m in infs)]
+        sm = [k for k in ks if len({(m[k].get("esito") or "").strip().lower() == "gap" for m in infs}) == 1]
+        res["matrice_informativa"] = {"righe": len(ks), "stesso_giudizio": len(sm)}
     out = a.out
     out.mkdir(parents=True, exist_ok=True)
     if res.get("matrice_entita"):   # unione della matrice: gap se almeno un giro lo dice, con la provenienza
@@ -291,6 +300,9 @@ def main():
         me = res["matrice_entita"]
         print(f"matrice per entità: stesso giudizio (gap o no) su {me['stesso_giudizio']}/{me['righe']} righe aperte "
               f"({me['stesso_giudizio'] / max(1, me['righe']):.0%}) · " + ", ".join(f"{q} {v[0]}/{v[1]}" for q, v in sorted(me['per_domanda'].items())))
+    if res.get("matrice_informativa"):
+        mi = res["matrice_informativa"]
+        print(f"matrice dell'informativa: stesso giudizio (gap o no) su {mi['stesso_giudizio']}/{mi['righe']} voci aperte ({mi['stesso_giudizio'] / max(1, mi['righe']):.0%})")
     print(f"finding con un corrispondente in un altro giro: {res['con_corrispondente']:.0%} (stima alta: conta anche i giri che dividono "
           "o raggruppano le cause in modo diverso; da leggere insieme all'accordo)")
     durate = []

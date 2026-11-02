@@ -18,10 +18,10 @@ Stesso giorno, `appsec-sentinel rapido` (solo analisi statica) sul banco Django 
 | Agente | Difetti | Alti | Falsi allarmi | Finding | Smentita | `chiudi` |
 |---|---|---|---|---|---|---|
 | Antigravity (Gemini) | 10/11 | 6/6 | 0/5 | 12 | 7 finding alti, tutti resistono, con tentativi citati per file e riga; l'agente ha preparato il pacchetto e dichiara un «sottoagente indipendente con contesto isolato»: non verificabile da qui che fosse davvero separato | 13 ok, 0 da verificare, 0 falliti (13 min) |
-| Codex | — | — | — | — | — | giro interrotto: credito esaurito, da ripetere |
+| Codex | 11/11 | 6/6 | 0/5 | 14 | sottoagente indipendente avviato da Codex: 4 finding verificati, 3 resistono e 1 declassato (SSRF da alta a media: timeout, output limitato, nessuna credenziale inoltrata) | 11 ok, 1 da verificare, 0 falliti (giro ripreso il giorno dopo, credito esaurito) |
 | Claude (riferimento, due giri in cloud) | 11/11 e 11/11 | 6/6 | 0/5 | — | — | 0 falliti |
 
-Antigravity ha trovato anche il segreto presente solo nella storia Git senza riportarne il valore; ha mancato le dipendenze con vulnerabilità note (D09).
+Antigravity ha trovato anche il segreto presente solo nella storia Git senza riportarne il valore; ha mancato le dipendenze con vulnerabilità note (D09). Codex li ha trovati tutti e 11, più due rilievi fuori elenco ragionevoli (login senza limite di tentativi, immagine Docker senza utente dedicato), ma assegna severità più basse (la chiave di firma Django è «media») e lascia come ipotesi il segreto nella storia Git e le dipendenze. Il «da verificare» è «deserializzazione sicura», termine tecnico.
 
 ## Prima prova (30/10/2026)
 Prova del 30/10/2026, su Windows, un solo giro per agente: audit in modalità `rapido`, solo analisi statica, su un'app finta creata dall'agente stesso, con entrambe le skill (`appsec-sentinel` e `gdpr-sentinel`). Le versioni degli agenti non sono state registrate.

@@ -3,6 +3,8 @@
 Formato basato su [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/); versioni secondo [SemVer](https://semver.org/lang/it/).
 
 ## [Non rilasciato]
+
+## [1.3.3] - 2026-11-02
 ### Misurato (Juice Shop con altri agenti)
 - `appsec-sentinel rapido` su Juice Shop, stesso prompt: Codex 18/32 (vicino 22), Antigravity 6/32 (vicino 9), Claude 19–23/32. Tabella in `docs/ALTRI-AGENTI.md`.
 

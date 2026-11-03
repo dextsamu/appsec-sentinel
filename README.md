@@ -5,10 +5,12 @@
 <br>
 
 ![Licenza](https://img.shields.io/badge/licenza-Apache--2.0-0ea5a4?style=for-the-badge)
-![Lingua](https://img.shields.io/badge/lingua-italiano-22c55e?style=for-the-badge)
+![Lingua](https://img.shields.io/badge/lingua-italiano%20%C2%B7%20English-22c55e?style=for-the-badge)
 ![Agenti](https://img.shields.io/badge/agenti-Claude%20%C2%B7%20Codex%20%C2%B7%20Antigravity-f59e0b?style=for-the-badge)
 ![Versione](https://img.shields.io/badge/versione-1.4.2-6366f1?style=for-the-badge)
 [![Sito](https://img.shields.io/badge/sito-dextsamu.github.io-0f172a?style=for-the-badge)](https://dextsamu.github.io/appsec-sentinel/)
+
+🇬🇧 **Security audit skill for AI coding agents** (Claude Code, Codex, Antigravity) that proves what it claims and writes down what it could not verify. Works in English and Italian: **[English guide →](README.en.md)**
 
 **Un report di sicurezza vale quanto la sua onestà.**
 Questa skill trasforma il tuo agente AI in un responsabile tecnico di assessment che *dimostra* ciò che dichiara, e scrive nero su bianco ciò che non ha potuto verificare. Nata per Claude, provata anche su Codex e Antigravity: vedi [`docs/ALTRI-AGENTI.md`](docs/ALTRI-AGENTI.md).

@@ -5,6 +5,9 @@ Website: [https://dextsamu.github.io/appsec-sentinel/](https://dextsamu.github.i
 **An application-security assessment skill for AI coding agents that proves what it claims and writes down what it could not verify.**
 Built for Claude; also run once on Codex CLI and Antigravity (see [`docs/ALTRI-AGENTI.md`](docs/ALTRI-AGENTI.md), in Italian). Apache-2.0. © Samuele Cucurnia and Pietro Previtali.
 
+<p align="center"><img src="docs/img/demo.gif" alt="appsec-sentinel demo on OWASP Juice Shop" width="760"><br>
+<sub>Real run on the OWASP Juice Shop bench: real commands and output, nothing staged. 23 of 32 vulnerabilities found with file and line.</sub></p>
+
 > **Commands and language.** Every command works in English or Italian (`quick`/`rapido`, `refute`/`smentita`, `close`/`chiudi`…): see the [command card](docs/COMMAND-CARD.md). The skill writes chat, findings and reports in the language you use. Machine-readable files keep canonical Italian field names and enum values because the scripts check them. The PDF generator produces an English report with `--lang en`.
 >
 > **Language note.** The skill's own instructions, references and templates are written in Italian (the authors work with Italian public administrations and non-profits); the agent applies them and answers in your language. This page is a short English guide.

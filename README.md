@@ -21,6 +21,9 @@ Questa skill trasforma il tuo agente AI in un responsabile tecnico di assessment
 >
 > 🤝 **Skill gemella**: per la parte privacy usa [`gdpr-sentinel`](https://github.com/dextsamu/gdpr-sentinel) (informativa contro codice, fornitori, retention, diritti). Insieme producono un unico report PDF: vedi [Con gdpr-sentinel](#con-gdpr-sentinel).
 
+<img src="docs/img/demo.gif" alt="appsec-sentinel demo on OWASP Juice Shop" width="760"><br>
+<sub>Giro reale sul banco OWASP Juice Shop: comandi e output veri, nulla di preparato. 23 vulnerabilità su 32 trovate con file e riga.</sub>
+
 [Perché](#perché-esiste) · [Come funziona](#come-funziona) · [Esempio](#esempio-di-sessione) · [Installazione](#installazione) · [Limiti](#cosa-non-fa) · [FAQ](#domande-frequenti)
 
 </div>

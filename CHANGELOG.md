@@ -3,6 +3,8 @@
 Formato basato su [Keep a Changelog](https://keepachangelog.com/it-IT/1.1.0/); versioni secondo [SemVer](https://semver.org/lang/it/).
 
 ## [Non rilasciato]
+
+## [1.5.0] - 2026-11-04
 ### Cambiato (script condivisi con gdpr-sentinel)
 - `check_delivery.py`, `punti.py`, `merge_audits.py`: supporto alla matrice dei ruoli e degli accessi di gdpr-sentinel (`accessi.csv`). Nessun effetto sulle cartelle di appsec-sentinel.
 

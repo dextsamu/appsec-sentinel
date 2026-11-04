@@ -37,8 +37,12 @@ jobs:
           TAG: ${{ steps.v.outputs.tag }}
         run: |
           # release già esistente (creata a mano o in un giro precedente): aggiorna solo l'allegato
+          # (se un errore di GitHub l'ha lasciata in bozza a metà creazione, la pubblica)
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release upload "$TAG" dist/appsec-sentinel.skill --clobber
+            if [ "$(gh release view "$TAG" --json isDraft --jq .isDraft)" = "true" ]; then
+              gh release edit "$TAG" --draft=false --latest
+            fi
             exit 0
           fi
           gh release create "$TAG" dist/appsec-sentinel.skill --target "$GITHUB_SHA" --title "$TAG" \

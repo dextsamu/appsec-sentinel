@@ -281,6 +281,9 @@ def main() -> int:
     im = punti.entita_problems(audit, strict_mode(audit), "informativa.csv")
     if im:
         add("matrice dell'informativa (informativa.csv)", *im)
+    am = punti.accessi_problems(audit, strict_mode(audit))
+    if am:
+        add("matrice dei ruoli e degli accessi (accessi.csv)", *am)
 
     deliverables(audit)
     return finish(a)

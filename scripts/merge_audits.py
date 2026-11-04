@@ -251,6 +251,16 @@ def main():
               and not any((m[k].get("prepass") or "").strip().lower().startswith(("si", "n/a")) and not (m[k].get("esito") or "").strip() for m in infs)]
         sm = [k for k in ks if len({(m[k].get("esito") or "").strip().lower() == "gap" for m in infs}) == 1]
         res["matrice_informativa"] = {"righe": len(ks), "stesso_giudizio": len(sm)}
+    accs = []
+    for d in a.audits:
+        ap_ = d / "accessi.csv"
+        accs.append({(r["entita"], r["ruolo"]): r for r in csv.DictReader(ap_.open(encoding="utf-8"))} if ap_.exists() else None)
+    if all(m is not None for m in accs) and accs:   # ruoli e accessi: stesso giudizio (gap o no) e stesso ambito
+        ka = [k for k in accs[0] if all(k in m for m in accs[1:])
+              and not any((m[k].get("prepass") or "").strip().lower().startswith(("si", "n/a")) and not (m[k].get("esito") or "").strip() for m in accs)]
+        sa = [k for k in ka if len({(m[k].get("esito") or "").strip().lower() == "gap" for m in accs}) == 1]
+        amb = [k for k in ka if len({(m[k].get("ambito") or "").strip().lower() for m in accs}) == 1]
+        res["matrice_accessi"] = {"righe": len(ka), "stesso_giudizio": len(sa), "stesso_ambito": len(amb)}
     out = a.out
     out.mkdir(parents=True, exist_ok=True)
     if res.get("matrice_entita"):   # unione della matrice: gap se almeno un giro lo dice, con la provenienza
@@ -262,6 +272,19 @@ def main():
                 g = [lab for lab, e in es if e == "gap"]
                 w.writerow([r["entita"], r["dati"], r["fonte"], r["domanda"], r["prepass"], "gap" if g else (es[0][1] or ""), "",
                             ("gap per " + ", ".join(g) + "; " if g and len(g) < len(es) else "") + " | ".join(f"{lab}: {e or '-'}" for lab, e in es)])
+    if res.get("matrice_accessi"):   # unione: gap se almeno un giro lo dice; ambito il più ampio dichiarato
+        ordine = {"nessuno": 0, "propri": 1, "gruppo": 2, "tutti": 3}
+        with (out / "accessi.csv").open("w", newline="", encoding="utf-8") as fh:
+            w = csv.writer(fh)
+            w.writerow(["entita", "dati", "ruolo", "prepass", "ambito", "esito", "gap_id", "note"])
+            for k, r in accs[0].items():
+                es = [(lab, (m.get(k, {}).get("esito") or "").strip().lower(), (m.get(k, {}).get("ambito") or "").strip().lower())
+                      for lab, m in zip(labels, accs)]
+                g = [lab for lab, e, _ in es if e == "gap"]
+                am_ = max((x for _, _, x in es if x in ordine), key=ordine.get, default="")
+                w.writerow([r["entita"], r["dati"], r["ruolo"], r["prepass"], am_, "gap" if g else (es[0][1] or ""), "",
+                            ("gap per " + ", ".join(g) + "; " if g and len(g) < len(es) else "")
+                            + " | ".join(f"{lab}: {e or '-'}/{x or '-'}" for lab, e, x in es)])
     gaps_mode = all("_gap" in f for f in merged) and merged
     if gaps_mode:
         with (out / "gaps.csv").open("w", newline="", encoding="utf-8") as fh:
@@ -303,6 +326,10 @@ def main():
     if res.get("matrice_informativa"):
         mi = res["matrice_informativa"]
         print(f"matrice dell'informativa: stesso giudizio (gap o no) su {mi['stesso_giudizio']}/{mi['righe']} voci aperte ({mi['stesso_giudizio'] / max(1, mi['righe']):.0%})")
+    if res.get("matrice_accessi"):
+        ma = res["matrice_accessi"]
+        print(f"matrice dei ruoli e degli accessi: stesso giudizio (gap o no) su {ma['stesso_giudizio']}/{ma['righe']} coppie aperte "
+              f"({ma['stesso_giudizio'] / max(1, ma['righe']):.0%}) · stesso ambito {ma['stesso_ambito']}/{ma['righe']}")
     print(f"finding con un corrispondente in un altro giro: {res['con_corrispondente']:.0%} (stima alta: conta anche i giri che dividono "
           "o raggruppano le cause in modo diverso; da leggere insieme all'accordo)")
     durate = []

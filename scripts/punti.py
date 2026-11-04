@@ -138,3 +138,41 @@ def entita_problems(audit, strict, nome="entita.csv"):
         return ("FALLITO" if strict else "DA VERIFICARE", det)
     g = sum(1 for r in rows if (r.get("esito") or "").strip().lower() == "gap")
     return ("OK", f"{len(rows)} righe, {g} con gap")
+
+
+AMBITI = ("propri", "gruppo", "tutti", "nessuno")
+
+
+def accessi_problems(audit, strict):
+    """accessi.csv (gdpr-sentinel): ogni coppia entità × ruolo aperta va chiusa con `ambito` (propri, gruppo, tutti,
+    nessuno) ed `esito`; «gap» richiede un gap_id presente e il file:riga della lettura in note, «ok» e «gap» l'ambito,
+    «non verificabile» il motivo in note."""
+    p = Path(audit) / "accessi.csv"
+    if not p.exists():
+        return None
+    rows = list(csv.DictReader(p.open(encoding="utf-8")))
+    gp = Path(audit) / "gaps.csv"
+    ids = {r.get("id") for r in csv.DictReader(gp.open(encoding="utf-8"))} if gp.exists() else set()
+    aperte, bad = [], []
+    for r in rows:
+        pre = (r.get("prepass") or "").strip().lower()
+        e, amb = (r.get("esito") or "").strip().lower(), (r.get("ambito") or "").strip().lower()
+        k = f"{r.get('entita')}/{r.get('ruolo')}"
+        if pre.startswith(("si", "n/a")) and not e:
+            continue
+        if e not in ("ok", "gap", "non applicabile", "non verificabile"):
+            aperte.append(k)
+        elif e in ("ok", "gap") and amb not in AMBITI:
+            bad.append(f"{k} (ambito mancante: {', '.join(AMBITI)})")
+        elif e == "gap" and not any(x in ids for x in re.split(r"[\s,;]+", r.get("gap_id") or "") if x):
+            bad.append(f"{k} (gap senza gap_id esistente)")
+        elif e == "gap" and not re.search(r"[\w./\[\]-]+\.\w+:\d+", r.get("note") or ""):
+            bad.append(f"{k} (gap senza il file:riga della lettura in note)")
+        elif e == "non verificabile" and not (r.get("note") or "").strip():
+            bad.append(f"{k} (non verificabile senza motivo)")
+    if aperte or bad:
+        det = (f"{len(aperte)} coppie entità × ruolo senza esito: {', '.join(aperte[:5])}{'…' if len(aperte) > 5 else ''}" if aperte else "")
+        det += ("; " if aperte and bad else "") + "; ".join(bad[:5])
+        return ("FALLITO" if strict else "DA VERIFICARE", det)
+    g = sum(1 for r in rows if (r.get("esito") or "").strip().lower() == "gap")
+    return ("OK", f"{len(rows)} righe, {g} con gap")

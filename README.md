@@ -1,383 +1,379 @@
 <div align="center">
 
-<img src="docs/img/banner.svg" alt="appsec-sentinel: assessment di sicurezza che dimostra ciò che dichiara" width="100%">
+<img src="docs/img/banner.svg" alt="appsec-sentinel: a security assessment that proves what it claims" width="100%">
 
 <br>
 
-![Licenza](https://img.shields.io/badge/licenza-Apache--2.0-0ea5a4?style=for-the-badge)
-![Lingua](https://img.shields.io/badge/lingua-italiano%20%C2%B7%20English-22c55e?style=for-the-badge)
-![Agenti](https://img.shields.io/badge/agenti-Claude%20%C2%B7%20Codex%20%C2%B7%20Antigravity-f59e0b?style=for-the-badge)
-![Versione](https://img.shields.io/badge/versione-1.5.0-6366f1?style=for-the-badge)
-[![Sito](https://img.shields.io/badge/sito-dextsamu.github.io-0f172a?style=for-the-badge)](https://dextsamu.github.io/appsec-sentinel/)
+![License](https://img.shields.io/badge/license-Apache--2.0-0ea5a4?style=for-the-badge)
+![Language](https://img.shields.io/badge/language-English%20%C2%B7%20italiano-22c55e?style=for-the-badge)
+![Agents](https://img.shields.io/badge/agents-Claude%20%C2%B7%20Codex%20%C2%B7%20Antigravity-f59e0b?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-1.5.0-6366f1?style=for-the-badge)
+[![Website](https://img.shields.io/badge/website-dextsamu.github.io-0f172a?style=for-the-badge)](https://dextsamu.github.io/appsec-sentinel/index.en.html)
 
-🇬🇧 **Security audit skill for AI coding agents** (Claude Code, Codex, Antigravity) that proves what it claims and writes down what it could not verify. Works in English and Italian: **[English guide →](README.en.md)**
+## 🇮🇹 [Leggi in italiano →](README.it.md)
 
-**Un report di sicurezza vale quanto la sua onestà.**
-Questa skill trasforma il tuo agente AI in un responsabile tecnico di assessment che *dimostra* ciò che dichiara, e scrive nero su bianco ciò che non ha potuto verificare. Nata per Claude, provata anche su Codex e Antigravity: vedi [`docs/ALTRI-AGENTI.md`](docs/ALTRI-AGENTI.md).
+**A security report is only worth as much as its honesty.**
+This skill turns your AI agent into an assessment lead that *proves* what it claims and writes down, in plain words, what it could not verify. Built for Claude, also tested on Codex and Antigravity: see [`docs/ALTRI-AGENTI.md`](docs/ALTRI-AGENTI.md) (in Italian).
 
-> 🌍 **English**: short guide in [`README.en.md`](README.en.md) and [command card](docs/COMMAND-CARD.md). I comandi funzionano anche in inglese (`quick`, `refute`, `close`…).
+> 🗒️ **Get started**: the one-page [command card](docs/COMMAND-CARD.md). Every command works in English or Italian (`quick`/`rapido`, `refute`/`smentita`, `close`/`chiudi`…).
 >
-> 🗒️ **Subito operativo**: la [scheda comandi](docs/SCHEDA-COMANDI.md) in una pagina.
->
-> 🤝 **Skill gemella**: per la parte privacy usa [`gdpr-sentinel`](https://github.com/dextsamu/gdpr-sentinel) (informativa contro codice, fornitori, retention, diritti). Insieme producono un unico report PDF: vedi [Con gdpr-sentinel](#con-gdpr-sentinel).
+> 🤝 **Sister skill**: for privacy use [`gdpr-sentinel`](https://github.com/dextsamu/gdpr-sentinel) (privacy notice vs code, suppliers, retention, data-subject rights). Together they produce a single PDF report: see [With gdpr-sentinel](#with-gdpr-sentinel).
 
 <img src="docs/img/demo.gif" alt="appsec-sentinel demo on OWASP Juice Shop" width="760"><br>
-<sub>Giro reale sul banco OWASP Juice Shop: comandi e output veri, nulla di preparato. 23 vulnerabilità su 32 trovate con file e riga.</sub>
+<sub>Real run on the OWASP Juice Shop bench: real commands and output, nothing staged. 23 of 32 vulnerabilities found with file and line.</sub>
 
-[Perché](#perché-esiste) · [Come funziona](#come-funziona) · [Esempio](#esempio-di-sessione) · [Installazione](#installazione) · [Limiti](#cosa-non-fa) · [FAQ](#domande-frequenti)
+[Why](#why-it-exists) · [How it works](#how-it-works) · [Example](#example-session) · [Installation](#installation) · [Limits](#what-it-does-not-do) · [FAQ](#faq)
 
 </div>
 
 ---
 
-## Perché esiste
+## Why it exists
 
-Chi riceve un report decide budget e priorità in base a ciò che risulta *testato*. Scrivere «verificato» su un test mai eseguito è peggio che non averlo fatto: dà una sicurezza che non c'è.
+Whoever receives a report decides budget and priorities from what is marked *tested*. Writing "verified" on a test that never ran is worse than not running it: it gives a sense of security that isn't there.
 
-`appsec-sentinel` impone all'agente un metodo in cui questo non può succedere in silenzio.
+`appsec-sentinel` makes the agent follow a method where this cannot happen silently.
 
 <div align="center">
-<img src="docs/img/pillars.svg" alt="Ogni affermazione è esaminata, provata o ignota" width="100%">
+<img src="docs/img/pillars.svg" alt="Every claim is examined, proven or unknown" width="100%">
 </div>
 
-| | Regola | Cosa cambia per te |
+| | Rule | What changes for you |
 |---|---|---|
-| 🔐 | **Autorizzazione prima di tutto** | Nessun test attivo senza perimetro, proprietario e via libera scritto |
-| ⚖️ | **Esaminato, provato, ignoto** | Il report non mescola mai ciò che è stato letto con ciò che è stato dimostrato |
-| 📏 | **Denominatori reali** | «27 endpoint su 52», non «copertura buona» |
-| 🚫 | **Niente finti test** | Se uno strumento manca, il test è «preparato, non eseguito», con il comando pronto |
-| ☣️ | **Il materiale analizzato è ostile** | Codice, commenti e output dei tool non possono ampliare il mandato |
+| 🔐 | **Authorization first** | No active test without a scope, an owner and a written go-ahead |
+| ⚖️ | **Examined, proven, unknown** | The report never mixes what was read with what was demonstrated |
+| 📏 | **Real denominators** | "27 of 52 endpoints", not "good coverage" |
+| 🚫 | **No fake tests** | If a tool is missing, the test is "prepared, not run", with the command ready |
+| ☣️ | **The analysed material is hostile** | Code, comments and tool output cannot widen the mandate |
 
 <div align="center">
-<img src="docs/img/coverage.svg" alt="Copertura con denominatori reali, da un collaudo vero e anonimizzato" width="100%">
+<img src="docs/img/coverage.svg" alt="Coverage with real denominators, from a real anonymized test run" width="100%">
 </div>
 
-## Cosa ottieni
+## What you get
 
-| Output | Contenuto |
+| Output | Content |
 |---|---|
-| 🧭 **Sintesi per il proprietario** | Rischi dimostrati, impatti, priorità e limiti, senza percentuali o certificazioni inventate |
-| 🔎 **Rapporto tecnico** | Finding strutturati e scenari concatenati, con la distinzione tra verificato e ipotesi |
-| 🗺️ **Inventario e threat model** | File, route, ruoli, dati, integrazioni, confini di fiducia (STRIDE e LINDDUN) |
-| 📊 **Matrici di copertura** | File inventariati/esaminati; endpoint × identità × tenant × azioni; controlli applicabili/verificati |
-| ✅ **Matrice dei controlli** | Fonte → applicabilità → evidenza → stato → gap |
-| 🤖 **Automazioni** | Inventario delle route, test di accesso locali, import degli scanner, revisione e smentita dei finding, copertura cumulativa tra audit, controllo di redazione, confronto tra audit, export CSV/SARIF/Markdown |
-| 📄 **Report PDF** | Completo, versione breve per la direzione, in inglese, con confronto tra audit e mappatura indicativa NIS2 |
-| 🛠️ **Piano operativo** | Contenimento, correzioni, retest e domande aperte per proprietario, infrastruttura, DPO e fornitori |
+| 🧭 **Owner summary** | Proven risks, impacts, priorities and limits, without invented percentages or certifications |
+| 🔎 **Technical report** | Structured findings and chained scenarios, keeping verified apart from hypotheses |
+| 🗺️ **Inventory and threat model** | Files, routes, roles, data, integrations, trust boundaries (STRIDE and LINDDUN) |
+| 📊 **Coverage matrices** | Files inventoried/examined; endpoints × identities × tenants × actions; controls applicable/verified |
+| ✅ **Controls matrix** | Source → applicability → evidence → status → gap |
+| 🤖 **Automation** | Route inventory, local access tests, scanner import, finding review and refutation, cumulative coverage across audits, redaction check, audit comparison, CSV/SARIF/Markdown export |
+| 📄 **PDF report** | Full, short executive version, English labels, comparison between audits and an indicative NIS2 mapping |
+| 🛠️ **Action plan** | Containment, fixes, retests and open questions for the owner, infrastructure, DPO and suppliers |
 
-I dati sono in Markdown, JSON e CSV, in una cartella di audit **riservata**, creata fuori dal repository.
+Data is stored as Markdown, JSON and CSV in a **confidential** audit folder created outside the repository.
 
-## Come funziona
+## How it works
 
 <div align="center">
-<img src="docs/img/flow.svg" alt="Il percorso di un assessment in dieci fasi, dal gate di autorizzazione al retest" width="100%">
+<img src="docs/img/flow.svg" alt="The ten phases of an assessment, from the authorization gate to the retest" width="100%">
 </div>
 
 <details>
-<summary><b>Le fasi in dettaglio</b> (tabella)</summary>
+<summary><b>The phases in detail</b> (table)</summary>
 
-| Fase | Cosa si guarda | Reference |
+| Phase | What is checked | Reference |
 |---|---|---|
-| 1 Intake e gate | Perimetro, ambienti, autorizzazioni, modalità, baseline | `engagement-rules.md` |
-| 2 Inventario | File, route, asset, ruoli, dati, ambienti; matrice endpoint | `inventory-threatmodel.md` |
-| 3 Threat model | Flussi, confini di fiducia, percorsi concatenati | `inventory-threatmodel.md` |
-| 4 Identità e autorizzazione | Sessioni, MFA, OAuth, segreti, BOLA/BFLA, tenant | `identity-authz.md` |
-| 5 Input, API, file, logica | Injection, XSS, SSRF, CSRF, webhook, business logic | `input-api-business.md` |
-| 6 Infrastruttura e supply chain | Database, crittografia, cloud, container, CI/CD, SBOM, ripristino | `infra-supplychain-ops.md` |
-| 7 AI e automazioni | Prompt injection, RAG, tool, agenti (se presenti) | `ai-features.md` |
-| 8 Disponibilità e costi | DoS applicativo, denial of wallet (solo se autorizzata) | `availability-gated.md` |
-| 9 Privacy | Trattamento reale, GDPR/ePrivacy | skill [`gdpr-sentinel`](https://github.com/dextsamu/gdpr-sentinel) |
-| 10 Validazione e piano | Falsi positivi, deduplica, retest | `SKILL.md` |
+| 1 Intake and gate | Scope, environments, authorizations, mode, baseline | `engagement-rules.md` |
+| 2 Inventory | Files, routes, assets, roles, data, environments; endpoint matrix | `inventory-threatmodel.md` |
+| 3 Threat model | Flows, trust boundaries, chained paths | `inventory-threatmodel.md` |
+| 4 Identity and authorization | Sessions, MFA, OAuth, secrets, BOLA/BFLA, tenants | `identity-authz.md` |
+| 5 Input, API, files, logic | Injection, XSS, SSRF, CSRF, webhooks, business logic | `input-api-business.md` |
+| 6 Infrastructure and supply chain | Database, cryptography, cloud, containers, CI/CD, SBOM, recovery | `infra-supplychain-ops.md` |
+| 7 AI and automation | Prompt injection, RAG, tools, agents (if present) | `ai-features.md` |
+| 8 Availability and cost | Application DoS, denial of wallet (only if authorized) | `availability-gated.md` |
+| 9 Privacy | Real processing, GDPR/ePrivacy | skill [`gdpr-sentinel`](https://github.com/dextsamu/gdpr-sentinel) |
+| 10 Validation and plan | False positives, deduplication, retest | `SKILL.md` |
 
-I reference si caricano **solo per le fasi attive**: la skill resta leggera e consuma contesto solo dove serve.
+References are loaded **only for the active phases**: the skill stays light and uses context only where it is needed.
 </details>
 
-### Tre modalità
+### Three modes
 
-| Modalità | Quando | Cosa include |
+| Mode | When | What it includes |
 |---|---|---|
-| ⚡ `rapido` | Hai poche ore | Superficie, segreti, authn/authz sui flussi principali, dipendenze con advisory raggiungibili |
-| 🎯 `standard` *(default)* | Il caso normale | Threat model, analisi statica, verifiche dinamiche autorizzate, matrice controlli ASVS ai capitoli pertinenti |
-| 🔬 `completo` | Applicazioni critiche | Inventario file per file, ASVS esteso (L3 valutato per applicabilità), matrici complete, disponibilità se autorizzata |
+| ⚡ `quick` (`rapido`) | You have a few hours | Attack surface, secrets, authn/authz on the main flows, dependencies with reachable advisories |
+| 🎯 `standard` *(default)* | The normal case | Threat model, static analysis, authorized dynamic checks, ASVS controls matrix for the relevant chapters |
+| 🔬 `full` (`completo`) | Critical applications | File-by-file inventory, extended ASVS (L3 assessed for applicability), complete matrices, availability if authorized |
 
 > [!IMPORTANT]
-> Con **solo il repository** la skill fa analisi statica e dichiara i limiti. Con **solo un URL autorizzato** lavora come un assessment esterno. Senza autorizzazione, i test attivi vengono preparati e **non eseguiti**.
+> With **only the repository**, the skill does static analysis and states its limits. With **only an authorized URL**, it works as an external assessment. Without authorization, active tests are prepared and **not run**.
 
-## Esempi di richiesta
+## Example requests
 
 ```text
-Fai un assessment standard della web app in questa cartella.
+Run a standard assessment of the web app in this folder.
 
-Controlla se l'API in questo repo ha problemi di autorizzazione tra tenant.
+Check whether the API in this repo has authorization problems between tenants.
 
-Triage rapido di sicurezza sul progetto: segreti, login e dipendenze vulnerabili.
+Quick security triage of the project: secrets, login and vulnerable dependencies.
 
-Prepara le regole di ingaggio per testare https://staging.esempio.it con gli account di prova.
+Prepare the rules of engagement to test https://staging.example.com with the test accounts.
 
-Verifica la parte tecnica NIS2/ACN di questo gestionale con la baseline AgID.
+Check the technical NIS2/ACN side of this management app against the AgID baseline.
 ```
 
-## Esempio di sessione
+## Example session
 
-> Frasi pronte per ogni modalità: [`docs/ESEMPI-DI-UTILIZZO.md`](docs/ESEMPI-DI-UTILIZZO.md). Un collaudo completo anonimizzato, da un caso reale: [`examples/collaudo-rapido/`](examples/collaudo-rapido/README.md).
+> Ready-made phrases for every mode: [`docs/ESEMPI-DI-UTILIZZO.md`](docs/ESEMPI-DI-UTILIZZO.md) (in Italian). A complete anonymized test run from a real case: [`examples/collaudo-rapido/`](examples/collaudo-rapido/README.md).
 
-<img src="docs/img/caso-reale.svg" alt="Cosa emerge in un collaudo rapido su un'app web reale" width="50%">
+<img src="docs/img/caso-reale.svg" alt="What a quick run surfaces on a real web app" width="50%">
 
-Il ritmo del lavoro, da un collaudo vero (applicazione web Next.js di proprietà di chi la usa, modalità `rapido`, anonimizzato):
+The rhythm of the work, from a real test run (a Next.js web app owned by the person using the skill, `quick` mode, anonymized):
 
-> **Tu:** Prova la skill su questo repository, è mio. Dimmi come fare.
+> **You:** Try the skill on this repository, it's mine. Tell me what to do.
 >
-> **Agente:** Propongo la modalità `rapido`: superficie, segreti, accessi e dipendenze. Prima di toccare il codice mi servono tre conferme: che il repository sia tuo, che l'attività sia solo analisi statica (niente richieste a server, niente test attivi) e la modalità.
+> **Agent:** I suggest `quick` mode: attack surface, secrets, access and dependencies. Before touching the code I need three confirmations: that the repository is yours, that the work is static analysis only (no requests to servers, no active tests), and the mode.
 >
-> **Tu:** Sì, tuo, solo analisi statica. Rapido.
+> **You:** Yes, it's mine, static analysis only. Quick.
 >
-> **Agente:** Scrivo le regole di ingaggio con la tua conferma e creo la cartella di audit fuori dal repository. I valori dei segreti non finiranno nel report: registro solo posizione, tipo e forma.
+> **Agent:** I'm writing the rules of engagement with your confirmation and creating the audit folder outside the repository. Secret values won't end up in the report: I only record location, type and shape.
 >
-> *(a fine lavoro)* Sette finding, tutti «confermati da codice o configurazione»: nessun test dinamico, quindi nessuno «riprodotto». Due alti: un endpoint demo senza autenticazione e il framework con bypass del middleware noti. Copertura: 14 route lette su 309, oltre 280 «ignote»; 0 test eseguiti su 9 endpoint censiti. In allegato le domande per chi gestisce il progetto, a partire da: queste route sono nella build di produzione?
+> *(at the end)* Seven findings, all "confirmed from code or configuration": no dynamic test, so none "reproduced". Two high: an unauthenticated demo endpoint and a framework version with known middleware bypasses. Coverage: 14 routes read out of 309, over 280 "unknown"; 0 tests run on 9 endpoints listed. Attached are the questions for whoever runs the project, starting with: are these routes in the production build?
 
-Il caso completo, con i finding anonimizzati, è in [`examples/collaudo-rapido/`](examples/collaudo-rapido/README.md).
+The full case, with anonymized findings, is in [`examples/collaudo-rapido/`](examples/collaudo-rapido/README.md).
 
-## Com'è fatto un finding
+## What a finding looks like
 
-Ogni rilievo segue lo stesso modello (`assets/finding-template.md`) ed è registrato in JSON secondo `assets/finding.schema.json`. Qui un finding del caso reale, anonimizzato; tutti e cinque sono in [`examples/collaudo-rapido/findings/findings.json`](examples/collaudo-rapido/findings/findings.json):
+Every finding follows the same template (`assets/finding-template.md`) and is recorded in JSON according to `assets/finding.schema.json`. Here is one from the real case, anonymized; all five are in [`examples/collaudo-rapido/findings/findings.json`](examples/collaudo-rapido/findings/findings.json):
 
 <div align="center">
-<img src="docs/img/finding.svg" alt="Finding da un caso reale: endpoint di seed demo senza autenticazione" width="100%">
+<img src="docs/img/finding.svg" alt="Finding from a real case: demo seed endpoint without authentication" width="100%">
 </div>
 
-Quattro stati, mai mescolati: `riprodotto dinamicamente`, `confermato da codice o configurazione`, `ipotesi da validare`, `non verificabile`. Lo script `validate_findings.py` controlla le regole di onestà: un finding «riprodotto» deve avere il test eseguito, un CVSS deve avere la versione, e nei campi non devono comparire segreti.
+Four states, never mixed: dynamically reproduced (`riprodotto dinamicamente`), confirmed from code or configuration (`confermato da codice o configurazione`), hypothesis to validate (`ipotesi da validare`), not verifiable (`non verificabile`). The script `validate_findings.py` checks the honesty rules: a "reproduced" finding must have the test that was run, a CVSS score must state its version, and no secrets may appear in the fields.
 
-## Controlli minimi per classe di rischio
+## Minimum controls by risk class
 
-`references/minimum-controls-profile.md` e `assets/minimum-controls-profile.csv` dicono **quanto rigore aspettarsi** su 14 temi, per asset Basso, Medio o Alto. Ogni soglia dichiara la sua **provenienza**: *da fonte* (AgID, ACN, NIST SP 800-53B), *proposta* (nostra, da confermare con il titolare) o *da definire*. Dove le fonti non fissano un numero, per esempio i giorni per le patch, non ne viene inventato uno spacciato per norma.
+`references/minimum-controls-profile.md` and `assets/minimum-controls-profile.csv` say **how much rigor to expect** on 14 topics, for Low, Medium or High assets. Every threshold states its **origin**: *from a source* (AgID, ACN, NIST SP 800-53B), *proposed* (ours, to be confirmed with the owner) or *to be defined*. Where the sources set no number, for example the days to apply patches, none is invented and passed off as a rule.
 
 <div align="center">
-<img src="docs/img/profile.svg" alt="Per ogni tema, quali fonti sono state lette e quanta parte delle soglie è proposta" width="100%">
+<img src="docs/img/profile.svg" alt="For each topic, which sources were read and how much of the thresholds is proposed" width="100%">
 </div>
 
-## Baseline e fonti
+## Baselines and sources
 
-| Livello | Riferimenti |
+| Level | References |
 |---|---|
-| **Predefinite** | OWASP ASVS 5.0.0, WSTG, API Security Top 10, OWASP LLM Top 10, NIST SP 800-115, SP 800-218, CSF, SP 800-63 |
-| **Opzionali** | AgID Misure minime ICT per le PA, ACN misure di base NIS2, NIST SP 800-53 Rev. 5 con baseline 800-53B, Framework Nazionale CINI, ISO/IEC 27001, CIS Controls |
-| **Del cliente** | Qualsiasi baseline propria: la skill chiede il documento, ne registra versione e data e la applica con le stesse regole |
+| **Default** | OWASP ASVS 5.0.0, WSTG, API Security Top 10, OWASP LLM Top 10, NIST SP 800-115, SP 800-218, CSF, SP 800-63 |
+| **Optional** | AgID minimum ICT measures for Italian public administrations, ACN NIS2 basic measures, NIST SP 800-53 Rev. 5 with the 800-53B baselines, Italian National Framework (CINI), ISO/IEC 27001, CIS Controls |
+| **Yours** | Any in-house baseline: the skill asks for the document, records its version and date, and applies it with the same rules |
 
-I link sono in `references/baselines-sources.md` con la data di verifica. Le baseline sono un **metro di confronto**, non una certificazione.
+Links are in `references/baselines-sources.md` with the date they were checked. Baselines are a **yardstick**, not a certification.
 
-## Comandi
+## Commands
 
-> 🗒️ Versione corta, una pagina: [**scheda comandi**](docs/SCHEDA-COMANDI.md).
+> 🗒️ Short version, one page: [**command card**](docs/COMMAND-CARD.md).
 
-Le skill non hanno sotto-comandi nativi: le parole qui sotto sono una **convenzione definita nelle istruzioni** (`SKILL.md`). Dove l'agente lo supporta (per esempio Claude Code) puoi anteporre il nome della skill con la barra; altrove scrivi la frase in chat. Nessun comando salta il controllo di autorizzazione.
+Skills have no native sub-commands: the words below are a **convention defined in the instructions** (`SKILL.md`). Where the agent supports it (for example Claude Code) you can prefix the skill name with a slash; elsewhere, write the phrase in chat. Every command also works with its Italian word. No command skips the authorization check.
 
-| Comando | Cosa fa |
+| Command | What it does |
 |---|---|
-| `/appsec-sentinel rapido <repo>` | Triage mirato: superficie, segreti, accessi, dipendenze |
-| `/appsec-sentinel standard <repo> [url]` | Threat model, analisi statica e verifiche dinamiche autorizzate |
-| `/appsec-sentinel completo <repo> [url]` | Inventario file per file e matrici complete |
-| `/appsec-sentinel area <authz\|segreti\|dipendenze\|infra\|input\|ai> <repo>` | Solo l'area indicata |
-| `/appsec-sentinel retest <ID> [branch]` | Ripete il caso originale e prova percorsi alternativi |
-| `/appsec-sentinel piano [cartella]` | Piano di intervento dai finding |
-| `/appsec-sentinel report [cartella]` | Valida finding e copertura, produce sintesi e rapporto |
-| `/appsec-sentinel stato [cartella]` | Riepilogo di copertura e finding aperti |
-| `/appsec-sentinel documentale <repo>` | Audit documentale su tutta la codebase e l'applicazione, poi report PDF aziendale |
-| `/appsec-sentinel inventario <repo>` | Bozza della matrice endpoint, con le route senza autenticazione evidente in testa |
-| `/appsec-sentinel dinamico <config> <test>` | Test di accesso su istanza locale o host autorizzato per iscritto |
-| `/appsec-sentinel scanner <file…>` | Importa npm audit, SARIF, gitleaks, osv come candidati «ipotesi da validare» |
-| `/appsec-sentinel revisione [cartella]` | Revisione indipendente dei finding: falsi positivi e incoerenze |
-| `/appsec-sentinel chiudi [cartella]` | Controllo di consegna in un solo passo: zero «falliti» prima di dare l'audit al cliente |
-| `/appsec-sentinel smentita [cartella]` | Un verificatore diverso dall'autore prova a confutare ogni finding alto o critico |
-| `/appsec-sentinel riprendi <vecchio> <nuovo>` | Audit ripetuto: copertura ancora valida riportata, voci cambiate segnate «stantie» |
-| `/appsec-sentinel confronta <vecchio> <nuovo>` | Risolti, nuovi e cambiati tra due audit (retest) |
-| `/appsec-sentinel esporta [cartella]` | CSV, SARIF o Markdown per le issue |
-| `/appsec-sentinel redazione [cartella]` | Controlla segreti e dati personali prima di consegnare |
-| `/appsec-sentinel pdf [cartella]` | Genera il report PDF dai file di audit (opzioni: `--sintetico`, `--lang en`, `--previous`, `--nis2`) |
-| `/appsec-sentinel privacy <repo>` | Passa a `gdpr-sentinel` |
+| `/appsec-sentinel quick <repo>` | Targeted triage: attack surface, secrets, access, dependencies |
+| `/appsec-sentinel standard <repo> [url]` | Threat model, static analysis and authorized dynamic checks |
+| `/appsec-sentinel full <repo> [url]` | File-by-file inventory and complete matrices |
+| `/appsec-sentinel area <authz\|secrets\|dependencies\|infra\|input\|ai> <repo>` | Only the given area |
+| `/appsec-sentinel retest <ID> [branch]` | Repeats the original case and tries alternative paths |
+| `/appsec-sentinel plan [folder]` | Action plan from the findings |
+| `/appsec-sentinel report [folder]` | Validates findings and coverage, produces the summary and the report |
+| `/appsec-sentinel status [folder]` | Summary of coverage and open findings |
+| `/appsec-sentinel documentary <repo>` | Documentary audit of the whole codebase and application, then a corporate PDF report |
+| `/appsec-sentinel inventory <repo>` | Draft endpoint matrix, with routes lacking evident authentication first |
+| `/appsec-sentinel dynamic <config> <tests>` | Access tests on a local instance or a host authorized in writing |
+| `/appsec-sentinel scanner <file…>` | Imports npm audit, SARIF, gitleaks, osv as "hypothesis to validate" candidates |
+| `/appsec-sentinel review [folder]` | Independent review of the findings: false positives and inconsistencies |
+| `/appsec-sentinel close [folder]` | Delivery check in one step: zero "FAIL" before handing the audit to the client |
+| `/appsec-sentinel refute [folder]` | A verifier other than the author tries to refute every high or critical finding |
+| `/appsec-sentinel resume <old> <new>` | Repeated audit: still-valid coverage carried over, changed items marked "stale" |
+| `/appsec-sentinel compare <old> <new>` | Resolved, new and changed between two audits (retest) |
+| `/appsec-sentinel export [folder]` | CSV, SARIF or Markdown for issues |
+| `/appsec-sentinel redact [folder]` | Checks for secrets and personal data before delivery |
+| `/appsec-sentinel pdf [folder]` | Builds the PDF report from the audit files (options: `--sintetico`, `--lang en`, `--previous`, `--nis2`) |
+| `/appsec-sentinel privacy <repo>` | Hands over to `gdpr-sentinel` |
 
-Script da riga di comando:
+Command-line scripts:
 
 ```bash
-python3 scripts/init_audit.py <cartella-audit> [--force]   # crea la cartella di audit (fuori dal repo)
-python3 scripts/validate_findings.py <findings.json>       # valida i finding contro lo schema
-python3 scripts/coverage_summary.py <cartella-audit>       # denominatori reali di copertura
-pip install reportlab                                       # una volta sola
-python3 scripts/build_report_pdf.py <cartella-audit>       # report PDF in formato aziendale
+python3 scripts/init_audit.py <audit-folder> [--force]     # creates the audit folder (outside the repo)
+python3 scripts/validate_findings.py <findings.json>       # validates findings against the schema
+python3 scripts/coverage_summary.py <audit-folder>         # real coverage denominators
+pip install reportlab                                       # once
+python3 scripts/build_report_pdf.py <audit-folder>         # corporate PDF report
 ```
 
-Esempi completi: [`docs/ESEMPI-DI-UTILIZZO.md`](docs/ESEMPI-DI-UTILIZZO.md).
+Full examples: [`docs/ESEMPI-DI-UTILIZZO.md`](docs/ESEMPI-DI-UTILIZZO.md) (in Italian).
 
-## Strumenti automatici
+## Automated tools
 
-Script in `scripts/` che accelerano il lavoro ripetitivo senza decidere al posto tuo. Flusso e limiti in [`references/automation.md`](references/automation.md).
+Scripts in `scripts/` speed up repetitive work without deciding for you. Flow and limits in [`references/automation.md`](references/automation.md).
 
-| Script | Cosa fa | Limite dichiarato |
+| Script | What it does | Stated limit |
 |---|---|---|
-| `inventory_routes.py` | Elenca route e metodi (Next.js, Express, Flask, FastAPI, Django, Laravel, Spring, ASP.NET, Rails, Go) e segnala quelle senza auth evidente | Euristico: non prova che un controllo sia corretto o assente. Legge i gruppi di Laravel (middleware e prefisso), l'auth delle view Django (decoratori, mixin, permessi DRF) e i prefissi di `include()`; per gli altri framework cerca l'auth vicino alla singola route (filtri globali non si vedono) |
-| `dynamic_authz_check.py` | Prova accessi per identità su un'istanza locale | Solo localhost o host autorizzato; solo metodi sicuri di default; nessun corpo salvato |
-| `import_openapi.py` | Importa una specifica OpenAPI/Swagger (JSON/YAML) come matrice endpoint; con `--repo` la confronta con l'inventario del codice | La spec dichiara l'intento, non prova la protezione; il confronto eredita i limiti euristici dell'inventario |
-| `iac_check.py` | 14 regole a pattern su Dockerfile, compose, Kubernetes, Terraform, GitHub Actions; emette SARIF | Indizi, non sostituisce trivy/checkov; valori dei segreti mai riportati |
-| `prepass.py` | Esegue tutti gli strumenti in ordine fisso, pre-compila la checklist delle 14 aree del `rapido` ed elenca i punti pericolosi da leggere (HTML senza escape anche nel client, esecuzione di codice, deserializzazione, XML, AI, recupero password) | Uguale tra due giri; i candidati sono ipotesi, non finding |
-| `merge_audits.py` | Unisce più giri sullo stesso repo per causa (file/righe, CWE, titolo; mai per ID) e misura l'accordo | Una causa vista da un solo giro non è meno vera |
-| `secret_triage.py` | Classifica i possibili segreti nella storia Git (formato, entropia, segnaposto, tipo di file, ripetizioni) senza mai riportarne il valore | Euristico: punteggio basso non significa innocuo |
-| `run_scanners.py` | Esegue `npm audit` sul solo lockfile (pip-audit se presente) e cerca segreti nella storia Git (gitleaks o pattern interni) | Se uno scanner non parte lo dichiara con il comando preparato; clone superficiale segnalato; valori mai riportati |
-| `import_scanner.py` | Trasforma l'output degli scanner (npm audit, SARIF, gitleaks, osv, semgrep, trivy, ZAP) in candidati | Sempre ipotesi, severità mai oltre «media», valori dei segreti mai riportati |
-| `verify_findings.py` | Cerca riferimenti inesistenti, severità senza prova, duplicati; prepara il brief di smentita per i finding alti | Meccanico: le domande di revisione e la smentita restano a chi legge |
-| `canonicalize.py` | Riporta ai valori canonici italiani stati e severità scritti in inglese | Tocca solo valori enumerati, mai il testo libero |
-| `check_delivery.py` | Un solo controllo prima della consegna: finding, revisore, smentite, redazione (anche i valori dei segreti dell'app), parole vietate, copertura | Meccanico: non prova che l'audit sia giusto; non vede i messaggi di chat |
-| `coverage_carry.py` | Audit ripetuti: riporta la copertura con contenuto invariato, segna le voci stantie e le aree mai coperte | L'impronta prova che il contenuto non è cambiato, non che l'esame fosse giusto |
-| `redact_check.py` | Cerca segreti e dati personali in file e PDF | Non stampa mai il valore; un esito pulito non è una garanzia |
-| `compare_audits.py`, `export_findings.py` | Retest tra due audit; CSV, SARIF, Markdown | «Risolto» significa assente, non verificato |
+| `inventory_routes.py` | Lists routes and methods (Next.js, Express, Flask, FastAPI, Django, Laravel, Spring, ASP.NET, Rails, Go) and flags those without evident auth | Heuristic: it does not prove that a control is correct or missing. It reads Laravel groups (middleware and prefix), Django view auth (decorators, mixins, DRF permissions) and `include()` prefixes; for other frameworks it looks for auth near each route (global filters are not seen) |
+| `dynamic_authz_check.py` | Tests access per identity on a local instance | Localhost or an authorized host only; safe methods only by default; no bodies saved |
+| `import_openapi.py` | Imports an OpenAPI/Swagger spec (JSON/YAML) as the endpoint matrix; with `--repo` it compares it with the code inventory | The spec states intent, it does not prove protection; the comparison inherits the inventory's heuristic limits |
+| `iac_check.py` | 14 pattern rules on Dockerfile, compose, Kubernetes, Terraform, GitHub Actions; outputs SARIF | Hints, not a replacement for trivy/checkov; secret values never reported |
+| `prepass.py` | Runs every tool in a fixed order, pre-fills the 14-area `quick` checklist and lists the dangerous code to read (unescaped HTML, client side too, code execution, deserialization, XML, AI, password recovery, SSRF, client routes, seed credentials) | Identical between runs; candidates are hypotheses, not findings |
+| `merge_audits.py` | Merges several runs on the same repo by cause (file/lines, CWE, title; never by ID) and measures agreement | A cause seen by one run only is not less true |
+| `secret_triage.py` | Ranks possible secrets in the Git history (format, entropy, placeholders, file type, repetitions) without ever reporting the value | Heuristic: a low score does not mean harmless |
+| `run_scanners.py` | Runs `npm audit` on the lockfile alone (pip-audit if present) and looks for secrets in the Git history (gitleaks or built-in patterns) | If a scanner does not start, it says so with the prepared command; shallow clones flagged; values never reported |
+| `import_scanner.py` | Turns scanner output (npm audit, SARIF, gitleaks, osv, semgrep, trivy, ZAP) into candidates | Always hypotheses, severity never above "medium", secret values never reported |
+| `verify_findings.py` | Looks for nonexistent references, severity without evidence, duplicates; prepares the refutation brief for high findings | Mechanical: the review questions and the refutation stay with the reader |
+| `canonicalize.py` | Converts states and severities written in English to the canonical Italian values | Touches only enumerated values, never free text |
+| `check_delivery.py` | One check before delivery: findings, reviewer, refutations, redaction (including the app's own secret values), forbidden words, coverage, dangerous-code categories closed | Mechanical: it does not prove the audit is right; it cannot see chat messages |
+| `coverage_carry.py` | Repeated audits: carries over coverage whose content is unchanged, marks stale items and areas never covered | The fingerprint proves the content did not change, not that the review was right |
+| `redact_check.py` | Looks for secrets and personal data in files and PDFs | Never prints the value; a clean result is not a guarantee |
+| `compare_audits.py`, `export_findings.py` | Retest between two audits; CSV, SARIF, Markdown | "Resolved" means absent, not verified |
 
-Gli script sono collaudati contro un'app finta con difetti noti: `python3 tests/run_checks.py`. Il comportamento dell'agente si collauda con i [giri di `tests/scenarios`](tests/scenarios/README.md) e la capacità di trovare difetti con i banchi pubblici: [`tests/bench-app`](tests/bench-app/README.md) (Node/Next.js, 16 difetti noti), [`tests/bench-php`](tests/bench-php/README.md) (Laravel, 13) e [`tests/bench-django`](tests/bench-django/README.md) (Django, 11), ognuno con 5 esche, più [`tests/bench-juice`](tests/bench-juice/juice_bench.py), dove la verità è scritta da altri (32 vulnerabilità di OWASP Juice Shop con file e riga). Risultati dei giri reali in [docs/BENCHMARK.md](docs/BENCHMARK.md): 13/13 su Laravel, 11/11 su Django, 18–20/32 per giro su Juice Shop; i banchi scritti da noi misurano l'applicazione del metodo, Juice Shop la generalizzazione.
+The scripts are tested against a fake app with known flaws: `python3 tests/run_checks.py`. The agent's behaviour is tested with the [runs in `tests/scenarios`](tests/scenarios/README.md), and its ability to find flaws with public benches: [`tests/bench-app`](tests/bench-app/README.md) (Node/Next.js, 16 known flaws), [`tests/bench-php`](tests/bench-php/README.md) (Laravel, 13) and [`tests/bench-django`](tests/bench-django/README.md) (Django, 11), each with 5 decoys, plus [`tests/bench-juice`](tests/bench-juice/juice_bench.py), where the truth is written by others (32 OWASP Juice Shop vulnerabilities with file and line). Results of the real runs in [docs/BENCHMARK.md](docs/BENCHMARK.md) and [docs/ALTRI-AGENTI.md](docs/ALTRI-AGENTI.md) (in Italian): 13/13 on Laravel, 11/11 on Django, up to 23/32 on Juice Shop; our own benches measure how the method is applied, Juice Shop measures generalization.
 
-## Report PDF aziendale
+## Corporate PDF report
 
-Il comando `documentale` esamina i documenti di tutto il progetto (README, guide, politiche, DPIA, piani, rapporti di test, file di istruzioni) e li **confronta con il codice**: una dichiarazione di sicurezza che il codice non sostiene è il rilievo più utile. Poi `scripts/build_report_pdf.py` assembla un PDF A4 con copertina, sintesi per il proprietario, quadro e dettaglio dei finding, audit documentale, copertura con denominatori reali, piano di intervento e avvertenze.
+The `documentary` command examines the documents of the whole project (README, guides, policies, DPIA, plans, test reports, instruction files) and **compares them with the code**: a security claim the code does not back up is the most useful finding. Then `scripts/build_report_pdf.py` assembles an A4 PDF with cover, owner summary, finding overview and detail, documentary audit, coverage with real denominators, action plan and disclaimers.
 
-Opzioni: `--sintetico` per una versione breve alla direzione (copertina, sintesi, quadro, piano), `--lang en` per titoli ed etichette in inglese (il contenuto resta nella lingua dei file), `--previous <findings.json>` per aggiungere il confronto con un audit precedente e `--nis2` per una mappatura **indicativa** sulle misure dell'art. 21 della NIS2, che non stabilisce se il soggetto rientra nell'ambito né valuta la conformità. Il tema è teal per la sicurezza e ambra per la privacy.
+Options: `--sintetico` for a short version for management (cover, summary, overview, plan), `--lang en` for English titles and labels (the content stays in the language of the files), `--previous <findings.json>` to add a comparison with a previous audit, and `--nis2` for an **indicative** mapping onto the measures of NIS2 Article 21, which neither decides whether the entity is in scope nor assesses compliance. The theme is teal for security and amber for privacy.
 
-Un esempio anonimizzato, da un caso reale: [`examples/collaudo-rapido/report-esempio.pdf`](examples/collaudo-rapido/report-esempio.pdf). Metodo: [`references/documentary-audit.md`](references/documentary-audit.md).
+An anonymized example from a real case: [`examples/collaudo-rapido/report-esempio.pdf`](examples/collaudo-rapido/report-esempio.pdf). Method: [`references/documentary-audit.md`](references/documentary-audit.md).
 
-## Con gdpr-sentinel
+## With gdpr-sentinel
 
-<img src="docs/img/suite.svg" alt="appsec-sentinel e gdpr-sentinel: due skill, una cartella di audit, un solo report PDF" width="100%">
+<img src="docs/img/suite.svg" alt="appsec-sentinel and gdpr-sentinel: two skills, one audit folder, one PDF report" width="100%">
 
-`appsec-sentinel` guarda la **sicurezza**; la sua gemella [`gdpr-sentinel`](https://github.com/dextsamu/gdpr-sentinel) guarda la **privacy**: trattamenti reali, informativa contro codice, fornitori, retention, diritti. Funzionano anche da sole, ma insieme si completano:
+`appsec-sentinel` looks at **security**; its sister skill [`gdpr-sentinel`](https://github.com/dextsamu/gdpr-sentinel) looks at **privacy**: real processing, privacy notice vs code, suppliers, retention, rights. They work on their own, but together they complement each other:
 
-- **Dalla sicurezza alla privacy**: quando trovi dati personali, `/appsec-sentinel privacy <repo>` passa il lavoro a `gdpr-sentinel`, che parte dalla stessa cartella di audit.
-- **Dalla privacy alla sicurezza**: un finding di sicurezza che incide sulla protezione dei dati (art. 32) è già nella tua matrice; `gdpr-sentinel` lo richiama invece di rifarlo.
-- **Un solo report**: se le due skill scrivono nella stessa cartella, `scripts/build_report_pdf.py` produce un unico PDF con finding, audit documentale, matrice privacy e domande.
+- **From security to privacy**: when you find personal data, `/appsec-sentinel privacy <repo>` hands the work to `gdpr-sentinel`, which starts from the same audit folder.
+- **From privacy to security**: a security finding that affects data protection (GDPR Art. 32) is already in your matrix; `gdpr-sentinel` refers to it instead of redoing it.
+- **One report**: if both skills write to the same folder, `scripts/build_report_pdf.py` produces a single PDF with findings, documentary audit, privacy matrix and questions.
 
+## Installation
 
+**Claude.ai**: download `appsec-sentinel.skill` from the [Releases](https://github.com/dextsamu/appsec-sentinel/releases) and upload it under *Settings → Capabilities → Skills*.
 
-**Claude.ai**: scarica il file `appsec-sentinel.skill` dalle [Release](https://github.com/dextsamu/appsec-sentinel/releases) e caricalo da *Impostazioni → Capacità → Skill*.
-
-**Claude Code**, come plugin (si aggiorna da solo alle nuove versioni):
+**Claude Code**, as a plugin (updates itself to new versions):
 ```text
 /plugin marketplace add dextsamu/appsec-sentinel
 /plugin install appsec-sentinel@appsec-sentinel
 ```
-Dallo stesso marketplace si installa anche la skill gemella: `/plugin install gdpr-sentinel@appsec-sentinel`. In alternativa, come cartella di skill:
+The sister skill installs from the same marketplace: `/plugin install gdpr-sentinel@appsec-sentinel`. Alternatively, as a skill folder:
 ```bash
 git clone https://github.com/dextsamu/appsec-sentinel ~/.claude/skills/appsec-sentinel
 ```
-oppure, per un solo progetto, in `<progetto>/.claude/skills/appsec-sentinel/`.
+or, for a single project, in `<project>/.claude/skills/appsec-sentinel/`.
 
-**Altri agenti** (Codex, Antigravity): vedi [`docs/ALTRI-AGENTI.md`](docs/ALTRI-AGENTI.md) per i percorsi di installazione e per cosa è stato provato.
+**Other agents** (Codex, Antigravity): see [`docs/ALTRI-AGENTI.md`](docs/ALTRI-AGENTI.md) (in Italian) for the install paths and what was tested.
 
-### Primo avvio
+### First run
 
-1. Apri una sessione sul progetto da esaminare.
-2. Chiedi un assessment: la skill propone la modalità e le domande di intake.
-3. Compila e fai confermare il documento di regole di ingaggio (`00-regole-di-ingaggio.md`).
-4. La skill crea la cartella di audit fuori dal repository con `scripts/init_audit.py`; lo script rifiuta di scrivere dentro un repository Git, salvo `--force`.
-5. A fine lavoro la skill esegue i controlli finali: `validate_findings.py` e `coverage_summary.py`.
+1. Open a session on the project to examine.
+2. Ask for an assessment: the skill proposes the mode and the intake questions.
+3. Fill in and confirm the rules-of-engagement document (`00-regole-di-ingaggio.md`).
+4. The skill creates the audit folder outside the repository with `scripts/init_audit.py`; the script refuses to write inside a Git repository unless you pass `--force`.
+5. At the end the skill runs the final checks: `validate_findings.py` and `coverage_summary.py`.
 
-## Struttura
+## Structure
 
 ```
-SKILL.md                      gate, modalità, fasi, regole, rimandi
-references/                   caricati solo quando servono
+SKILL.md                      gate, modes, phases, rules, pointers
+references/                   loaded only when needed
   engagement-rules.md  inventory-threatmodel.md  identity-authz.md
   input-api-business.md  infra-supplychain-ops.md  ai-features.md
   availability-gated.md  baselines-sources.md  optional-baselines.md
   minimum-controls-profile.md  automation.md  review-pass.md  refutation-pass.md
-assets/                       template e schema
+assets/                       templates and schema
   engagement-rules-template.md  finding-template.md  finding.schema.json
   coverage-matrix.csv  endpoint-matrix.csv  controls-matrix.csv
   minimum-controls-profile.csv
-scripts/                      solo libreria standard di Python (jsonschema opzionale)
+scripts/                      Python standard library only (jsonschema optional)
   init_audit.py  validate_findings.py  coverage_summary.py  build_report_pdf.py
   inventory_routes.py  import_openapi.py  iac_check.py  dynamic_authz_check.py  import_scanner.py  verify_findings.py
   compare_audits.py  export_findings.py  redact_check.py  coverage_carry.py
-tests/                        app di prova con difetti noti e run_checks.py
-examples/                     collaudo rapido anonimizzato (da un caso reale) + finding di riferimento per i test automatici
+tests/                        test apps with known flaws and run_checks.py
+examples/                     anonymized quick run (from a real case) + reference findings for the automated tests
 ```
 
-## Cosa NON fa
+The skill's own instructions, references and templates are written in Italian (the authors work with Italian public administrations and non-profits); the agent applies them and answers in your language. Machine-readable files keep canonical Italian field names and enum values because the scripts check them.
 
-- Non trova «tutte» le vulnerabilità e non certifica la sicurezza o la conformità di nulla.
-- Non sostituisce un penetration tester, un DPO o un legale.
-- Non esegue test su produzione o su sistemi non autorizzati e non modifica il prodotto: propone correzioni da applicare con un mandato successivo.
-- Non esegue strumenti che non ha: se Docker, uno scanner o la rete non sono disponibili, prepara i comandi da lanciare nell'ambiente del cliente.
-- Non porta dati personali, segreti o codice privato su servizi di terzi senza autorizzazione.
+## What it does not do
 
-## Domande frequenti
+- It does not find "all" vulnerabilities and does not certify the security or compliance of anything.
+- It does not replace a penetration tester, a DPO or a lawyer.
+- It does not test production or unauthorized systems and does not change the product: it proposes fixes to apply under a later mandate.
+- It does not run tools it doesn't have: if Docker, a scanner or the network are not available, it prepares the commands to run in the client's environment.
+- It does not send personal data, secrets or private code to third-party services without authorization.
+
+## FAQ
 
 <details>
-<summary><b>Gli script sostituiscono gli scanner?</b></summary>
+<summary><b>Do the scripts replace scanners?</b></summary>
 
-No. Gli scanner restano i tuoi: la skill ne importa l'output come candidati «ipotesi da validare» e governa regole, copertura, validazione e report. L'inventario delle route è euristico e i test dinamici provano solo ciò che hanno eseguito.
+No. The scanners remain yours: the skill imports their output as "hypothesis to validate" candidates and governs rules, coverage, validation and the report. The route inventory is heuristic, and dynamic tests prove only what they ran.
 </details>
 
 <details>
-<summary><b>Posso lanciare i test dinamici su produzione?</b></summary>
+<summary><b>Can I run the dynamic tests on production?</b></summary>
 
-`dynamic_authz_check.py` rifiuta ogni host che non sia locale, a meno di `--allow-host` per un host autorizzato per iscritto, e di default esegue solo richieste di lettura. Su produzione valgono comunque le regole di ingaggio della Fase 0: dati sintetici, limiti e finestre concordati.
+`dynamic_authz_check.py` refuses any host that is not local, unless you pass `--allow-host` for a host authorized in writing, and by default it only sends read requests. On production the Phase 0 rules of engagement still apply: synthetic data, agreed limits and time windows.
 </details>
 
 <details>
-<summary><b>Posso usarla sul sito di un cliente?</b></summary>
+<summary><b>Can I use it on a client's website?</b></summary>
 
-Solo con autorizzazione scritta del titolare dei sistemi. La skill non esegue test attivi senza perimetro confermato, ma la responsabilità dell'uso resta tua: l'accesso non autorizzato a un sistema informatico può costituire reato (in Italia, per esempio, art. 615-ter c.p.).
+Only with written authorization from the owner of the systems. The skill runs no active tests without a confirmed scope, but responsibility for its use stays with you: unauthorized access to a computer system can be a crime (in Italy, for example, Art. 615-ter of the Criminal Code).
 </details>
 
 <details>
-<summary><b>Funziona con la mia pipeline di scansione?</b></summary>
+<summary><b>Does it work with my scanning pipeline?</b></summary>
 
-Sì. Se hai già script SAST/SCA o test dinamici su un'istanza locale con dati finti, indica come lanciarli: la skill li usa come fase automatica e si occupa di regole, copertura, validazione manuale e report.
+Yes. If you already have SAST/SCA scripts or dynamic tests on a local instance with fake data, say how to run them: the skill uses them as an automated phase and takes care of rules, coverage, manual validation and the report.
 </details>
 
 <details>
-<summary><b>Devo conoscere ASVS o WSTG?</b></summary>
+<summary><b>Do I need to know ASVS or WSTG?</b></summary>
 
-No. La skill ti guida e riporta i riferimenti nei finding. Se vuoi capire perché una verifica è richiesta, chiedilo.
+No. The skill guides you and puts the references in the findings. If you want to know why a check is required, ask.
 </details>
 
 <details>
-<summary><b>Serve anche gdpr-sentinel?</b></summary>
+<summary><b>Do I also need gdpr-sentinel?</b></summary>
 
-No, le due skill funzionano separatamente. Se [`gdpr-sentinel`](https://github.com/dextsamu/gdpr-sentinel) è installata, `appsec-sentinel` la richiama per la fase privacy (`/appsec-sentinel privacy <repo>`) e usate la stessa cartella di audit; altrimenti dichiara il limite e prepara le domande per DPO e legale.
+No, the two skills work separately. If [`gdpr-sentinel`](https://github.com/dextsamu/gdpr-sentinel) is installed, `appsec-sentinel` calls it for the privacy phase (`/appsec-sentinel privacy <repo>`) and both use the same audit folder; otherwise it states the limit and prepares the questions for the DPO and the lawyer.
 </details>
 
 <details>
-<summary><b>Posso adattarla a una baseline interna?</b></summary>
+<summary><b>Can I adapt it to an in-house baseline?</b></summary>
 
-Sì: vedi la sezione «Baseline e fonti» e `references/optional-baselines.md`.
+Yes: see "Baselines and sources" and `references/optional-baselines.md`.
 </details>
 
-## Stato del progetto
+## Project status
 
-Cosa viene dopo, in ordine e con il numero che ogni voce deve migliorare: [ROADMAP.md](ROADMAP.md).
+What comes next, in order and with the number each item must improve: [ROADMAP.md](ROADMAP.md) (in Italian).
 
-Versione 1.5.0. Cosa è già verificato e cosa no, in modo esplicito:
+Version 1.5.0. What has been verified and what has not, explicitly:
 
-- Gli script e i template sono controllati automaticamente a ogni modifica (GitHub Actions), insieme ai link relativi e al finding di riferimento. `tests/run_checks.py` prova gli script contro un'app finta con difetti noti; per ora la CI su GitHub dipende dal limite di spesa dell'account, quindi il collaudo è stato eseguito in locale.
-- **Primo collaudo su un caso reale** (30/10/2026): applicazione web Next.js di proprietà dell'autore, modalità `rapido`, sola analisi statica. Ha prodotto 7 finding e ha fatto correggere script, template e istruzioni (vedi CHANGELOG). Dopo: 12 giri reali di agenti indipendenti su Laravel, Django e Juice Shop (31/10/2026, vedi docs/BENCHMARK.md). Resta da collaudare: modalità `standard` e `completo`, i test dinamici su un'istanza reale (`dynamic_authz_check.py` è provato solo contro un server di prova), la smentita indipendente dei finding alti dentro `doppio`, stack diversi da JavaScript, PHP e Python. Segnala ciò che si rompe o confonde con una issue.
-- Nel profilo dei controlli minimi le righe su fornitori e risposta agli incidenti hanno ancora parti «da definire», perché le fonti ACN non sono state rilette per intero.
-- **Altri agenti.** Provata una volta su Codex e su Antigravity (Windows, modalità `rapido`, app finta, solo analisi statica): le regole sono state rispettate e le lacune emerse sono state corrette nella 1.1.0. Non è una garanzia di compatibilità: vedi [`docs/ALTRI-AGENTI.md`](docs/ALTRI-AGENTI.md).
-- I link alle fonti sono stati verificati il 29/10/2026. Gli standard cambiano: controlla versione e vigore prima di citarli in un report.
+- Scripts and templates are checked automatically on every change (GitHub Actions), together with relative links and the reference finding. `tests/run_checks.py` tests the scripts against a fake app with known flaws.
+- **First test on a real case** (30/10/2026): a Next.js web app owned by the author, `quick` mode, static analysis only. It produced 7 findings and led to fixes in scripts, templates and instructions (see CHANGELOG). After that: 12 real runs by independent agents on Laravel, Django and Juice Shop (31/10/2026, see docs/BENCHMARK.md), then runs on Claude, Codex and Antigravity with the same prompt (docs/ALTRI-AGENTI.md). Still to be tested: `full` mode, dynamic tests on a real instance (`dynamic_authz_check.py` has only been tested against a test server), stacks other than JavaScript, PHP and Python. Please report anything that breaks or confuses you with an issue.
+- In the minimum-controls profile, the rows on suppliers and incident response still have parts "to be defined", because the ACN sources have not been reread in full.
+- **Other agents.** Tested on Codex and Antigravity (Windows, static analysis only): the rules were followed and the gaps that came up were fixed. This is not a compatibility guarantee: see [`docs/ALTRI-AGENTI.md`](docs/ALTRI-AGENTI.md).
+- Links to sources were checked on 29/10/2026. Standards change: check version and status before citing them in a report.
 
-## In English
-
-`appsec-sentinel` is an agent skill (in Italian), built for Claude and also tried once on Codex and Antigravity, for application and cloud security assessments. It enforces an authorization gate before any active test, separates what was *examined*, *proven* and *unknown*, reports coverage with real denominators, and never claims tests that were not run. Output: structured findings (JSON schema), coverage matrices, a threat model and a prioritized remediation plan. Helper scripts (route inventory, local-only dynamic access checks, scanner import, finding review with an independent refutation pass for high-severity findings, redaction check, audit diff, cumulative coverage across repeated audits, CSV/SARIF export) and a business PDF report (full, executive, English labels, NIS2 indicative mapping) are included. Licensed under Apache-2.0. The skill text is Italian; an English version is not available yet.
-
-## Uso responsabile
+## Responsible use
 
 > [!WARNING]
-> Strumento di supporto, fornito «così com'è», **senza garanzie**. Usalo solo con autorizzazione scritta del titolare. Se i test possono toccare dati personali, definisci prima i ruoli privacy (per esempio la nomina a responsabile del trattamento, art. 28 GDPR) e la riservatezza. L'utente risponde dell'uso e dei risultati, secondo le sezioni 7 e 8 della licenza.
+> A support tool, provided "as is", **without warranty**. Use it only with written authorization from the owner. If the tests may touch personal data, first define the privacy roles (for example the appointment as processor, GDPR Art. 28) and confidentiality. The user is responsible for its use and results, under sections 7 and 8 of the license.
 
-## Licenza e crediti
+## License and credits
 
-Copyright 2026 Samuele Cucurnia e Pietro Previtali, licenza [Apache-2.0](LICENSE) (vedi anche [NOTICE](NOTICE)).
+Copyright 2026 Samuele Cucurnia and Pietro Previtali, licensed under [Apache-2.0](LICENSE) (see also [NOTICE](NOTICE)).
 
-La skill nasce da un prompt di assessment fornito da **Pietro Previtali** ed è stata adattata e strutturata da **Samuele Cucurnia** con il supporto di Claude (Anthropic).
+The skill comes from an assessment prompt provided by **Pietro Previtali** and was adapted and structured by **Samuele Cucurnia** with the support of Claude (Anthropic).
 
-**Nessuna affiliazione**: il progetto non è affiliato né approvato da OWASP, NIST, MITRE, FIRST, CISA, ACN, AgID, CINI, Anthropic o altri enti citati. I marchi appartengono ai rispettivi titolari. Le fonti di terzi sono collegate o riassunte, non riprodotte: vedi [THIRD_PARTY.md](THIRD_PARTY.md).
+**No affiliation**: the project is not affiliated with or endorsed by OWASP, NIST, MITRE, FIRST, CISA, ACN, AgID, CINI, Anthropic or the other bodies mentioned. Trademarks belong to their owners. Third-party sources are linked or summarized, not reproduced: see [THIRD_PARTY.md](THIRD_PARTY.md).
 
-## Contribuire e segnalare
+## Contributing and reporting
 
-- Correzioni di link, miglioramenti ai checklist, nuovi template e bug negli script sono benvenuti: leggi [CONTRIBUTING.md](CONTRIBUTING.md).
-- Problemi di sicurezza o istruzioni che potrebbero indurre a test non autorizzati: [SECURITY.md](SECURITY.md).
-- Cronologia delle versioni: [CHANGELOG.md](CHANGELOG.md).
+- Link fixes, checklist improvements, new templates and script bugs are welcome: read [CONTRIBUTING.md](CONTRIBUTING.md).
+- Security problems, or instructions that could lead to unauthorized testing: [SECURITY.md](SECURITY.md).
+- Version history: [CHANGELOG.md](CHANGELOG.md) (in Italian).

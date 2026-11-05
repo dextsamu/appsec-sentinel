@@ -52,4 +52,4 @@ Scrivi il comando dopo `/appsec-sentinel` (o come prima parola della richiesta).
 - Un test non eseguito resta «no» nella matrice: mai «provato» senza output.
 - I file di audit e i report sono riservati: fuori da Git e dai repository pubblici.
 
-Dettagli: [README](../README.md) · [automazioni](../references/automation.md) · [revisione](../references/review-pass.md) · [smentita](../references/refutation-pass.md)
+Dettagli: [README](../README.it.md) · [automazioni](../references/automation.md) · [revisione](../references/review-pass.md) · [smentita](../references/refutation-pass.md)

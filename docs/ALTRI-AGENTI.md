@@ -33,6 +33,16 @@ Juice Shop (`tests/bench-juice`, verità scritta da altri, 32 vulnerabilità con
 
 Sul banco piccolo (Django, 11 difetti) Antigravity e Codex erano vicini (10 e 11); su un'app grande e densa come Juice Shop la differenza fra agenti è ampia. Antigravity ha scritto pochi finding (12) e ha raggruppato più cause in ciascuno.
 
+**Cosa sfugge a tutti e tre.** Le 9 vulnerabilità mancate da Claude nel giro migliore sono mancate anche da Codex e da Antigravity (analisi del 09/11/2026 sugli stessi tre audit). Non sono casuali, ma di tre famiglie:
+
+| Famiglia | Vulnerabilità di Juice Shop | Perché sfugge a una lettura del codice |
+|---|---|---|
+| Risposte indovinabili alle domande di sicurezza | `resetPasswordBenderChallenge`, `resetPasswordBjoernChallenge`, `resetPasswordBjoernOwaspChallenge`, `resetPasswordUvoginChallenge` (`data/static/securityQuestions.yml`) | Il difetto sta nei dati di prova, non nel codice: per vederlo serve sapere che la risposta si trova in rete |
+| Pagine «nascoste» nel frontend | `scoreBoardChallenge`, `tokenSaleChallenge`, `web3SandboxChallenge` (`frontend/src/app/app.routing.ts`) | Sicurezza per oscurità: una rotta con un nome strano non sembra sbagliata |
+| Logica applicativa | `redirectCryptoCurrencyChallenge` (indirizzo crypto ancora nella lista dei redirect consentiti, `lib/insecurity.ts`), `registerAdminChallenge` (ruolo admin impostabile alla registrazione, `server.ts`) | Serve capire l'intenzione dell'app, non riconoscere uno schema noto |
+
+I difetti «a schema» (injection, XSS, autenticazione) vengono trovati; quelli che richiedono di capire l'intenzione o un'informazione esterna no. Codex manca in più 5 casi (directory listing, metriche esposte, una domanda di sicurezza, XSS nella ricerca, immagine Docker vulnerabile); Antigravity, che si ferma presto, manca anche injection e login (26/32 mancate).
+
 ## Prima prova (30/10/2026)
 Prova del 30/10/2026, su Windows, un solo giro per agente: audit in modalità `rapido`, solo analisi statica, su un'app finta creata dall'agente stesso, con entrambe le skill (`appsec-sentinel` e `gdpr-sentinel`). Le versioni degli agenti non sono state registrate.
 
